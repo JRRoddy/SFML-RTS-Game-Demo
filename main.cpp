@@ -8,7 +8,7 @@
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 #include <iostream>
-
+#include "SceneManager.h"
  /**
   * The main function, which sets up and runs the SFML application.
   *
@@ -55,7 +55,13 @@ int main() {
      */
     sf::Time timePerFrame = sf::seconds(1.0f / f_fps);
 
+    
+    SceneManager sceneManager = SceneManager(&window,window.getSize().x,window.getSize().y);
+    sf::Clock elapsed;
+    float dt;
     while (window.isOpen()) {
+
+        dt = elapsed.restart().asSeconds();
 
         // Check if the W key is pressed and move the rectangle up accordingly
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
@@ -73,9 +79,10 @@ int main() {
 
         // Clear the window and draw the rectangle
         window.clear();
-        window.draw(rectangle);
+       /* window.draw(rectangle);*/ 
+        sceneManager.draw();
         window.display();
-
+        sceneManager.update(dt);
     }
 
     return 0;

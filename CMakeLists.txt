@@ -16,31 +16,49 @@ FetchContent_Declare(
 #set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
+
+
+
 # Add test cpp file
 add_executable( RunUnitTests "testgtest.cpp"
 )
 
 #find_package(SFML 2.6.2 COMPONENTS graphics audio REQUIRED)
+file(GLOB_RECURSE GAMESOURCE CMAKE_CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/GameSrc/*.cpp")
+file(GLOB_RECURSE GAMEINCLUDE CMAKE_CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/GameIncludes/*.h")
 add_executable("${PROJECT_NAME}" 
-"Main.cpp")
+"Main.cpp" "${GAMESOURCE}" "${GAMEINCLUDE}")
+
 
 set(SFML_DIR "SFML-2.6.2/lib/cmake/SFML")
+
 
 #look for SFML and add it
 find_package (SFML 2.6.2 REQUIRED system window graphics network audio)
 
+target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/GameIncludes/")
 target_link_libraries(SFML_GTEST debug sfml-audio sfml-graphics sfml-network sfml-system gtest gtest_main)
 
 # Link test executable against gtest & gtest_main
+
+
 target_link_libraries(RunUnitTests gtest gtest_main sfml-audio sfml-graphics sfml-network sfml-system )
 add_test( RunUnitTests RunUnitTests )
+
 
 install(TARGETS "${PROJECT_NAME}" DESTINATION bin) #${CMAKE_INSTALL_PREFIX}/bin
 install(FILES "Main.cpp" DESTINATION src)
 
+
+
+
+
+
+
 # Group into "Source Files" and "Header Files"
     if ("${FILE}" MATCHES ".*\\.cpp")
       set(GROUP "src${GROUP}")
+    
     elseif("${FILE}" MATCHES ".*\\.h")
       set(GROUP "include${GROUP}")
     endif()

@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\Build\_deps\googletest-subbuild\CMakeFiles\891003bdf97d89e82dd7669ee1c10bac\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{06B9BC15-208F-3717-95EE-C7256A8CAA7B}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

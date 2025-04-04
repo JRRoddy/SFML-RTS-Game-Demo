@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\Build\_deps\googletest-subbuild\CMakeFiles\42d7f76c528c2dded6c9ce0083ef5844\googletest-populate-mkdir.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\Build\_deps\googletest-subbuild\CMakeFiles\42d7f76c528c2dded6c9ce0083ef5844\googletest-populate-download.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\Build\_deps\googletest-subbuild\CMakeFiles\42d7f76c528c2dded6c9ce0083ef5844\googletest-populate-update.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\Build\_deps\googletest-subbuild\CMakeFiles\42d7f76c528c2dded6c9ce0083ef5844\googletest-populate-patch.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\Build\_deps\googletest-subbuild\CMakeFiles\42d7f76c528c2dded6c9ce0083ef5844\googletest-populate-configure.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\Build\_deps\googletest-subbuild\CMakeFiles\42d7f76c528c2dded6c9ce0083ef5844\googletest-populate-build.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\Build\_deps\googletest-subbuild\CMakeFiles\42d7f76c528c2dded6c9ce0083ef5844\googletest-populate-install.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\Build\_deps\googletest-subbuild\CMakeFiles\42d7f76c528c2dded6c9ce0083ef5844\googletest-populate-test.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\Build\_deps\googletest-subbuild\CMakeFiles\54f8266efabd01fcd5f8d14f630e21c3\googletest-populate-complete.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\Build\_deps\googletest-subbuild\CMakeFiles\891003bdf97d89e82dd7669ee1c10bac\googletest-populate.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\Build\_deps\googletest-subbuild\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\Build\_deps\googletest-subbuild\CMakeFiles\googletest-populate" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{06B9BC15-208F-3717-95EE-C7256A8CAA7B}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
