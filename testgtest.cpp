@@ -7,7 +7,184 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
+#include "GameIncludes/GameObject.h"
+#include "GameIncludes/TileDeepCopyUtil.h"
+#include "GameIncludes/ForestTile.h"
+#include "GameIncludes/Player.h"
+#include "GameIncludes/DynamicObject.h"
+#include "TextureManager.h"
+// GameObject class unit tests:
+class GameObjectTests: public::testing::Test {
 
+public:
+    GameObjectTests() {
+        m_rotationToSet =  0.0f; 
+        m_positionToSet = sf::Vector2f(0.0f, 0.0f);
+        m_scaleToSet = sf::Vector2f(0.0f, 0.0f);
+    };
+protected:
+    GameObject m_GameObjectTest = GameObject(); 
+    sf::Vector2f m_positionToSet;
+    sf::Vector2f m_scaleToSet;
+    float m_rotationToSet;
+  
+    
+    void SetUp() {
+
+        m_positionToSet = sf::Vector2f(10.0f, 10.0f);
+        m_rotationToSet = 10.0f; 
+        m_scaleToSet = sf::Vector2f(1.5f, 1.5f);
+        
+
+        m_GameObjectTest.setPosition(m_positionToSet); 
+        m_GameObjectTest.setRotation(m_rotationToSet); 
+        m_GameObjectTest.setScale(m_scaleToSet); 
+
+
+        
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+}; 
+
+
+
+
+
+
+TEST_F(GameObjectTests, GameObjectUnitTest) {
+
+    // testing getters and setters for gameObject i.e setting postion rot and scale
+    EXPECT_EQ(m_positionToSet.x, m_GameObjectTest.getPosition().x);
+    EXPECT_EQ(m_rotationToSet, m_GameObjectTest.getRotation());
+    EXPECT_EQ(m_scaleToSet.y, m_GameObjectTest.getScale().y);
+
+
+
+}
+
+// test for deep copying a specifc tile
+class tileDeepCopytest : public::testing::Test {
+public:
+   
+
+    tileDeepCopytest() {
+        m_player = Player();
+        m_forest = new ForestTile(sf::Vector2f(10.0f, 15.0f));;// set the position of the tile that will be used for the deep copy
+        m_newDeepCopyObject = TileInitialiser(m_forest); // the initial deep copy object that holds the base object to copy 
+    }
+
+
+
+protected:
+    std::unique_ptr<Tile> m_tileCopyDestination;
+    TileInitialiser m_newDeepCopyObject;
+    Tile * m_forest;
+    Player m_player;
+
+
+};
+
+
+TEST_F(tileDeepCopytest, deepCopyingTilesTest) {
+    
+    EXPECT_EQ(m_newDeepCopyObject.basePtr.get()->getPosition().x, 10.0f); // testing the setting of the position for the tile we are copying 
+    m_tileCopyDestination = m_newDeepCopyObject.getHeldObjectCopy(); // assingin the other ptr to a supossed copy of the one held in the deep copy object
+    bool isEqual = m_tileCopyDestination.get() == m_newDeepCopyObject.basePtr.get();
+    std::cout <<"POINTER for the copy :"<< m_tileCopyDestination.get() << " ::::::: pointer for the object held wihtin the deep copy object " << m_newDeepCopyObject.basePtr.get() << std::endl;
+    ASSERT_FALSE(isEqual);  // checking if the deep copy we made is not equal in address( if it fails non of the other test will be valid so we break out of this test)
+    m_tileCopyDestination.get()->setPosition(sf::Vector2f(20.0f, 0.0f)); 
+
+    EXPECT_NE(m_tileCopyDestination.get()->getPosition().x, m_newDeepCopyObject.basePtr.get()->getPosition().x); // expect the new set position for the copy to not be equal to the object held in the deep copy object 
+    std::cout << "new copy type "<<typeid(m_tileCopyDestination.get()).name() << std::endl;
+
+    m_tileCopyDestination.get()->playerEffect(&m_player);
+
+
+
+
+}
+
+// dynamic object unit tests
+class DynamicObjectTest: public::testing::Test {
+public:
+
+    
+    DynamicObjectTest() {
+        m_dynamic = DynamicObject();
+        m_speedValue = 0.0f;
+    }
+    void SetUp() {
+
+        m_speedValue = 10.0f;
+
+    }
+
+
+protected:
+    DynamicObject m_dynamic;
+    float m_speedValue;
+
+};
+
+// testing setting speed value of dynamic objects
+TEST_F(DynamicObjectTest, dynamicObjectSpeedSetTest) {
+
+      
+    m_dynamic.setSpeed(m_speedValue); 
+
+    EXPECT_EQ(m_dynamic.getSpeed(), m_speedValue);
+
+
+}
+
+
+// texture manager unit test
+
+class TextureManagerTest : public::testing::Test {
+public:
+
+    TextureManagerTest() {
+
+        m_textureManager = TextureManager();
+
+    }
+
+    
+    void SetUp() {
+
+        m_pathToLoad = ".. /Assets/Textures/GrassBackground0.png";
+            
+    }
+protected:
+    std::string m_pathToLoad;
+    TextureManager m_textureManager;
+
+
+
+
+
+};
+
+
+// load from file and accessing map of texture in texture manager test
+TEST_F(TextureManagerTest, loadFileTest) {
+
+    m_textureManager.loadTexture(m_pathToLoad); 
+    EXPECT_NE(m_textureManager.getTexture(m_pathToLoad), nullptr);
+
+}
 
 
  /**

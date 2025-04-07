@@ -4,10 +4,12 @@ class DynamicObject: public GameObject {
 
 
 public:
-	
+	DynamicObject();
+	DynamicObject(sf::Vector2f position);
 	DynamicObject(float speed); 
 	DynamicObject(float speed, sf::Vector2f position);
-
+	float getSpeed();
+	void setSpeed(float speed);
 
 
 protected:

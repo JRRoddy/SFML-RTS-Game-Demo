@@ -18,14 +18,14 @@ FetchContent_MakeAvailable(googletest)
 
 
 
-
+file(GLOB_RECURSE GAMESOURCE CMAKE_CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/GameSrc/*.cpp")
+file(GLOB_RECURSE GAMEINCLUDE CMAKE_CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/GameIncludes/*.h")
 # Add test cpp file
-add_executable( RunUnitTests "testgtest.cpp"
+add_executable( RunUnitTests "testgtest.cpp" "${GAMESOURCE}" "${GAMEINCLUDE}"
 )
 
 #find_package(SFML 2.6.2 COMPONENTS graphics audio REQUIRED)
-file(GLOB_RECURSE GAMESOURCE CMAKE_CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/GameSrc/*.cpp")
-file(GLOB_RECURSE GAMEINCLUDE CMAKE_CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/GameIncludes/*.h")
+
 add_executable("${PROJECT_NAME}" 
 "Main.cpp" "${GAMESOURCE}" "${GAMEINCLUDE}")
 
@@ -43,6 +43,7 @@ target_link_libraries(SFML_GTEST debug sfml-audio sfml-graphics sfml-network sfm
 
 
 target_link_libraries(RunUnitTests gtest gtest_main sfml-audio sfml-graphics sfml-network sfml-system )
+target_include_directories(RunUnitTests PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/GameIncludes/")
 add_test( RunUnitTests RunUnitTests )
 
 

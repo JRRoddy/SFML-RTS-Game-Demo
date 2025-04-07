@@ -1,3 +1,5 @@
 #include "StaticObject.h"
 
-staticObject::~staticObject(){}
+StaticObject::StaticObject(sf::Vector2f position) :GameObject(position){}
+
+StaticObject::~StaticObject(){}

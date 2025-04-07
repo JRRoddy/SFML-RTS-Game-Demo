@@ -4,6 +4,13 @@ GameObject::GameObject() {};
 
 GameObject::GameObject(sf::Vector2f position) { m_position = position; }
 
+GameObject::GameObject(sf::Vector2f position, float rotation, sf::Vector2f scale)
+{
+	m_position = position;
+	m_rotation = rotation;
+	m_scale = scale;
+}
+
 GameObject::GameObject(sf::Vector2f position, float rotation) {
 	m_position = position;
 	m_rotation = rotation;
@@ -28,6 +35,12 @@ void GameObject::setScale(sf::Vector2f scale)
 	m_scale = scale;
 }
 
+void GameObject::setBaseSprite(std::shared_ptr<sf::Sprite> spriteRef)
+{
+	m_baseSpriteRef = spriteRef;
+
+}
+
 sf::Vector2f GameObject::getScale()
 {
 	return m_scale;
@@ -48,6 +61,8 @@ void GameObject::update(float dt){}
 void GameObject::draw(sf::RenderWindow * window){}
 
 void GameObject::getSprites(SpriteGenerator* spriteGenerator){}
+
+void GameObject::getSprites(SpriteGenerator* spriteGenerator, std::string spriteTexturePath){}
 
 
 

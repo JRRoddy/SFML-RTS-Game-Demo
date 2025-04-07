@@ -1,8 +1,18 @@
 #include "Player.h"
 
-Player::Player(float speed):DynamicObject(speed)
+Player::Player()
 {
-	m_damage = 10.0f;
+}
+
+
+
+Player::Player(sf::Vector2f position):DynamicObject(position)
+{
+}
+
+Player::Player(float speed,sf::Vector2f position):DynamicObject(speed,position)
+{
+	
 }
 
 Player::Player(float speed, float damage):DynamicObject(speed)
