@@ -36,3 +36,10 @@ void DynamicObject::setSpeed(float speed)
 {
 	m_speed = speed;
 }
+
+void DynamicObject::updatePosition(float dt)
+{
+
+	m_position += (m_direction * m_speed) * dt;
+
+}

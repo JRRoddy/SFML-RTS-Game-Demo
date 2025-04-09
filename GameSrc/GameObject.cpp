@@ -60,9 +60,16 @@ void GameObject::update(float dt){}
 
 void GameObject::draw(sf::RenderWindow * window){}
 
-void GameObject::getSprites(SpriteGenerator* spriteGenerator){}
+void GameObject::getSprites(SpriteGenerator* spriteGenerator)
+{
+	m_baseSpriteRef = spriteGenerator->GenerateSprite(m_texturePath);
+}
 
-void GameObject::getSprites(SpriteGenerator* spriteGenerator, std::string spriteTexturePath){}
+void GameObject::getSprites(SpriteGenerator* spriteGenerator, std::string spriteTexturePath)
+{
+	m_texturePath = spriteTexturePath;
+	m_baseSpriteRef = spriteGenerator->GenerateSprite(m_texturePath);
+}
 
 
 

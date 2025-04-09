@@ -26,12 +26,13 @@ public:
 	virtual void draw(sf::RenderWindow * window);
 	virtual void getSprites(SpriteGenerator* spriteGenerator);
 	virtual void getSprites(SpriteGenerator* spriteGenerator, std::string spriteTexturePath);
+	
 protected: 
 	sf::Vector2f m_position = sf::Vector2f(0.0f,0.0f);
 	sf::Vector2f m_scale = sf::Vector2f(1.0f, 1.0f);
 	float m_rotation = 0.0f; 
 	std::shared_ptr<sf::Sprite> m_baseSpriteRef;
-	
+	std::string m_texturePath;
 
 
 

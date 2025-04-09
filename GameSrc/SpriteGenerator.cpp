@@ -3,9 +3,7 @@
 SpriteGenerator::SpriteGenerator(TextureManager* textureManager)
 {
     m_textureManager = textureManager;
-    /*m_path = path;
-    m_texture.loadFromFile(path);
-    m_spriteRef  = std::make_shared<sf::Sprite>( new sf::Sprite(m_texture));*/
+
 
 }
 
@@ -16,20 +14,14 @@ std::vector<std::shared_ptr<sf::Sprite>> SpriteGenerator::GenerateSprite(std::st
        
         return m_spriteSheets[spriteSheetPath]; // this will avoid duplication of data as we ensure that only one of the sprite is generated and it can be used by many objects 
     }
-
-
     m_spriteSheets.insert({ spriteSheetPath,std::vector < std::shared_ptr<sf::Sprite>>{}}); // if the sprite has not been generated we generate a new vector of shadred pointers if we are parsing multiple sprites 
     // we use shared pointers here as not only will they be deallocated automatically when the vector goes out of scope 
     // but this is also due to the fact many objects can hold a refernce to the same sprite and the shared pointer will keep track of its 
     // current refernce count and deallocate accordingly
 
-    
-
     // parsing the sprite sheet 
     int textureRowSize = round(m_textureManager->getTexture(spriteSheetPath)->getSize().x / desiredWidth);
     int textureColumnSize = round(m_textureManager->getTexture(spriteSheetPath)->getSize().y / desiredHeight);
-
-    
     for (int i = 0; i < textureColumnSize; i++) {
         for (int j = 0; j < textureRowSize; j++) {
 
@@ -39,14 +31,15 @@ std::vector<std::shared_ptr<sf::Sprite>> SpriteGenerator::GenerateSprite(std::st
             )));
             
             m_spriteSheets[spriteSheetPath].back().get()->setOrigin(sf::Vector2f(desiredWidth / 2.0f, desiredHeight / 2.0f));
-
+            
         }
-
+        
     }
    
 
 	return m_spriteSheets[spriteSheetPath] ;
 }
+
 
 // seperate method for single sprites using same methodology as above method 
 std::shared_ptr<sf::Sprite> SpriteGenerator::GenerateSprite(std::string & spriteTexturePath)
@@ -69,7 +62,7 @@ std::shared_ptr<sf::Sprite> SpriteGenerator::GenerateSprite(std::string & sprite
     { 
     spriteTexturePath,std::shared_ptr<sf::Sprite>
     (new sf::Sprite(*temp,sf::IntRect(0,0,temp->getSize().x,temp->getSize().y)))
-
+    
     });
 
     m_singleSprite[spriteTexturePath].get()->setOrigin(sf::Vector2f(temp->getSize()) / 2.0f);

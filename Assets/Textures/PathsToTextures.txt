@@ -1,1 +1,3 @@
 ../Assets/Textures/GrassBackground0.png
+../Assets/Textures/ForestTile.png
+../Assets/Textures/KnightIdleBlue .png

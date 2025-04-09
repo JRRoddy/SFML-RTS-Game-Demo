@@ -82,7 +82,7 @@ public:
     tileDeepCopytest() {
         m_player = Player();
         m_forest = new ForestTile(sf::Vector2f(10.0f, 15.0f));;// set the position of the tile that will be used for the deep copy
-        m_newDeepCopyObject = TileInitialiser(m_forest); // the initial deep copy object that holds the base object to copy 
+        m_newDeepCopyObject = TileInitialiser(m_forest);
     }
 
 
@@ -99,22 +99,50 @@ protected:
 
 TEST_F(tileDeepCopytest, deepCopyingTilesTest) {
     
-    EXPECT_EQ(m_newDeepCopyObject.basePtr.get()->getPosition().x, 10.0f); // testing the setting of the position for the tile we are copying 
-    m_tileCopyDestination = m_newDeepCopyObject.getHeldObjectCopy(); // assingin the other ptr to a supossed copy of the one held in the deep copy object
-    bool isEqual = m_tileCopyDestination.get() == m_newDeepCopyObject.basePtr.get();
-    std::cout <<"POINTER for the copy :"<< m_tileCopyDestination.get() << " ::::::: pointer for the object held wihtin the deep copy object " << m_newDeepCopyObject.basePtr.get() << std::endl;
+    std::cout << "DEEP COPY TEST" << std::endl;
+    EXPECT_EQ(m_newDeepCopyObject.getHeldObject()->getPosition().x, 10.0f); // testing the setting of the position for the tile we are copying 
+    
+    m_tileCopyDestination.reset(  m_newDeepCopyObject.getHeldObjectCopy()); // assingin the other ptr to a supossed copy of the one held in the deep copy object
+    bool isEqual = m_tileCopyDestination.get() == m_newDeepCopyObject.getHeldObject();
+    std::cout <<"POINTER for the copy :"<< m_tileCopyDestination.get() << " pointer for the object held wihtin the deep copy object " << m_newDeepCopyObject.getHeldObject() << std::endl;
     ASSERT_FALSE(isEqual);  // checking if the deep copy we made is not equal in address( if it fails non of the other test will be valid so we break out of this test)
     m_tileCopyDestination.get()->setPosition(sf::Vector2f(20.0f, 0.0f)); 
 
-    EXPECT_NE(m_tileCopyDestination.get()->getPosition().x, m_newDeepCopyObject.basePtr.get()->getPosition().x); // expect the new set position for the copy to not be equal to the object held in the deep copy object 
-    std::cout << "new copy type "<<typeid(m_tileCopyDestination.get()).name() << std::endl;
-
+    EXPECT_NE(m_tileCopyDestination.get()->getPosition().x, m_newDeepCopyObject.getHeldObject()->getPosition().x); // expect the new set position for the copy to not be equal to the object held in the deep copy object 
+    std::cout << "new copy type "<<typeid(*m_tileCopyDestination.get()).name() << std::endl;
     m_tileCopyDestination.get()->playerEffect(&m_player);
 
 
 
 
 }
+
+
+TEST(vectorTest, testVector) {
+
+    class myclass {
+    public : 
+        int myint;
+        myclass(int i) {
+            myint = i;
+        }
+
+
+    };
+
+
+    std::vector<myclass>myClasses = { myclass(1) };
+    std::vector<myclass> classes = myClasses; 
+
+    classes.clear(); 
+
+    std::cout << "MYCLASSES SIZE " << myClasses.size() <<"CLASSES SIZE "<<classes.size() << std::endl;
+
+
+
+
+}
+
 
 // dynamic object unit tests
 class DynamicObjectTest: public::testing::Test {

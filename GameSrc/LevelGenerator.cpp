@@ -5,27 +5,40 @@
 
 // this class is responsible for holding the main data that is used for level generation keeping things such as various 
 // background textures for level area containers and tile data all wrapped under a single class. All of this data  is 
-// also stored within maps and vectors allowing it to then be easily accessed by other classes such as the tile generator
-LevelGenerator::LevelGenerator(SpriteGenerator * spriteGenerator,sf::Vector2f startAreaOffsetPosition, sf::Vector2i tileDimensions,float areaGridWidth , float areaGridHeight) {
+// also stored within maps and vectors allowing it to then be easily accessed by other classes used to generate the level
+LevelGenerator::LevelGenerator(SpriteGenerator * spriteGenerator,sf::Vector2f startAreaOffsetPosition, sf::Vector2i tileDimensions,sf::Vector2f chunkDimensions, sf::Vector2i gridDim) {
 	std::cout << "initialsing level generator" <<std::endl;;
 	m_spriteGenerator = spriteGenerator;
-	m_areaGridWidth = areaGridWidth;
-	m_areaGridHeight = areaGridHeight;
-	
-	m_levelGrid = std::make_unique<LevelGrid>(LevelGrid((m_levelChunkGridWidth * m_areaGridWidth) / tileDimensions.x, (m_levelChunkGridHeight * m_areaGridHeight) / tileDimensions.y,tileDimensions));
-	generateNewAreaGrid(GRASSLANDS, startAreaOffsetPosition);
-	m_currentArea = &m_areaContainersPool.back(); 
+	m_ChunkSize = chunkDimensions; 
+	m_gridDimensions = gridDim;
 	
 	
-    
+	m_levelGrid = std::make_unique<LevelGrid>(LevelGrid((gridDim.x * chunkDimensions.x) / tileDimensions.x, (gridDim.y * chunkDimensions.y) / tileDimensions.y,tileDimensions));
+
+// initialising the areas that will have their data copied from in order to create new areas of that type  
+// here we pass in data such as the tiles that will be randomly placed in the area and those that are fixed in placement  
+// this allows us to then create deep copies of any of these areas at any point through the Area initialiser 
+// deep copy object essentially acting as a instantiate method for any area placed within this map 
+// a map has been used as it allows an id to be attached to each area that allows for fast access to any of the objects stored 
+// through a key value pair relationship between the object and the id (area type enums)
+	m_areas =  
+	{ 
+    {GRASSLANDS,AreaInitialiser(new GrassLandsArea(m_spriteGenerator,m_randomMappedTiles[GRASSLANDS],m_areaBackgroundTextures[GRASSLANDS]),m_spriteGenerator)}
+     
+	};
+	
+	generateNewAreaGrid(GRASSLANDS, startAreaOffsetPosition); 
+	m_currentArea = m_areaContainersPool.back();
+
+	m_levelGrid.get()->generateTilesRelativeToArea(m_currentArea);
 
 
 }
 
 void LevelGenerator::generateNewAreaGrid(AreaTypes areaType, sf::Vector2f offsetPosition)
 {
-
-	m_areaContainersPool.emplace_back(m_spriteGenerator,offsetPosition,areaType,getRandomAreaBackgroundTexturePath(areaType),sf::Vector2i(m_levelChunkGridWidth,m_levelChunkGridHeight),sf::Vector2f(m_areaGridWidth,m_areaGridHeight));
+	LevelAreaContainer* newArea = m_areas[areaType].getNewAreaCopy(offsetPosition,m_gridDimensions,m_ChunkSize);
+	m_areaContainersPool.push_back(newArea);
 
 }
 
@@ -40,32 +53,22 @@ LevelAreaContainer* LevelGenerator::getCurrentAreaGrid()
 
 float LevelGenerator::getGridAreaWidth()const  
 {
-	return m_areaGridWidth;
+	return m_ChunkSize.x;
 }
 
 float LevelGenerator::getGridAreaHeight()const 
 {
-	return m_areaGridHeight;
+	return m_ChunkSize.y;
 }
 
 int LevelGenerator::getLevelChunkWidth() const
 {
-	return m_levelChunkGridWidth;
+	return m_gridDimensions.x;
 }
 
 int LevelGenerator::getlevelChunkHeight()const
 {
-	return m_levelChunkGridHeight;
+	return m_gridDimensions.y;
 }
 
-std::string LevelGenerator::getRandomAreaBackgroundTexturePath(AreaTypes areaType) 
-{
 
-	std::vector<std::string>& temp = m_levelAreaBackgroundImages[areaType]; 
-
-	return temp[rand() % temp.size()];
-
-
-
-	
-}

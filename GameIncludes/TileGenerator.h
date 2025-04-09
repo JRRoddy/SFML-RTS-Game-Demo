@@ -20,10 +20,10 @@ public:
 
 
 private:
-	// map the area type to various data structures that hold tile initialisers whihc are deep copy objects 
+	// map the area type to various data structures that hold tile initialisers which are deep copy objects 
 	// that hold a specifc tile returning a deepy copy of that held tile on demand
-	std::map<AreaTypes, std::vector<TileInitialiser>> m_randomPositionedTiles; 
-	std::map<AreaTypes, std::map<sf::Color,TileGenerator>> m_colourMappedTiles;
+	//std::map<AreaTypes, std::vector<TileInitialiser>> m_randomPositionedTiles{ {GRASSLANDS,{}} };
+	//std::map<AreaTypes, std::map<sf::Color,TileInitialiser>> m_MappedTiles;
 	
 
 };

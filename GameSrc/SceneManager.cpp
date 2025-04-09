@@ -11,10 +11,15 @@ SceneManager::SceneManager(sf::RenderWindow* window, unsigned int windowWidth, u
 	// allocate memory that will be tracked via unique ptrs for each object that will only have a single instance within the game 
 	m_textureManager = std::make_unique<TextureManager>(TextureManager()); 
 	m_textureManager.get()->loadTextures(pathToTextures);
-
 	m_spriteGenerator = std::make_unique<SpriteGenerator>(SpriteGenerator(m_textureManager.get()));
+	m_levelGenerator = std::make_unique<LevelGenerator>(LevelGenerator(m_spriteGenerator.get(), sf::Vector2f(window->getSize()) / 2.0f,sf::Vector2i(64,64),sf::Vector2f(512.0f,512.0f),sf::Vector2i(2,2)));
+	m_inputManager = std::make_unique<InputManager>(InputManager(m_window)); 
+	m_player = std::make_unique<Player>(sf::Vector2f(window->getSize()) / 2.0f, m_inputManager.get());
 
-	m_levelGenerator = std::make_unique<LevelGenerator>(LevelGenerator(m_spriteGenerator.get(), sf::Vector2f(window->getSize()) / 2.0f,sf::Vector2i(64,64)));
+	
+
+
+
 
 }
 
