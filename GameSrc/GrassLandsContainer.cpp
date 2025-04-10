@@ -1,6 +1,11 @@
 #include "GrassLandsContainer.h"
 #include "ForestTile.h"
 GrassLandsArea::GrassLandsArea(){}
+GrassLandsArea::~GrassLandsArea()
+{
+	std::cout << "grass lands area destructor called" << std::endl;
+
+}
 // setting properties specifc to the grasslands area which is a child class of the level area container class
 GrassLandsArea::GrassLandsArea(SpriteGenerator* spriteGenerator,std::vector<TileInitialiser> & randomPostionedTiles,std::vector<std::string> & backgroundPaths):LevelAreaContainer(spriteGenerator,randomPostionedTiles,backgroundPaths){ 
 	std::cout << "grasslands constructor called" << std::endl;

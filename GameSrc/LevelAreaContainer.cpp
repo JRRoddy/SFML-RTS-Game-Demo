@@ -12,6 +12,8 @@ LevelAreaContainer::LevelAreaContainer(SpriteGenerator* spriteGenerator, sf::Vec
 	// defining the dimensions for the grid 
 	m_gridDimensions = gridDimensions;
     m_gridSectionSize = gridSectionSize;
+	m_fullWidth = m_gridDimensions.x * m_gridSectionSize.x;
+	m_fullheight = m_gridDimensions.y * m_gridSectionSize.y;
 	// define a refernce point for which the first grid item will be centred 
 	sf::Vector2f topLeftcentre = sf::Vector2f(m_position.x - m_gridSectionSize.x/2.0f,m_position.y - m_gridSectionSize.y/2.0f);
 
@@ -29,7 +31,6 @@ LevelAreaContainer::LevelAreaContainer(SpriteGenerator* spriteGenerator, sf::Vec
 	for (int i = 0; i < m_gridDimensions.y; i++) {
 		for (int j = 0; j < m_gridDimensions.x; j++) {
 
-			std::cout << "generating chunk for level area " << j << std::endl;
 
 			// here we are generating a current grid position for the centre of each chunk that will be wihtin the grid for this area container 
 			// this is done by taking the current section size defined for the area and offsetting it from the tope left based on the current width and height 
@@ -46,8 +47,9 @@ LevelAreaContainer::LevelAreaContainer(SpriteGenerator* spriteGenerator, sf::Vec
 
 		}
 	} 
-	initTiles(spriteGenerator);
 
+	initTiles(spriteGenerator);
+	
 
 }
 
@@ -109,12 +111,9 @@ void LevelAreaContainer::initGrid() {
 	m_backgroundVertecies.setPrimitiveType(tilePrimitiveType);
 	m_backgroundVertecies.resize(size_t(m_gridDimensions.x * m_gridDimensions.y * m_tileVertexCount));
 	sf::Vector2f topLeftcentre = sf::Vector2f(m_position.x - m_gridSectionSize.x / 2.0f, m_position.y - m_gridSectionSize.y / 2.0f);
-	std::cout << "grid section size " << m_gridSectionSize.x << ":" << m_gridSectionSize.y << std::endl;
 	m_topLeft = sf::Vector2f(topLeftcentre.x - m_gridSectionSize.x / 2.0f, topLeftcentre.y - m_gridSectionSize.y / 2.0f);
-	std::cout << "levelgrid top left centre " << topLeftcentre.x << ":" <<topLeftcentre.y << std::endl; 
-	std::cout << "levelgrid top left  " << m_topLeft.x << ":" << m_topLeft.y << std::endl;
-
-
+	m_fullWidth = m_gridDimensions.x * m_gridSectionSize.x; 
+	m_fullheight = m_gridDimensions.y * m_gridSectionSize.y;
 	for (int i = 0; i < m_gridDimensions.y; i++) {
 		for (int j = 0; j < m_gridDimensions.x; j++) {
 
@@ -176,12 +175,20 @@ LevelAreaContainer* LevelAreaContainer::clone()
 	return copy;
 }
 
+float LevelAreaContainer::getFullWidth()
+{
+	return m_fullWidth;
+}
+
+float LevelAreaContainer::getFullHeight()
+{
+	return m_fullheight;
+}
+
 
 void LevelAreaContainer::initTiles(SpriteGenerator* spriteGenerator)
 {
-	std::cout << "level are base called " <<std::endl;
 	for (int i = 0; i < m_randomPositionedTiles.size(); i++) {
-		std::cout << "initialising tiles "<<i << std::endl;
 		m_randomPositionedTiles[i].getHeldObject()->getSprites(spriteGenerator);
 		
 	}
@@ -230,11 +237,9 @@ int LevelAreaContainer::getRandomGeneratedTilesCap()
 Tile * LevelAreaContainer::initNewRandomTileInArea(sf::Vector2f position, float width, float height)
 {
 
-	std::cout << "initialsing random tile" << std::endl;
 	size_t randomTileIndex = rand() % m_randomPositionedTiles.size();
 	Tile * worldTileToInit = m_randomPositionedTiles[randomTileIndex].getHeldObjectCopy();  
-	std::cout << "position for tile X" << position.x << " Y: " << position.y;
-
+	
 	worldTileToInit->setVerticies(width, height, position);
 	m_worldTiles.push_back(worldTileToInit);
 

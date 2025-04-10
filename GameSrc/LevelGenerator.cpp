@@ -6,13 +6,13 @@
 // this class is responsible for holding the main data that is used for level generation keeping things such as various 
 // background textures for level area containers and tile data all wrapped under a single class. All of this data  is 
 // also stored within maps and vectors allowing it to then be easily accessed by other classes used to generate the level
-LevelGenerator::LevelGenerator(SpriteGenerator * spriteGenerator,sf::Vector2f startAreaOffsetPosition, sf::Vector2i tileDimensions,sf::Vector2f chunkDimensions, sf::Vector2i gridDim) {
+LevelGenerator::LevelGenerator(SpriteGenerator * spriteGenerator,sf::Vector2f startAreaOffsetPosition,Player * playerRef, sf::Vector2i tileDimensions,sf::Vector2f chunkDimensions, sf::Vector2i gridDim) {
 	std::cout << "initialsing level generator" <<std::endl;;
 	m_spriteGenerator = spriteGenerator;
 	m_ChunkSize = chunkDimensions; 
 	m_gridDimensions = gridDim;
-	
-	
+	m_playerRef = playerRef;
+
 	m_levelGrid = std::make_unique<LevelGrid>(LevelGrid((gridDim.x * chunkDimensions.x) / tileDimensions.x, (gridDim.y * chunkDimensions.y) / tileDimensions.y,tileDimensions));
 
 // initialising the areas that will have their data copied from in order to create new areas of that type  
@@ -29,8 +29,10 @@ LevelGenerator::LevelGenerator(SpriteGenerator * spriteGenerator,sf::Vector2f st
 	
 	generateNewAreaGrid(GRASSLANDS, startAreaOffsetPosition); 
 	m_currentArea = m_areaContainersPool.back();
+	m_levelGrid.get()->setNewWorldArea(m_currentArea);
+	m_levelGrid.get()->generateTilesRelativeToArea(m_currentArea); 
 
-	m_levelGrid.get()->generateTilesRelativeToArea(m_currentArea);
+	m_currentPlayerTile = m_levelGrid.get()->getWorldToLocalPosition(m_playerRef->getPosition());
 
 
 }
@@ -70,5 +72,40 @@ int LevelGenerator::getlevelChunkHeight()const
 {
 	return m_gridDimensions.y;
 }
+
+void LevelGenerator::update(float dt)
+{ 
+	updatePlayerTileState();
+
+}
+
+void LevelGenerator::updatePlayerTileState()
+{
+	Tile* realPlayerTile = m_levelGrid.get()->getWorldToLocalPosition(m_playerRef->getPosition());
+	if (m_currentPlayerTile != realPlayerTile) {
+		if (m_currentPlayerTile) {
+			m_currentPlayerTile->resetPlayerEffect(m_playerRef);
+		}
+		m_currentPlayerTile = realPlayerTile;
+	}
+	if (m_currentPlayerTile) {
+		m_currentPlayerTile->playerEffect(m_playerRef);
+	}
+
+
+
+}
+
+LevelGenerator::~LevelGenerator()
+{
+	std::cout << "level generator destructor called" << std::endl;
+	for (int i = 0; i < m_areaContainersPool.size(); i++) {
+
+		delete m_areaContainersPool[i];
+	}
+
+}
+
+
 
 

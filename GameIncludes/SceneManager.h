@@ -23,9 +23,10 @@ private:
 	unsigned int m_windowHeight;
 	std::unique_ptr<InputManager> m_inputManager;
 
-	std::unique_ptr<LevelGenerator> m_levelGenerator;
+	LevelGenerator *  m_levelGenerator;
 	std::unique_ptr<TextureManager> m_textureManager;
 	std::unique_ptr<SpriteGenerator> m_spriteGenerator;
 	std::unique_ptr<Player> m_player;
-	std::string pathToTextures = "../Assets/Textures/PathsToTextures.txt";
+	std::string m_pathToTextures = "../Assets/Textures/PathsToTextures.txt";
+	std::string m_pathToAnims = "../Assets/Animations/PathsToAnimations.txt";
 };

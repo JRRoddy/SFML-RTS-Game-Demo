@@ -7,8 +7,9 @@ class SpriteGenerator {
 public:
 	
 	SpriteGenerator(TextureManager * textureManager);
-	std::vector<std::shared_ptr<sf::Sprite>> GenerateSprite(std::string& spriteSheetPath, int sectionWidth, int sectionHeight);
-	std::shared_ptr<sf::Sprite> GenerateSprite(std::string& spriteTexturePath);
+	std::vector<std::shared_ptr<sf::Sprite>> &GenerateAnim(std::string &animPath);
+	std::vector<std::shared_ptr<sf::Sprite>> &GenerateSprite(std::string &spriteSheetPath, int sectionWidth, int sectionHeight);
+	std::shared_ptr<sf::Sprite> &GenerateSprite(std::string &spriteTexturePath);
 
 
 private:

@@ -1,0 +1,7 @@
+id:../Assets/Animations/KnightIdleBlue.png
+0 0 86 86
+191 0 86 86
+384 0 86 86
+576 0 86 86
+768 0 86 86
+959 0 86 86

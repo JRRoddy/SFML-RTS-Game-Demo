@@ -7,7 +7,11 @@ SpriteGenerator::SpriteGenerator(TextureManager* textureManager)
 
 }
 
-std::vector<std::shared_ptr<sf::Sprite>> SpriteGenerator::GenerateSprite(std::string& spriteSheetPath, int desiredWidth, int desiredHeight)
+
+
+
+
+std::vector<std::shared_ptr<sf::Sprite>> &SpriteGenerator::GenerateSprite(std::string &spriteSheetPath, int desiredWidth, int desiredHeight)
 {
 
     if (m_spriteSheets.find(spriteSheetPath) != m_spriteSheets.end()){ // first we check if the sprite already exists based on the path to its texture
@@ -31,7 +35,7 @@ std::vector<std::shared_ptr<sf::Sprite>> SpriteGenerator::GenerateSprite(std::st
             )));
             
             m_spriteSheets[spriteSheetPath].back().get()->setOrigin(sf::Vector2f(desiredWidth / 2.0f, desiredHeight / 2.0f));
-            
+          
         }
         
     }
@@ -42,7 +46,7 @@ std::vector<std::shared_ptr<sf::Sprite>> SpriteGenerator::GenerateSprite(std::st
 
 
 // seperate method for single sprites using same methodology as above method 
-std::shared_ptr<sf::Sprite> SpriteGenerator::GenerateSprite(std::string & spriteTexturePath)
+std::shared_ptr<sf::Sprite>& SpriteGenerator::GenerateSprite(std::string &spriteTexturePath)
 {
     if (m_singleSprite.find(spriteTexturePath) != m_singleSprite.end()) {
         std::cout << "path to texture already existed in sprite generator returning pointer path was " << spriteTexturePath << std::endl;
@@ -54,7 +58,7 @@ std::shared_ptr<sf::Sprite> SpriteGenerator::GenerateSprite(std::string & sprite
     if (temp == nullptr) {
 
         std::cout << "TEXTURE WAS NULL WHEN BEING ACCESSED IN SPRITE GENERATOR " << std::endl;
-        return nullptr;
+       
     }
     sf::Sprite sprite;
     
@@ -68,4 +72,31 @@ std::shared_ptr<sf::Sprite> SpriteGenerator::GenerateSprite(std::string & sprite
     m_singleSprite[spriteTexturePath].get()->setOrigin(sf::Vector2f(temp->getSize()) / 2.0f);
 
 	return m_singleSprite[spriteTexturePath] ;
+}
+
+std::vector<std::shared_ptr<sf::Sprite>> &SpriteGenerator::GenerateAnim(std::string &animPath)
+{
+    std::cout << "calling generate anim " << std::endl;
+
+    if (m_spriteSheets.find(animPath) != m_spriteSheets.end()) {
+        std::cout << "sprite generator already has anim " << animPath << std::endl;
+        return   m_spriteSheets[animPath];
+    }
+
+    sf::Texture* temp = m_textureManager->getTexture(animPath); 
+
+    
+    m_spriteSheets.insert({ animPath,std::vector<std::shared_ptr<sf::Sprite>>() });
+    std::cout << "sprite anim size " << m_textureManager->getAnimationFrameData(animPath).size() << std::endl;
+    for (sf::IntRect& rect : m_textureManager->getAnimationFrameData(animPath)){
+
+        std::cout <<"parsing anim frame: X: "<<rect.left<<" Y:"<<rect.top<<" width:"<<rect.width<<" height:"<<rect.height << std::endl;
+
+        m_spriteSheets[animPath].emplace_back((new sf::Sprite(*temp, rect))); 
+
+        m_spriteSheets[animPath].back().get()->setOrigin(float(rect.width) / 2, float(rect.height) / 2);
+
+    }
+
+    return m_spriteSheets[animPath];
 }

@@ -13,11 +13,9 @@ public:
 		
 		basePtr = other.basePtr->clone();
 		m_spriteGenerator = other.m_spriteGenerator;
-		std::cout << "area initialiser copy called " << std::endl;
 
 	}
 	AreaInitialiser operator= (const AreaInitialiser& other) {
-		std::cout << "area initialiser = copy called " << std::endl;
 		basePtr = other.basePtr->clone();
 		m_spriteGenerator = other.m_spriteGenerator;
 
@@ -39,7 +37,6 @@ public:
 
 		LevelAreaContainer * copyObjectToReturn; // create a new unique pointer to assign the allocated memeory from the current held LevelAreaContainer's clone method 
 		copyObjectToReturn = basePtr->clone(); // assign the heap allocated memeory to the unique ptr to be managed
-		std::cout << "grid dim x" << gridDim.x << ": Y " << gridDim.y << std::endl;
 		copyObjectToReturn->getSprites(m_spriteGenerator); /// get the sprite ref for the new area
 		copyObjectToReturn->setDimensionsForArea(gridDim, tileSize); // set grid dimensions for new area
 		copyObjectToReturn->setPosition(positionForArea); // set position

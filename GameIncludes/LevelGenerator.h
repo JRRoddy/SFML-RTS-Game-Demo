@@ -12,18 +12,21 @@
 class LevelGenerator {
 
 public:
-	LevelGenerator(SpriteGenerator* spriteGenerator, sf::Vector2f startAreaOffsetPosition,sf::Vector2i tileDimensions, sf::Vector2f gridChunkSize,sf::Vector2i gridDim);
+	LevelGenerator(SpriteGenerator* spriteGenerator, sf::Vector2f startAreaOffsetPosition,Player * playerRef,sf::Vector2i tileDimensions, sf::Vector2f gridChunkSize,sf::Vector2i gridDim);
 	void generateNewAreaGrid(AreaTypes areaType,sf::Vector2f offsetPosition);
 	LevelAreaContainer* getCurrentAreaGrid();
 	float getGridAreaWidth()const;
 	float getGridAreaHeight()const; 
 	int getLevelChunkWidth() const;
 	int getlevelChunkHeight() const;
-	//std::string RandomBackgroundTexture(AreaTypes areaType);
-
-
+	void update(float dt);
+	void updatePlayerTileState();
+	~LevelGenerator();
+	
 private:
 	LevelAreaContainer* m_currentArea; 
+	Player* m_playerRef;
+	Tile* m_currentPlayerTile;
 	SpriteGenerator* m_spriteGenerator;
 	std::unique_ptr<LevelGrid> m_levelGrid;
 	

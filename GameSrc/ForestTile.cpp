@@ -8,6 +8,10 @@ ForestTile::ForestTile(sf::Vector2f position, float width, float height ):Tile(p
 
 }
 
+ForestTile::ForestTile(sf::Vector2f position):Tile(position)
+{
+}
+
 ForestTile::ForestTile()
 {  
     m_texturePath = "../Assets/Textures/ForestTile.png";
@@ -21,11 +25,16 @@ Tile* ForestTile::clone()
     copy->setPosition(this->m_position);
     copy->setBaseSprite(this->m_baseSpriteRef);
     copy->setSpawnCap(this->m_spawnCap);
-    std::cout << "clone forest location " << copy << "clone forest type " << typeid(*copy).name() << std::endl;
     return copy;
 }
 
 void ForestTile::playerEffect(Player* player)
 {
-    std::cout << "forest tile PLAYER EFFECT called" << std::endl;
+    player->setSpeedModfier(m_playerSpeedModifer);
+}
+
+void ForestTile::resetPlayerEffect(Player* player)
+{
+    player->resetSpeedModifier();
+
 }

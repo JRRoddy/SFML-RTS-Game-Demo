@@ -14,6 +14,7 @@ public:
 	Tile(sf::Vector2f position, float width, float height);
 	virtual ~Tile();
 	virtual void playerEffect(Player* player);
+	virtual void resetPlayerEffect(Player* player);
 	void setVerticies(float width, float height, sf::Vector2f position);
 	virtual Tile*clone(); 
 	int getSpawnCap();

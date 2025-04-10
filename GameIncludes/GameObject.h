@@ -1,6 +1,7 @@
 #pragma once
 #include "SFML/Graphics.hpp"
 #include "SpriteGenerator.h"
+#include "vectorMath.h"
 // base game object class that will be used to provide functionaility across all the objects wihtin the game 
 // that being things such as setting the position or scale of the object reducing the amount of code duplication 
 class GameObject {
@@ -12,11 +13,11 @@ public:
 	GameObject(sf::Vector2f position);
 	GameObject(sf::Vector2f position, float rotation,sf::Vector2f scale);
 	~GameObject();
-
+	void updateBaseSprite();
 	void setPosition(sf::Vector2f position);
 	void setRotation(float rotation); 
 	void setScale(sf::Vector2f scale);
-	void setBaseSprite(std::shared_ptr<sf::Sprite> spriteRef);
+	virtual void setBaseSprite(std::shared_ptr<sf::Sprite>& spriteRef);
 	sf::Vector2f getScale();
 	sf::Vector2f getPosition();
 	float getRotation();

@@ -28,6 +28,8 @@ Tile::~Tile(){}
 // implmentation across each child that through dynamic linkage will be maintained when assigned to a base class refernce 
 void Tile::playerEffect(Player* player){}
 
+void Tile::resetPlayerEffect(Player* player){}
+
 
 
 void Tile::setVerticies(float width, float height, sf::Vector2f position)
@@ -39,9 +41,7 @@ void Tile::setVerticies(float width, float height, sf::Vector2f position)
     m_tileVerticies[1] = sf::Vertex(sf::Vector2f(position.x - width / 2.0f, position.y + height / 2.0f), sf::Vector2f(0.0f, height));
     m_tileVerticies[2] = sf::Vertex(sf::Vector2f(position.x + width / 2.0f, position.y + height / 2.0f), sf::Vector2f(width, height));
     m_tileVerticies[3] = sf::Vertex(sf::Vector2f(position.x + width / 2.0f, position.y - height / 2.0f), sf::Vector2f(width, 0.0f));
-    std::cout << "initial position of tile top left vertex X" << m_tileVerticies[0].position.x << " Y: " << m_tileVerticies[0].position.y << std::endl;
-    std::cout << "initial position of tile bottom right vertex X" << m_tileVerticies[2].position.x << " Y: " << m_tileVerticies[2].position.y << std::endl;
-
+   
 }
 
 Tile* Tile::clone(){

@@ -36,7 +36,8 @@ public:
 	int getRandomGeneratedTilesCap();
 	Tile* initNewRandomTileInArea(sf::Vector2f position,float width,float height);
 	virtual LevelAreaContainer* clone();
-
+	float getFullWidth(); 
+	float getFullHeight();
 
 
 	
@@ -59,7 +60,8 @@ protected:
 	std::map<const sf::Color, TileInitialiser> m_mappedTiles;
 	std::vector<std::string> m_backgroundTextures;
 	int m_generatedTilesCap = 0;
-
+	float m_fullWidth  = 0.0f;
+	float m_fullheight = 0.0f;
 
 
 

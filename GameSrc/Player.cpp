@@ -3,13 +3,16 @@
 
 
 
-Player::Player(sf::Vector2f position, InputManager * input):DynamicObject(position)
+Player::Player(){}
+
+Player::Player(sf::Vector2f position, SpriteGenerator *spriteGenerator,InputManager * input):DynamicObject(position)
 {
 	m_input = input;
 	m_speed = m_baseSpeed;
-
+	std::cout << "player start position x" << m_position.x << std::endl;
 	m_input->addDirectionalMapping(m_vertInputMapName, m_vertcialDirectionMap); 
 	m_input->addDirectionalMapping(m_horiInputMapName, m_horizontalDirectionMap);
+	getSprites(spriteGenerator);
 }
 
 
@@ -24,8 +27,6 @@ float Player::getDamage()
 void Player::update(float dt)
 {
 
-
-
 	float dirX = m_input->getDirectionFromKey(m_horiInputMapName); 
 	float dirY = m_input->getDirectionFromKey(m_vertInputMapName);
 	m_direction = normalize(sf::Vector2f(dirX, dirY)); 
@@ -35,6 +36,20 @@ void Player::update(float dt)
 
 
 }
+
+void Player::getSprites(SpriteGenerator* spriteGenerator)
+{
+	
+	m_idleAnim = spriteGenerator->GenerateAnim(m_idleAnimPath);
+
+	m_baseSpriteRef = *m_idleAnim.data();  
+
+	std::cout << "player sprite texture " << m_baseSpriteRef.get()->getTexture() << std::endl;
+	updateBaseSprite();
+	
+}
+
+
 
 void Player::setDamage(float damage )
 {

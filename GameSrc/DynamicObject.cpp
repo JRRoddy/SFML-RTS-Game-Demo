@@ -38,8 +38,19 @@ void DynamicObject::setSpeed(float speed)
 }
 
 void DynamicObject::updatePosition(float dt)
+{ 
+
+	m_position += ((m_direction * m_speed)*m_speedModifier) * dt; // update position
+	m_baseSpriteRef.get()->move(( m_position - m_baseSpriteRef.get()->getPosition())); // move by offset from new pos
+
+}
+
+void DynamicObject::resetSpeedModifier()
 {
+	m_speedModifier = m_maxSpeedModifier;
+}
 
-	m_position += (m_direction * m_speed) * dt;
-
+void DynamicObject::setSpeedModfier(float speedModifer)
+{
+	m_speedModifier = speedModifer;
 }
