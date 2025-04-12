@@ -48,23 +48,20 @@ LevelAreaContainer::LevelAreaContainer(SpriteGenerator* spriteGenerator, sf::Vec
 		}
 	} 
 
-	initTiles(spriteGenerator);
+	init(spriteGenerator);
 	
 
 }
 
-LevelAreaContainer::LevelAreaContainer(SpriteGenerator* spriteGenerator, std::vector<TileInitialiser>& randomPostionedTiles,std::vector<std::string>& backgroundPaths)
+LevelAreaContainer::LevelAreaContainer(SpriteGenerator* spriteGenerator, std::vector<TileInitialiser>& randomPostionedTiles,std::map<std::string,TileInitialiser>& imageMappedTiles,std::vector<std::string>& backgroundPaths,std::vector<std::string>& tileMapPaths)
 {
-	//m_mappedTiles = fixedTiles; 
 	m_randomPositionedTiles = randomPostionedTiles; 
 	m_backgroundTextures = backgroundPaths;
+	m_tileMapPaths = tileMapPaths; 
+	m_imageMappedTiles = imageMappedTiles;
 	getSprites(spriteGenerator); 
-	initTiles(spriteGenerator);
-	for (TileInitialiser &tileinitialiser : m_randomPositionedTiles) {
-
-		m_generatedTilesCap += tileinitialiser.getHeldObject()->getSpawnCap();
-
-	}
+	init(spriteGenerator);
+	
 
 
 
@@ -105,6 +102,11 @@ void LevelAreaContainer::setBackgroundTexturePaths(std::vector<std::string>& pat
 	m_backgroundTextures = paths;
 }
 
+std::vector<std::string>& LevelAreaContainer::getBackgroundTexturePaths()
+{
+	return m_backgroundTextures;
+}
+
 
 void LevelAreaContainer::initGrid() {
 
@@ -134,7 +136,7 @@ void LevelAreaContainer::initGrid() {
 }
 
 
-AreaTypes LevelAreaContainer::getType()
+AreaTypes LevelAreaContainer::getAreaType()
 {
 	return m_areaType;
 }
@@ -158,22 +160,36 @@ void LevelAreaContainer::setRandomlyGeneratedTiles(std::vector<TileInitialiser>&
 	m_randomPositionedTiles = tiles;
 }
 
-void LevelAreaContainer::setMappedTiles(std::map<const sf::Color, TileInitialiser>& tiles)
-{
-	m_mappedTiles = tiles;
-}
 
 
-
+//  below two methods are used for deep copying one level area container and creating a copy of it(new heap allocated memeory at a new address)
 LevelAreaContainer* LevelAreaContainer::clone()
 {
 	LevelAreaContainer* copy = new LevelAreaContainer();
-	copy->setMappedTiles(this->m_mappedTiles);
-	copy->setRandomlyGeneratedTiles(this->m_randomPositionedTiles);
-	copy->setAreaType(this->m_areaType);
-	copy->setBackgroundTexturePaths(this->m_backgroundTextures);
+	copy->setRandomlyGeneratedTiles(this->getRandomlyGeneratedTiles());
+	copy->setAreaType(this->getAreaType());
+	copy->setBackgroundTexturePaths(this->getBackgroundTexturePaths());
+	copy->setTileMapPaths(this->getTileMapPaths());
+	copy->setTileMapImages(this->getTileMapImages());
+	copy->setImageParsedTiles(this->getImageParsedTiles());
+	copy->setTileInfoColoursMap(this->getTileInfoColourMap());
 	return copy;
 }
+
+void LevelAreaContainer::clone(LevelAreaContainer* copy)
+{
+	copy->setRandomlyGeneratedTiles(this->getRandomlyGeneratedTiles());
+	copy->setAreaType(this->getAreaType());
+	copy->setBackgroundTexturePaths(this->getBackgroundTexturePaths());
+	copy->setTileMapPaths(this->getTileMapPaths());
+	copy->setTileMapImages(this->getTileMapImages()); 
+	copy->setImageParsedTiles(this->getImageParsedTiles());
+	copy->setTileInfoColoursMap(this->getTileInfoColourMap());
+
+
+}
+
+void LevelAreaContainer::getTileFromSelectedMap(int x, int y) {};
 
 float LevelAreaContainer::getFullWidth()
 {
@@ -186,18 +202,25 @@ float LevelAreaContainer::getFullHeight()
 }
 
 
-void LevelAreaContainer::initTiles(SpriteGenerator* spriteGenerator)
+void LevelAreaContainer::init(SpriteGenerator* spriteGenerator)
 {
-	for (int i = 0; i < m_randomPositionedTiles.size(); i++) {
-		m_randomPositionedTiles[i].getHeldObject()->getSprites(spriteGenerator);
+	initTiles(spriteGenerator);
+
+	// load maps associated with this area type 
+	for (int i = 0; i < m_tileMapPaths.size(); i++) {
 		
+		m_loadedTileMaps.emplace_back(); 
+		if (!m_loadedTileMaps.back().loadFromFile(m_tileMapPaths[i])) 
+		{
+			std::cout << "could not load tile map image " << m_tileMapPaths[i] << std::endl;
+		};
+
 	}
+
+
+
+
 	
-
-	/*for (std::map<sf::Color, TileInitialiser>::iterator it = m_mappedTiles.begin(); it != m_mappedTiles.end(); it++) {
-		it->second.basePtr->getSprites(spriteGenerator);
-	}*/
-
 
 
 
@@ -207,6 +230,11 @@ void LevelAreaContainer::setDimensionsForArea(sf::Vector2i gridDimensions, sf::V
 {
 	m_gridDimensions = gridDimensions;
 	m_gridSectionSize = tileSize;
+}
+
+std::vector<TileInitialiser>& LevelAreaContainer::getRandomlyGeneratedTiles()
+{
+	return m_randomPositionedTiles;
 }
 
 void LevelAreaContainer::setGridDimensions(sf::Vector2i dim)
@@ -219,10 +247,76 @@ void LevelAreaContainer::setGridAreaSize(sf::Vector2f dim)
 	m_gridSectionSize = dim;
 }
 
-void LevelAreaContainer::setBackgroundTextures(std::vector<std::string>& backgroundTexturePaths)
+void LevelAreaContainer::initTiles(SpriteGenerator * spriteGenerator)
 {
-	m_backgroundTextures = backgroundTexturePaths;
+
+	for (int i = 0; i < m_randomPositionedTiles.size(); i++) { // loop through all the tile that can be renaomdly positioned
+
+
+			m_randomPositionedTiles[i].getHeldObject()->getSprites(spriteGenerator); // assign sprites to the tiles held in the deep copy object allowing the sprites to be reused across the copies created from the ile iniitaliser class 
+			m_generatedTilesCap += m_randomPositionedTiles[i].getHeldObject()->getSpawnCap();// geta sum of the toatal amount of tiles that can be ranomdly placed in the area 
+		
+
+	}
+	// initialise all tiles that can be mapped to an image
+	for each (std::pair<std::string,TileInitialiser> pair in m_imageMappedTiles) {
+		pair.second.getHeldObject()->getSprites(spriteGenerator);
+	}
+		
+
+	
+			
+	
 }
+
+
+
+std::vector<std::string>& LevelAreaContainer::getTileMapPaths()
+{
+
+	return m_tileMapPaths;
+}
+
+void LevelAreaContainer::setTileMapPaths(std::vector <std::string>& tileMapPaths) {
+
+	m_tileMapPaths = tileMapPaths;
+}
+void LevelAreaContainer::setNewTileMapImage()
+{
+	m_currentTileMapImage = m_loadedTileMaps[rand() % m_loadedTileMaps.size()];
+
+}
+std::vector<sf::Image>& LevelAreaContainer::getTileMapImages()
+{
+	return m_loadedTileMaps;
+}
+
+void LevelAreaContainer::setTileMapImages(std::vector<sf::Image>& tileMapImages)
+{
+	m_loadedTileMaps = tileMapImages;
+}
+
+void LevelAreaContainer::setImageParsedTiles(std::map<std::string, TileInitialiser>& imageParsedTiles)
+{
+	m_imageMappedTiles = imageParsedTiles;
+}
+
+std::map<std::string, TileInitialiser>& LevelAreaContainer::getImageParsedTiles()
+{
+	return m_imageMappedTiles;
+}
+
+void LevelAreaContainer::setTileInfoColoursMap(std::map<imageMapColour, std::string>& tileInfocoloursMap)
+{
+	m_tileInfocoloursMap = tileInfocoloursMap;
+}
+
+std::map<imageMapColour, std::string>& LevelAreaContainer::getTileInfoColourMap() 
+{
+	return m_tileInfocoloursMap;
+
+};
+
 
 sf::Vector2f LevelAreaContainer::getTopLeft()
 {

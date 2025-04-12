@@ -51,12 +51,16 @@ Tile* LevelGrid::getWorldToLocalPosition(sf::Vector2f worldPos)
 	int indexX =  static_cast<int>( difference.x / m_tileDimensions.x);
 	int indexY =  static_cast<int>( difference.y / m_tileDimensions.y);
 
-	size_t finalIndex = static_cast<size_t>( (indexY * m_width) + indexX);
-	if (m_localTiles[finalIndex].worldTileRef != nullptr) {
+	size_t finalIndex = static_cast<size_t>( (indexY * m_width) + indexX); 
+
+	clampIndex(finalIndex);
+
+
+	/*if (m_localTiles[finalIndex].worldTileRef != nullptr) {
 		std::cout << "found filled tile" << std::endl;
 		std::cout << "calcuated index base on world postion x " << indexX << " Y:" << indexY << " final:" << finalIndex << std::endl;
 		std::cout << "tile world pos x:" << m_localTiles[finalIndex].localPosition.x << " y:" << m_localTiles[finalIndex].localPosition.x << std::endl;
-	}
+	}*/
 	return m_localTiles[finalIndex].worldTileRef;
 }
 
@@ -75,4 +79,20 @@ localTile* LevelGrid::getRandomLocationInGrid()
 	}
 
 	return &m_localTiles[randIndex];
+}
+
+void LevelGrid::clampIndex(size_t& index)
+{
+	
+	if (index<0) {
+		index = 0;
+		return;
+	}
+     if (index >= m_resolution) {
+		index = m_resolution - 1;
+	}
+
+
+
+
 }

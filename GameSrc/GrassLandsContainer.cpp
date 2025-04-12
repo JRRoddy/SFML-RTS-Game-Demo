@@ -1,15 +1,19 @@
 #include "GrassLandsContainer.h"
 #include "ForestTile.h"
 GrassLandsArea::GrassLandsArea(){}
-GrassLandsArea::~GrassLandsArea()
-{
-	std::cout << "grass lands area destructor called" << std::endl;
-
-}
+GrassLandsArea::~GrassLandsArea(){}
 // setting properties specifc to the grasslands area which is a child class of the level area container class
-GrassLandsArea::GrassLandsArea(SpriteGenerator* spriteGenerator,std::vector<TileInitialiser> & randomPostionedTiles,std::vector<std::string> & backgroundPaths):LevelAreaContainer(spriteGenerator,randomPostionedTiles,backgroundPaths){ 
-	std::cout << "grasslands constructor called" << std::endl;
-	m_areaType = GRASSLANDS;
+GrassLandsArea::GrassLandsArea(SpriteGenerator* spriteGenerator,std::vector<TileInitialiser>& randomPostionedTiles,std::map<std::string,TileInitialiser>& imageMappedTiles,std::vector<std::string>& backgroundPaths, std::vector<std::string>& tileMapPaths):LevelAreaContainer(spriteGenerator,randomPostionedTiles,imageMappedTiles,backgroundPaths,tileMapPaths){ 
+	m_areaType = GRASSLANDS; 
+	m_tileMapDescriptorPath = "";
+}
+
+void GrassLandsArea::getTileFromSelectedMap(int x, int y )
+{
+
+
+  
+
 }
 
 
@@ -19,13 +23,8 @@ GrassLandsArea::GrassLandsArea(SpriteGenerator* spriteGenerator,std::vector<Tile
 // and keeping dynamic linkage
 LevelAreaContainer* GrassLandsArea::clone()
 {
-
-	GrassLandsArea * copy = new GrassLandsArea();
-	copy->setMappedTiles(this->m_mappedTiles); 
-	copy->setRandomlyGeneratedTiles(this->m_randomPositionedTiles);
-	copy->setAreaType(this->m_areaType);
-	copy->setBackgroundTexturePaths(this->m_backgroundTextures); 
-
+	GrassLandsArea * copy = new GrassLandsArea();; 
+	LevelAreaContainer::clone(copy);
 	return copy ;
 }
 

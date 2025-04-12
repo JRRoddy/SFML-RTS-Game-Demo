@@ -15,18 +15,43 @@ LevelGenerator::LevelGenerator(SpriteGenerator * spriteGenerator,sf::Vector2f st
 
 	m_levelGrid = std::make_unique<LevelGrid>(LevelGrid((gridDim.x * chunkDimensions.x) / tileDimensions.x, (gridDim.y * chunkDimensions.y) / tileDimensions.y,tileDimensions));
 
+
+
+	m_randomMappedTiles = 
+	{
+	{GRASSLANDS,{TileInitialiser(new ForestTile())}}
+
+	};
+	m_imageMappedTiles = 
+	{
+	{GRASSLANDS,{{"Path",TileInitialiser(new PathTile())}}}
+	};
+
+
+
+
 // initialising the areas that will have their data copied from in order to create new areas of that type  
 // here we pass in data such as the tiles that will be randomly placed in the area and those that are fixed in placement  
 // this allows us to then create deep copies of any of these areas at any point through the Area initialiser 
 // deep copy object essentially acting as a instantiate method for any area placed within this map 
 // a map has been used as it allows an id to be attached to each area that allows for fast access to any of the objects stored 
-// through a key value pair relationship between the object and the id (area type enums)
+// through a key value pair relationship between the object and the id (area type enums) 
+
+// if new areas were to be generated all that would be needed would be a call to the AreaInitialiser object's copy method
+// obtaining a deep copy of the object assigned to it so all the data is initialised in the first instance of the area intialiser object 
+// passed into the map and a deep copy of that object can simply be made to create a new area of that type meaning all the heavy data intialisation for 
+// areas such as loading tile image maps and intialising tiles happens once 
 	m_areas =  
 	{ 
-    {GRASSLANDS,AreaInitialiser(new GrassLandsArea(m_spriteGenerator,m_randomMappedTiles[GRASSLANDS],m_areaBackgroundTextures[GRASSLANDS]),m_spriteGenerator)}
+    {GRASSLANDS,AreaInitialiser( new GrassLandsArea(m_spriteGenerator,m_randomMappedTiles[GRASSLANDS],m_imageMappedTiles[GRASSLANDS]
+		                        ,m_areaBackgroundTextures[GRASSLANDS],m_tileMapImages[GRASSLANDS]),m_spriteGenerator)}
      
 	};
-	
+	 
+	parseLevelMaps();
+
+
+
 	generateNewAreaGrid(GRASSLANDS, startAreaOffsetPosition); 
 	m_currentArea = m_areaContainersPool.back();
 	m_levelGrid.get()->setNewWorldArea(m_currentArea);
@@ -73,6 +98,23 @@ int LevelGenerator::getlevelChunkHeight()const
 	return m_gridDimensions.y;
 }
 
+void LevelGenerator::parseLevelMaps()
+{
+	ImageMapInfoParser imageMapInfoParser = ImageMapInfoParser();
+
+	for each (std::pair<AreaTypes, std::string> areaImageMapDescriptorPair in m_imageMapInfoFilePaths) {
+
+		std::map<imageMapColour, std::string> parsedData = imageMapInfoParser.parseImageMapInfoFile(areaImageMapDescriptorPair.second);
+	    
+		m_areas[areaImageMapDescriptorPair.first].getHeldObject()->setTileInfoColoursMap(parsedData);
+	
+	
+	}
+
+
+
+}
+
 void LevelGenerator::update(float dt)
 { 
 	updatePlayerTileState();
@@ -95,6 +137,8 @@ void LevelGenerator::updatePlayerTileState()
 
 
 }
+
+
 
 LevelGenerator::~LevelGenerator()
 {

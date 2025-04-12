@@ -46,7 +46,6 @@ public:
 
 
 	~TileInitialiser() {
-		std::cout << "tile initialiser destructor called" << std::endl;
 		delete basePtr;
 	}
 

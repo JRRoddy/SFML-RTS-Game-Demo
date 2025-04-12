@@ -28,6 +28,7 @@ public:
     Tile * getWorldToLocalPosition(sf::Vector2f worldPos); 
 	void setNewWorldArea(LevelAreaContainer* levelArea);
 	localTile* getRandomLocationInGrid();
+	void clampIndex(size_t& index);
 private:
 	
 	int m_resolution;

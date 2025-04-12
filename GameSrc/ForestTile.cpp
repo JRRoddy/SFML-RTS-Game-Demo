@@ -15,6 +15,7 @@ ForestTile::ForestTile(sf::Vector2f position):Tile(position)
 ForestTile::ForestTile()
 {  
     m_texturePath = "../Assets/Textures/ForestTile.png";
+    
     m_spawnCap = 20;
 }
 
@@ -22,9 +23,7 @@ Tile* ForestTile::clone()
 {
 
     ForestTile* copy = new ForestTile();
-    copy->setPosition(this->m_position);
-    copy->setBaseSprite(this->m_baseSpriteRef);
-    copy->setSpawnCap(this->m_spawnCap);
+    Tile::clone(copy);
     return copy;
 }
 

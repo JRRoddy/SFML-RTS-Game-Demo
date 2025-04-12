@@ -113,7 +113,6 @@ float InputManager::getDirectionFromKey(std::string&directionalMapName)
 	    
 		if (sf::Keyboard::isKeyPressed(linkedKeyFloatPair.first)){ 
 			
-			std::cout << "key pressed for directional map " << linkedKeyFloatPair.first << std::endl;
 			return linkedKeyFloatPair.second;
 		}
 	}

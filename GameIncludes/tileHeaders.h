@@ -1,1 +1,2 @@
-#include "ForestTile.h"
+#include "ForestTile.h" 
+#include "PathTile.h"

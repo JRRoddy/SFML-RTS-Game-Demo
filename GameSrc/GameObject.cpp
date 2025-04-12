@@ -28,7 +28,6 @@ GameObject::~GameObject(){}
 void GameObject::updateBaseSprite()
 {
 	if (m_baseSpriteRef.get()!= nullptr) {
-		std::cout << "updating sprite at position " << m_position.x << ":" << m_position.y << std::endl;
 		m_baseSpriteRef.get()->setPosition(m_position);
 		m_baseSpriteRef.get()->setRotation(m_rotation);
 		m_baseSpriteRef.get()->setScale(m_scale);

@@ -9,7 +9,6 @@ Player::Player(sf::Vector2f position, SpriteGenerator *spriteGenerator,InputMana
 {
 	m_input = input;
 	m_speed = m_baseSpeed;
-	std::cout << "player start position x" << m_position.x << std::endl;
 	m_input->addDirectionalMapping(m_vertInputMapName, m_vertcialDirectionMap); 
 	m_input->addDirectionalMapping(m_horiInputMapName, m_horizontalDirectionMap);
 	getSprites(spriteGenerator);
@@ -44,7 +43,6 @@ void Player::getSprites(SpriteGenerator* spriteGenerator)
 
 	m_baseSpriteRef = *m_idleAnim.data();  
 
-	std::cout << "player sprite texture " << m_baseSpriteRef.get()->getTexture() << std::endl;
 	updateBaseSprite();
 	
 }

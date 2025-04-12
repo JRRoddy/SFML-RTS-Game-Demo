@@ -5,6 +5,8 @@
 
 Tile::Tile(){}
 
+
+
 Tile::Tile(sf::Vector2f position):StaticObject(position){
     
        
@@ -48,9 +50,17 @@ Tile* Tile::clone(){
     // used to get a deep copy of a tile allowing for a single instance of a tile to be held in a data structure 
     // and then copied throughout them game in order to create new tiles of different types
     Tile* copy = new Tile();
-    copy->setPosition(this->getPosition());
+    copy->setPosition(this->m_position);
     copy->setBaseSprite(this->m_baseSpriteRef);
+    copy->setSpawnCap(this->m_spawnCap);
     return copy;
+}
+
+void Tile::clone(Tile* copy)
+{
+    copy->setPosition(this->m_position);
+    copy->setBaseSprite(this->m_baseSpriteRef);
+    copy->setSpawnCap(this->m_spawnCap);
 }
 
 int Tile::getSpawnCap()
