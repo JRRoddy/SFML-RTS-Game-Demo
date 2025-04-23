@@ -1,8 +1,11 @@
 #pragma once
 #include "GameObject.h"
-class DynamicObject: public GameObject {
+#include "AnimationController.h"
+// using virtual in heritance for the game object here to ensure that only one instance of inheriatnce 
+// when it comes to the classes such as the npc class that can be both dynamic and static
+class DynamicObject: public virtual GameObject {
 
-
+	
 public:
 	DynamicObject();
 	DynamicObject(sf::Vector2f position);

@@ -12,7 +12,8 @@
 #include "GameIncludes/ForestTile.h"
 #include "GameIncludes/Player.h"
 #include "GameIncludes/DynamicObject.h"
-#include "TextureManager.h"
+#include "TextureManager.h" 
+#include "Goblin.h"
 // GameObject class unit tests:
 class GameObjectTests: public::testing::Test {
 
@@ -23,7 +24,7 @@ public:
         m_scaleToSet = sf::Vector2f(0.0f, 0.0f);
     };
 protected:
-    GameObject m_GameObjectTest = GameObject(); 
+    StaticObject m_GameObjectTest = StaticObject(); 
     sf::Vector2f m_positionToSet;
     sf::Vector2f m_scaleToSet;
     float m_rotationToSet;
@@ -117,28 +118,51 @@ TEST_F(tileDeepCopytest, deepCopyingTilesTest) {
 
 }
 
-
-TEST(vectorTest, testVector) {
-
-    class myclass {
-    public : 
-        int myint;
-        myclass(int i) {
-            myint = i;
+class  EnemyStatsTest: public::testing::Test {
+public:
+     
+    std::vector<EnemyBase*> m_enemiesToTest{ new Goblin() }; 
+    
+    EnemyStatsTest() {
+       
+        m_positionToSet = sf::Vector2f(10.0f, 50.0f); 
+        m_damageToSet = 10.0f;
+        m_healthToSet = 50.0f;
+    }; 
+    ~EnemyStatsTest() {
+        for (int i = 0; i < m_enemiesToTest.size(); i++) {
+            delete m_enemiesToTest[i];
         }
+    }
+    
+    
 
 
-    };
+protected:
+
+    sf::Vector2f m_positionToSet; 
+    float m_damageToSet; 
+    float m_healthToSet;
+
+     
 
 
-    std::vector<myclass>myClasses = { myclass(1) };
-    std::vector<myclass> classes = myClasses; 
 
-    classes.clear(); 
+};
 
-    std::cout << "MYCLASSES SIZE " << myClasses.size() <<"CLASSES SIZE "<<classes.size() << std::endl;
+// test all stat setting of enemies 
+TEST_F(EnemyStatsTest, enemyStatsTest) {
+    std::cout << "testing stats of enemies" << std::endl;
+    for (int i = 0; i < m_enemiesToTest.size(); i++) {
 
+        m_enemiesToTest[i]->setDamage(m_damageToSet); 
+        m_enemiesToTest[i]->setHealth(m_healthToSet); 
+        m_enemiesToTest[i]->setPosition(m_positionToSet); 
+        EXPECT_TRUE(m_positionToSet == m_enemiesToTest[i]->getPosition()); 
+        EXPECT_TRUE(m_damageToSet == m_enemiesToTest[i]->getDamage());
+        EXPECT_TRUE(m_healthToSet == m_enemiesToTest[i]->getHealth());
 
+    }
 
 
 }

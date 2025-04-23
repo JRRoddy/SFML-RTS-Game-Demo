@@ -15,8 +15,9 @@ ForestTile::ForestTile(sf::Vector2f position):Tile(position)
 ForestTile::ForestTile()
 {  
     m_texturePath = "../Assets/Textures/ForestTile.png";
-    
     m_spawnCap = 20;
+    m_rowCap = 3; 
+    m_speedModifier = 0.75f;
 }
 
 Tile* ForestTile::clone()
@@ -27,13 +28,13 @@ Tile* ForestTile::clone()
     return copy;
 }
 
-void ForestTile::playerEffect(Player* player)
+void ForestTile::dynamicObjectEffect(DynamicObject* object)
 {
-    player->setSpeedModfier(m_playerSpeedModifer);
+    object->setSpeedModfier(m_speedModifier);
 }
 
-void ForestTile::resetPlayerEffect(Player* player)
+void ForestTile::resetDynamicObjectEffect(DynamicObject* object)
 {
-    player->resetSpeedModifier();
+    object->resetSpeedModifier();
 
 }

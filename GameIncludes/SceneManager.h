@@ -5,6 +5,7 @@
 #include "TextureManager.h"
 #include "LevelGenerator.h"
 #include "InputManager.h"
+#include "Camera.h"
 // simple scene manager class that will hold the current game state and all the main components of the game ensuring 
 // that the game is encapsulated into one class
 class SceneManager {
@@ -14,7 +15,7 @@ public:
 	~SceneManager();
 
 	void draw();
-	void update(float dt); 
+	void update(float dt,sf::Event & event); 
 
 private:
 
@@ -26,6 +27,7 @@ private:
 	LevelGenerator *  m_levelGenerator;
 	std::unique_ptr<TextureManager> m_textureManager;
 	std::unique_ptr<SpriteGenerator> m_spriteGenerator;
+	std::unique_ptr<Camera> m_camera;
 	std::unique_ptr<Player> m_player;
 	std::string m_pathToTextures = "../Assets/Textures/PathsToTextures.txt";
 	std::string m_pathToAnims = "../Assets/Animations/PathsToAnimations.txt";

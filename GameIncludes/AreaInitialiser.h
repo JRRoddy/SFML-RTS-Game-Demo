@@ -46,10 +46,16 @@ public:
 
 	};
 
+	
+
+
 	LevelAreaContainer* getHeldObject() {
 		return basePtr;
 	}
-	
+  
+	~AreaInitialiser() {
+		delete basePtr;
+	}
 
 private:
 	LevelAreaContainer* basePtr = nullptr;

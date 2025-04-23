@@ -1,19 +1,34 @@
 #pragma once
-
-class EnemyBase {
+#include "Npc.h"
+#include "Player.h"
+#include "CheckObjectType.h"
+// main abstract class for all enemies 
+class EnemyBase : public Npc {
 
 public:
+	
+	EnemyBase();
+	// virtual constructor here to ensure that memory allocated on the heap for any derrived classes is deallocated 
+    // correctly when delloacting the memory via the delete key word
+	virtual ~EnemyBase() 
+	{
+
+		std::cout << "enemy base destructor called" << std::endl;
+	};
+
+	void collision(GameObject* other);
+	
+    virtual EnemyBase* clone() { return nullptr; } 
+	virtual void clone(EnemyBase* copy);
+
+	void draw(sf::RenderWindow * window);
+	
+	virtual void setAnimStates();
+	void getSprites(SpriteGenerator* spriteGenerator);
+protected:
+	
+	
 
 
-	virtual void attack() = 0;
-	/*void takeDamage(float damage);*/
-
-
-
-private:
-	float m_attackPower = 0.0f;
-	float m_health = 0.0f;
-	bool isActive = false;
-
-
+	
 };

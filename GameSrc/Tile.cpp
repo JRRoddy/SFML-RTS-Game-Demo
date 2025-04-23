@@ -1,8 +1,5 @@
 #include "Tile.h"
 
-
-
-
 Tile::Tile(){}
 
 
@@ -14,6 +11,7 @@ Tile::Tile(sf::Vector2f position):StaticObject(position){
 
 Tile::Tile(sf::Vector2f position, float width, float height)
 {
+    // set up vertcies for this tile based on width and height
     m_tileVerticies.setPrimitiveType(sf::Quads); 
 
     m_tileVerticies[0] = sf::Vertex(sf::Vector2f(position.x - width / 2.0f, position.y - height / 2.0f), sf::Vector2f(0.0f, 0.0f));
@@ -26,16 +24,13 @@ Tile::Tile(sf::Vector2f position, float width, float height)
 }
 
 Tile::~Tile(){}
-// each tile will have a player effect and therefore this method has been made virtual allowing for it to have its own 
-// implmentation across each child that through dynamic linkage will be maintained when assigned to a base class refernce 
-void Tile::playerEffect(Player* player){}
 
-void Tile::resetPlayerEffect(Player* player){}
 
 
 
 void Tile::setVerticies(float width, float height, sf::Vector2f position)
 {
+    // set up vertcies for this tile ot be drawn
     m_position = position;
     m_tileVerticies.setPrimitiveType(m_primitveType);
     m_tileVerticies.resize(m_vertexCount);
@@ -46,26 +41,23 @@ void Tile::setVerticies(float width, float height, sf::Vector2f position)
    
 }
 
-Tile* Tile::clone(){
-    // used to get a deep copy of a tile allowing for a single instance of a tile to be held in a data structure 
-    // and then copied throughout them game in order to create new tiles of different types
-    Tile* copy = new Tile();
-    copy->setPosition(this->m_position);
-    copy->setBaseSprite(this->m_baseSpriteRef);
-    copy->setSpawnCap(this->m_spawnCap);
-    return copy;
-}
 
+// used for deep copying tiles
 void Tile::clone(Tile* copy)
 {
+
+
     copy->setPosition(this->m_position);
     copy->setBaseSprite(this->m_baseSpriteRef);
     copy->setSpawnCap(this->m_spawnCap);
+    copy->setSpeedModifier(this->m_speedModifier);
 }
 
-int Tile::getSpawnCap()
+
+// get number of tiles that can spawn by chance on a singular row
+int Tile::getRowCap()
 {
-    return m_spawnCap;
+    return m_rowCap;
 }
 
 void Tile::setSpawnCap(int spawnCap)
@@ -76,8 +68,14 @@ void Tile::setSpawnCap(int spawnCap)
 
 void Tile::draw(sf::RenderWindow* window)
 {
-
+    // draw tile verts
     window->draw(m_tileVerticies, m_baseSpriteRef.get()->getTexture());
 
+}
+
+void Tile::setSpeedModifier(float speedMod)
+{
+    // set any movement effects of this tile
+    m_speedModifier = speedMod;
 }
 

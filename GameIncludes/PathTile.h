@@ -6,9 +6,12 @@ public:
 	PathTile(sf::Vector2f position);
 	PathTile();
 	Tile* clone() override;
-	void playerEffect(Player* player)override;
-	void resetPlayerEffect(Player* player)override;
+	void dynamicObjectEffect(DynamicObject* object)override;
+	void resetDynamicObjectEffect(DynamicObject* object) override;
 private:
+
+	float m_movementSpeedModifier = 1.25;
+
 
 
 };

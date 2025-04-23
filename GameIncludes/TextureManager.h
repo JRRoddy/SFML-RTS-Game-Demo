@@ -3,12 +3,12 @@
 #include "iostream"
 #include <fstream>
 #include "sstream"
-// class that will hold all of the texture refernces for sprites and load them into a map based on their file path 
+// class that will hold all of the texture references for 
+// sprites and load them into a map based on their file path 
 class TextureManager {
  public:
 	TextureManager();
 	~TextureManager();
-
 
 	void loadTextures(std::string &pathToTextures);
 	void loadTexture(std::string &pathToTexture); 

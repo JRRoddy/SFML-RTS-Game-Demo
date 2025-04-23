@@ -24,7 +24,7 @@ std::map<imageMapColour, std::string> ImageMapInfoParser::parseImageMapInfoFile(
 
             std::string tileNameId = line.substr(0, line.find(":") ); // get the tile id associated with the colour 
             line.erase(0, line.find(":") + 1); 
-
+            inputData.str(line);
             float r, g, b, a; // parse the colour data
             inputData >> r;
             inputData >> g;
@@ -32,16 +32,18 @@ std::map<imageMapColour, std::string> ImageMapInfoParser::parseImageMapInfoFile(
             inputData >> a;
             // construct the imagMapColour struct and insert it as a key to the parsed id value
             imageMapColour temp = imageMapColour(r, g, b, a);
-       
-
             parsedData.insert(std::pair<imageMapColour, std::string>(temp, tileNameId));
+           
+
+            inputData.str("");
+            inputData.clear();
 
             continue; // move to next file
 
         }
 
         // log any errors 
-        std::cout << "line did not have id marker ':'" << std::endl;
+        std::cout << "line did not have id marker for image map info ':'" << std::endl;
        
     }
 

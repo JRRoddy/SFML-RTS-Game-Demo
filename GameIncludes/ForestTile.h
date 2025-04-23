@@ -6,10 +6,9 @@ public:
 	  ForestTile(sf::Vector2f position);
 	  ForestTile();
 	  Tile* clone() override;
-	  void playerEffect(Player * player)override;
-	  void resetPlayerEffect(Player* player)override;
+	  void  dynamicObjectEffect(DynamicObject * player)override;
+	  void resetDynamicObjectEffect(DynamicObject* player)override;
 private:
-	float m_playerSpeedModifer = 0.75f;
 
 
 

@@ -1,8 +1,5 @@
 #include "LevelGenerator.h"
 
-
-
-
 // this class is responsible for holding the main data that is used for level generation keeping things such as various 
 // background textures for level area containers and tile data all wrapped under a single class. All of this data  is 
 // also stored within maps and vectors allowing it to then be easily accessed by other classes used to generate the level
@@ -15,8 +12,6 @@ LevelGenerator::LevelGenerator(SpriteGenerator * spriteGenerator,sf::Vector2f st
 
 	m_levelGrid = std::make_unique<LevelGrid>(LevelGrid((gridDim.x * chunkDimensions.x) / tileDimensions.x, (gridDim.y * chunkDimensions.y) / tileDimensions.y,tileDimensions));
 
-
-
 	m_randomMappedTiles = 
 	{
 	{GRASSLANDS,{TileInitialiser(new ForestTile())}}
@@ -26,9 +21,6 @@ LevelGenerator::LevelGenerator(SpriteGenerator * spriteGenerator,sf::Vector2f st
 	{
 	{GRASSLANDS,{{"Path",TileInitialiser(new PathTile())}}}
 	};
-
-
-
 
 // initialising the areas that will have their data copied from in order to create new areas of that type  
 // here we pass in data such as the tiles that will be randomly placed in the area and those that are fixed in placement  
@@ -47,19 +39,20 @@ LevelGenerator::LevelGenerator(SpriteGenerator * spriteGenerator,sf::Vector2f st
 		                        ,m_areaBackgroundTextures[GRASSLANDS],m_tileMapImages[GRASSLANDS]),m_spriteGenerator)}
      
 	};
-	 
+	
 	parseLevelMaps();
-
-
-
-	generateNewAreaGrid(GRASSLANDS, startAreaOffsetPosition); 
+	
+	generateNewAreaGrid(m_startArea, startAreaOffsetPosition); 
+	// initialse level grid and current area
 	m_currentArea = m_areaContainersPool.back();
 	m_levelGrid.get()->setNewWorldArea(m_currentArea);
 	m_levelGrid.get()->generateTilesRelativeToArea(m_currentArea); 
-
+	m_astarObject = std::make_unique<Astar>(Astar(m_levelGrid.get()));
 	m_currentPlayerTile = m_levelGrid.get()->getWorldToLocalPosition(m_playerRef->getPosition());
-
-
+	m_enemyManager = std::make_unique<EnemyManager>(EnemyManager(m_playerRef,m_astarObject.get(),m_levelGrid.get()));
+	m_allyManager = std::make_unique<AllyManager>(m_playerRef, m_astarObject.get(), m_levelGrid.get());
+	initManagerPools();
+	
 }
 
 void LevelGenerator::generateNewAreaGrid(AreaTypes areaType, sf::Vector2f offsetPosition)
@@ -100,39 +93,68 @@ int LevelGenerator::getlevelChunkHeight()const
 
 void LevelGenerator::parseLevelMaps()
 {
-	ImageMapInfoParser imageMapInfoParser = ImageMapInfoParser();
+	ImageMapInfoParser imageMapInfoParser = ImageMapInfoParser(); //class used to parse level colour maps 
 
-	for each (std::pair<AreaTypes, std::string> areaImageMapDescriptorPair in m_imageMapInfoFilePaths) {
+	// loop through all key value pairs that map an area type to a particualr file that holds information/data 
+	// about the current level map being parsed
+	for each (std::pair<AreaTypes, std::string> areaImageMapDescriptorPair in m_imageMapInfoFilePaths) {  
 
 		std::map<imageMapColour, std::string> parsedData = imageMapInfoParser.parseImageMapInfoFile(areaImageMapDescriptorPair.second);
-	    
+		// set the map for the current area type that maps all the colours 
+		// found in the image map info file to a particualr tile id 
 		m_areas[areaImageMapDescriptorPair.first].getHeldObject()->setTileInfoColoursMap(parsedData);
-	
-	
+	    
 	}
-
-
 
 }
 
 void LevelGenerator::update(float dt)
 { 
 	updatePlayerTileState();
+	m_enemyManager.get()->update(dt);  
+	m_allyManager.get()->update(dt);
+	
+	
+}
 
+void LevelGenerator::drawObjects(sf::RenderWindow* window)
+{
+	m_currentArea->draw(window);
+	m_enemyManager.get()->drawEnemies(window);
+	m_allyManager.get()->drawAllies(window);
 }
 
 void LevelGenerator::updatePlayerTileState()
 {
-	Tile* realPlayerTile = m_levelGrid.get()->getWorldToLocalPosition(m_playerRef->getPosition());
-	if (m_currentPlayerTile != realPlayerTile) {
-		if (m_currentPlayerTile) {
-			m_currentPlayerTile->resetPlayerEffect(m_playerRef);
+	// get the real time position of the player within the level grid and the associated tile with that position
+	Tile* realPlayerTile = m_levelGrid.get()->getWorldToLocalPosition(m_playerRef->getPosition()); 
+	if (m_currentPlayerTile != realPlayerTile) { // if the current tile is not equal to the currenlty recorded player tile
+		if (m_currentPlayerTile) { // if the current tile is not nullptr reset its effect
+			m_currentPlayerTile->resetDynamicObjectEffect(m_playerRef);
 		}
-		m_currentPlayerTile = realPlayerTile;
+		m_currentPlayerTile = realPlayerTile; // set the current tile to the new player tile
 	}
-	if (m_currentPlayerTile) {
-		m_currentPlayerTile->playerEffect(m_playerRef);
+	if (m_currentPlayerTile) { // update the player effect of the tile if we are on a tile with an effect(not null)
+		m_currentPlayerTile->dynamicObjectEffect(m_playerRef);
 	}
+
+
+
+}
+
+void LevelGenerator::initManagerPools()
+{
+	// loop through all areas in the m_areas std::map and create 
+	// object pools based on their stored initialisers and type 
+	for  (std::map<AreaTypes,AreaInitialiser>::iterator it = m_areas.begin( );it != m_areas.end(); it++)
+	{
+		m_enemyManager.get()->initEnemyPool(it->first, it->second.getHeldObject()->getEnemyIntialisers(),m_spriteGenerator);
+		m_allyManager.get()->initAllyPools(it->first, it->second.getHeldObject()->getAllyIntialisers(),m_spriteGenerator);
+	}
+	m_allyManager.get()->setCurrentArea(m_currentArea);
+	m_enemyManager.get()->setCurrentArea(m_currentArea);
+
+
 
 
 
@@ -142,7 +164,7 @@ void LevelGenerator::updatePlayerTileState()
 
 LevelGenerator::~LevelGenerator()
 {
-	std::cout << "level generator destructor called" << std::endl;
+	std::cout << "LEVEL GENERATOR DESTRUCTOR CALLED" << std::endl;
 	for (int i = 0; i < m_areaContainersPool.size(); i++) {
 
 		delete m_areaContainersPool[i];

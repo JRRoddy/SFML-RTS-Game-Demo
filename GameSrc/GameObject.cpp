@@ -1,12 +1,15 @@
 #include "GameObject.h"
 
-GameObject::GameObject() {};
+GameObject::GameObject() 
+{
+  
+};
 
 GameObject::GameObject(sf::Vector2f position) { 
 	m_position = position; 
 
-
 }
+
 
 GameObject::GameObject(sf::Vector2f position, float rotation, sf::Vector2f scale)
 {
@@ -17,17 +20,27 @@ GameObject::GameObject(sf::Vector2f position, float rotation, sf::Vector2f scale
 
 }
 
+GameObject::GameObject(sf::Sprite *sprite)
+{
+	m_position = sprite->getPosition();
+	m_baseSpriteRef.reset(sprite);
+
+
+}
+
 GameObject::GameObject(sf::Vector2f position, float rotation) {
 	m_position = position;
 	m_rotation = rotation;
 	
 }
 
-GameObject::~GameObject(){}
 
+// updates the current assigned sprites properties 
+// such as position and rotation if it has been assigned
 void GameObject::updateBaseSprite()
 {
 	if (m_baseSpriteRef.get()!= nullptr) {
+		// set sprite properties
 		m_baseSpriteRef.get()->setPosition(m_position);
 		m_baseSpriteRef.get()->setRotation(m_rotation);
 		m_baseSpriteRef.get()->setScale(m_scale);
@@ -39,17 +52,36 @@ void GameObject::updateBaseSprite()
 void GameObject::setPosition(sf::Vector2f position)
 {
 	m_position = position; 
+	updateBaseSprite(); 
 
 }
 
 void GameObject::setRotation(float rotation)
 {
 	m_rotation = rotation; 
+	updateBaseSprite();
 }
 
 void GameObject::setScale(sf::Vector2f scale)
 {
 	m_scale = scale;
+	updateBaseSprite();
+}
+
+int GameObject::getSpawnCap()
+{
+	return m_spawnCap;
+}
+
+void GameObject::setIsActive(bool isActive)
+{
+	m_active = isActive;
+
+}
+
+bool GameObject::getIsActive()
+{
+	return m_active;
 }
 
 void GameObject::setBaseSprite(std::shared_ptr<sf::Sprite>& spriteRef)
@@ -73,20 +105,50 @@ float GameObject::getRotation()
 	return m_rotation;
 }
 
+sf::Sprite* GameObject::getBaseSprite()
+{
+	return m_baseSpriteRef.get();
+}
+
+sf::FloatRect GameObject::getBounds()
+{
+	return m_baseSpriteRef.get()->getGlobalBounds();
+}
+
+// flip the sprite in x depending on the passed in direction value
+void GameObject::flipSpriteX(float direction)
+{   
+	if (direction == 0.0f) {
+		return;
+	}
+
+	float dir = direction < 0.0f ? -1.0f : 1.0f;
+
+	sf::Sprite* sprite = m_baseSpriteRef.get();
+	sf::Vector2f newScale = sf::Vector2f(abs(sprite->getScale().x) *dir, sprite->getScale().y);
+	m_baseSpriteRef.get()->setScale(newScale);
+
+
+}
+
+
 void GameObject::update(float dt){}
 
 void GameObject::draw(sf::RenderWindow * window)
 {
 	window->draw(*m_baseSpriteRef.get());
+	window->draw(m_debugCircle);
 }
 
+// base get sprites method used across all children 
+// to generate and assign their sprites from the sprite generator 
+// instance 
 void GameObject::getSprites(SpriteGenerator* spriteGenerator)
 { 
-	
 	m_baseSpriteRef = spriteGenerator->GenerateSprite(m_texturePath);
 	updateBaseSprite();
 }
-
+// overload for get sprites 
 void GameObject::getSprites(SpriteGenerator* spriteGenerator, std::string spriteTexturePath)
 {
 	m_texturePath = spriteTexturePath;

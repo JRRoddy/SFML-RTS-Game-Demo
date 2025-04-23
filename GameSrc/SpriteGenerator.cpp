@@ -4,12 +4,7 @@ SpriteGenerator::SpriteGenerator(TextureManager* textureManager)
 {
     m_textureManager = textureManager;
 
-
 }
-
-
-
-
 
 std::vector<std::shared_ptr<sf::Sprite>> &SpriteGenerator::GenerateSprite(std::string &spriteSheetPath, int desiredWidth, int desiredHeight)
 {
@@ -59,7 +54,7 @@ std::shared_ptr<sf::Sprite>& SpriteGenerator::GenerateSprite(std::string &sprite
         std::cout << "TEXTURE WAS NULL WHEN BEING ACCESSED IN SPRITE GENERATOR " << std::endl;
        
     }
-    sf::Sprite sprite;
+    std::cout << "creating sprite for texture path "<<spriteTexturePath << std::endl;
     
     m_singleSprite.insert(
     { 
@@ -69,8 +64,43 @@ std::shared_ptr<sf::Sprite>& SpriteGenerator::GenerateSprite(std::string &sprite
     });
 
     m_singleSprite[spriteTexturePath].get()->setOrigin(sf::Vector2f(temp->getSize()) / 2.0f);
-
 	return m_singleSprite[spriteTexturePath] ;
+}
+
+AnimationObject SpriteGenerator::generateAnimationObject(std::string& animPath,std::shared_ptr<sf::Sprite>& baseSpirteRef,float &animDelay)
+{
+    std::cout << "sprite generator generating anim object" << std::endl;
+    AnimationObject anim;
+    if (m_spriteSheets.find(animPath) != m_spriteSheets.end()) {
+        std::cout << "returining anim object anim was already generated" <<std::endl;
+       anim =  AnimationObject(m_spriteSheets[animPath], baseSpirteRef, animDelay);
+       return anim;
+    }
+    std::cout << "returining anim object anim was not already generated" << std::endl;
+
+    sf::Texture* temp = m_textureManager->getTexture(animPath);
+
+
+    m_spriteSheets.insert({ animPath,std::vector<std::shared_ptr<sf::Sprite>>() });
+    std::cout << "looping over anim vector" << std::endl;
+    for (sf::IntRect& rect : m_textureManager->getAnimationFrameData(animPath)) {
+        std::cout << "itterating texture rects"<<rect.left <<" " << rect.top << " " << " "<< rect.width <<" " << rect.height << std::endl;
+        m_spriteSheets[animPath].emplace_back((new sf::Sprite(*temp, rect)));
+        m_spriteSheets[animPath].back().get()->setOrigin(float(rect.width) / 2, float(rect.height) / 2);
+        
+    }
+    std::cout << "returning anim" << std::endl;
+    anim  = AnimationObject(m_spriteSheets[animPath], baseSpirteRef, animDelay);
+    return anim;
+
+}
+
+sf::Sprite * SpriteGenerator::getAnimSection(int index,std::string & animPath)
+{
+    
+    sf::IntRect textureRect = m_textureManager->getAnimationFrameData(animPath)[index];
+    sf::Texture* temp = m_textureManager->getTexture(animPath);
+    return new sf::Sprite(*temp,textureRect);
 }
 
 std::vector<std::shared_ptr<sf::Sprite>> &SpriteGenerator::GenerateAnim(std::string &animPath)
@@ -86,9 +116,7 @@ std::vector<std::shared_ptr<sf::Sprite>> &SpriteGenerator::GenerateAnim(std::str
     m_spriteSheets.insert({ animPath,std::vector<std::shared_ptr<sf::Sprite>>() });
     for (sf::IntRect& rect : m_textureManager->getAnimationFrameData(animPath)){
 
-
         m_spriteSheets[animPath].emplace_back((new sf::Sprite(*temp, rect))); 
-
         m_spriteSheets[animPath].back().get()->setOrigin(float(rect.width) / 2, float(rect.height) / 2);
 
     }

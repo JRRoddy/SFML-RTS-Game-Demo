@@ -36,7 +36,7 @@ void TextureManager::loadTextures(std::string &pathToTextures)
 
 
 	}
-
+	file.close();
 
 }
 
@@ -56,6 +56,7 @@ void TextureManager::loadAnims(std::string &pathToAnims)
 	std::ifstream file;
 	std::string line;
 	std::istringstream inputData;
+
 	file.open(pathToAnims);
 
 	if (!file.is_open()) {
@@ -95,7 +96,6 @@ void TextureManager::loadAnims(std::string &pathToAnims)
 			animationDataContainerInserted = true;
 
 		}
-
 		inputData.str(line); // assign the current line as the str buffer being used by the input string stream 
 		std::cout << "current frame data being parsed: " << inputData.str() << std::endl;
 		int x, y;
@@ -105,7 +105,7 @@ void TextureManager::loadAnims(std::string &pathToAnims)
 		inputData >> y; 
 		inputData >> width;
 		inputData >> height; 
-		std::cout << "new anim data x:" << x << " y:" << " width:" << width << " height:" << height << std::endl;
+		std::cout << "new anim data x:" << x << " y:" <<y<< " width:" << width << " height:" << height << std::endl;
 		// read in the data for this particualr frame within the animation 
 		// and emplace it into the vector constructing the object in place meaning no copy 
 		m_animationFrameData[path].emplace_back(x, y,width,height); 
@@ -114,10 +114,19 @@ void TextureManager::loadAnims(std::string &pathToAnims)
 		
 		
 	}
+
+	file.close();
+
+
 }
 
 sf::Texture * TextureManager::getTexture(std::string &associatedPath)
 {
+
+	if (m_storedTextures.find(associatedPath) ==m_storedTextures.end()) {
+		std::cout << "texture path did not exsist : " << associatedPath << std::endl;
+	}
+
 	return &m_storedTextures[associatedPath];
 }
 

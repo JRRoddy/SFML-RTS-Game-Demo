@@ -5,3 +5,47 @@ id:../Assets/Animations/KnightIdleBlue.png
 576 0 86 86
 768 0 86 86
 959 0 86 86
+id:../Assets/Animations/GoblinIdle.png
+10 8 76 79
+202 8 76 79
+394 8 76 79
+587 8 76 79
+779 8 76 79
+973 8 76 79
+1164 8 76 79
+id:../Assets/Animations/goblinRunAnim.png
+25 4 86 67
+213 6 89 65
+410 8 83 65
+605 5 85 65
+795 5 85 66
+984 8 85 66
+id:../Assets/Animations/GoblinAttackAnim.png
+0 22 80 91
+186 15 87 98
+375 9 90 104
+605 5 85 65
+609 20 102 99
+805 19 102 99 
+983 50 78  63
+id:../Assets/Animations/PawnIdleAnim.png
+0 0 58 51
+191 0 58 51
+383 0 58 51
+576 0 58 51
+769 0 58 51
+961 0 58 51
+id:../Assets/Animations/PawnRunAnim.png
+0 0 53 52
+186 2 63 54
+379 1 63 54
+571 2 67 52
+762 3 70 52
+952 3 70 52
+id:../Assets/Animations/PawnAttackAnim.png
+9 0 68 68
+198 0 68 68
+390 0 68 68
+584 6 94 68
+776 6 97 68
+970 6 81 68

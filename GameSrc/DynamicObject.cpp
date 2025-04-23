@@ -6,8 +6,10 @@ DynamicObject::DynamicObject()
 {
 }
 
-DynamicObject::DynamicObject(sf::Vector2f position):GameObject(position)
+DynamicObject::DynamicObject(sf::Vector2f position)
 {
+	m_position = position;
+
 }
 
 // dynamic object class that inherits from the game object class 
@@ -39,9 +41,12 @@ void DynamicObject::setSpeed(float speed)
 
 void DynamicObject::updatePosition(float dt)
 { 
-
+	// update position based on current heading direction
+	// of this dynamic object according to a current speed
+	// along with taking into account any impact
+	// on the objects speed through a speed modifier
 	m_position += ((m_direction * m_speed)*m_speedModifier) * dt; // update position
-	m_baseSpriteRef.get()->move(( m_position - m_baseSpriteRef.get()->getPosition())); // move by offset from new pos
+	m_baseSpriteRef.get()->move((m_position - m_baseSpriteRef.get()->getPosition())); // move by offset from new pos
 
 }
 

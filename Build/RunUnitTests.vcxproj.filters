@@ -4,16 +4,49 @@
     <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\testgtest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\AllyBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\AllyManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\AllyObjectPool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\AnimationController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\AnimationObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\Astar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\Camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\Character.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\DynamicObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\EnemyBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\EnemyManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\EnemyPool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\ForestTile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\GameObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\Goblin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\GrassLandsContainer.cpp">
@@ -34,10 +67,22 @@
     <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\LevelGrid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\Npc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\ObjectPool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\PathTile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\PawnAlly.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\QuadTree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\SceneManager.cpp">
@@ -55,18 +100,45 @@
     <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\Tile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\TileDeepCopyUtil.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\TileGenerator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\AllyBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\AllyInitialiser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\AllyManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\AllyObjectPool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\AnimationController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\AnimationObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\AreaInitialiser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\AreaTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\Astar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\AstarNode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\Character.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\CheckObjectType.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\DynamicObject.h">
@@ -75,10 +147,22 @@
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\EnemyBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\EnemyInitialsier.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\EnemyManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\EnemyPool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\ForestTile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\GameObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\Goblin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\GrassLandsContainer.h">
@@ -99,10 +183,22 @@
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\LevelGrid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\Npc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\ObjectPool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\PathTile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\PawnAlly.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\Player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\QuadTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\SceneManager.h">
@@ -123,13 +219,19 @@
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\TileDeepCopyUtil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\TileGenerator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\areaHeaders.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\collisionHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\gridTile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\imageMapColour.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\random.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\tileHeaders.h">

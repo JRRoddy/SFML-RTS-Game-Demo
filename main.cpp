@@ -59,30 +59,28 @@ int main() {
     SceneManager sceneManager = SceneManager(&window,window.getSize().x,window.getSize().y);
     sf::Clock elapsed;
     float dt;
+    float lastTime = 0;
+    sf::Text displayfps; 
+    std::string fpsstring;
+    displayfps.setFillColor(sf::Color::Blue);
+    displayfps.setScale(1.0f, 1.0f); 
+  
+    displayfps.setPosition(0.0f, 0.0f);
     while (window.isOpen()) {
 
         dt = elapsed.restart().asSeconds();
-
-        // Check if the W key is pressed and move the rectangle up accordingly
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-            rectangle.move(0, -1);
-        }
+        
 
         // Poll for events in the window
         sf::Event event;
-        while (window.pollEvent(event)) {
-            // Close the window if the user clicks on the close button
-            if (event.type == sf::Event::Closed) {
-                window.close();
-            }
-        }
+       
 
         // Clear the window and draw the rectangle
         window.clear();
        /* window.draw(rectangle);*/ 
         sceneManager.draw();
         window.display();
-        sceneManager.update(dt);
+        sceneManager.update(dt,event);
     }
 
     return 0;

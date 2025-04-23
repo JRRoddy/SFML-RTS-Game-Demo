@@ -2,8 +2,8 @@
 
 PathTile::PathTile(sf::Vector2f position, float width, float height ):Tile(position,width,height)
 {
-   
-
+	
+	
 }
 
 PathTile::PathTile(sf::Vector2f position):Tile(position)
@@ -12,6 +12,7 @@ PathTile::PathTile(sf::Vector2f position):Tile(position)
 
 PathTile::PathTile()
 {  
+	m_speedModifier = 1.25f;
 	m_texturePath = "../Assets/Textures/CobblePathTile.png";
 }
 
@@ -24,10 +25,13 @@ Tile* PathTile::clone()
 	return copy;
 }
 
-void PathTile::playerEffect(Player* player)
+void PathTile::dynamicObjectEffect(DynamicObject* object)
 {
+	object->setSpeedModfier(m_speedModifier);
 }
 
-void PathTile::resetPlayerEffect(Player* player)
+void PathTile::resetDynamicObjectEffect(DynamicObject* object)
 {
+	object->resetSpeedModifier();
+
 }
