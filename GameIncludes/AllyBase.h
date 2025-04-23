@@ -11,7 +11,7 @@ public:
 	virtual ~AllyBase()
 	{
 
-		std::cout << "enemy base destructor called" << std::endl;
+		std::cout << "ally base destructor called" << std::endl;
 	};
 
 	void collision(GameObject* other);
