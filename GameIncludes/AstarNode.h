@@ -13,6 +13,7 @@ struct node
 	Tile* tileRef = nullptr;
 	node* parent = nullptr;
 	sf::Vector2f worldPosition;
+	bool walkable = true;
 	// costs
 	int gcost = 0; // cost to move from current node to neighbour
 	int hcost = 0; // cost to move from node to target end node
@@ -25,6 +26,7 @@ struct node
 		indexX = localTileRef->indexX;
 		indexY = localTileRef->indexY;
 		tileRef = localTileRef->worldTileRef;
+		walkable = localTileRef->isWalkable();
 		m_pathPoint.setFillColor(sf::Color::Cyan);
 		m_pathPoint.setRadius(8.0f); 
 		m_pathPoint.setOrigin(4.0f, 4.0f); 

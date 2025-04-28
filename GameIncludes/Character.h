@@ -18,16 +18,19 @@ public:
 	void takeDamage(float& damage);
 	void setCellWidth(int& cellWidsth);
 	float getDamage() const;
+	bool getIsAttacking() const;
 	float getHealth() const;
 	int getCellWidth() const;
 	void setGridTile(gridTile* gridTile);
 	int getCurrentGold();
-
+	bool getAttackFinished()const;
 protected:
 	float m_damage = 0.0f;
 	float m_health = 0.0f;
 	int m_cellWidth = 1;
 	gridTile* m_currentTile = nullptr;
+	bool m_canAttack = false;
+	bool m_attackFinished = false;
 	// every character will have some sort of currency either gained from killing 
 	// or to recurit others 
 	int m_gold = 0;

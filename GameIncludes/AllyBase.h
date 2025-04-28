@@ -1,6 +1,7 @@
 #pragma once
 #include "Npc.h"
-#include "CheckObjectType.h"
+#include "CheckObjectType.h" 
+#include "EnemyBase.h"
 // base class of all ally objects
 class AllyBase:public Npc {
 public:
@@ -19,15 +20,20 @@ public:
 	virtual void clone(AllyBase* copy);
 	void draw(sf::RenderWindow* window);
 	virtual void setAnimStates();
+	sf::Vector2f getTargetPosition();
 	void getSprites(SpriteGenerator* spriteGenerator);
 	bool isRecurited() const; 
 	void playerInteract(); 
 	void setIsSelected(bool isSelected);
 	bool getSelected();
-	
+	void checkFacingDirection();
 protected:
 	bool m_selected = false;
 	bool m_recruited = false;
+	// since allies could be moving towards the player but be attacking enemies
+	// we need to have a seperate direction for them to face when they are attacking 
+	// and running towards the player 
+	sf::Vector2f m_facingDirection;
 	sf::Vector2f m_worldPositionTarget;
 
 

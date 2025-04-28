@@ -5,6 +5,20 @@ id:../Assets/Animations/KnightIdleBlue.png
 576 0 86 86
 768 0 86 86
 959 0 86 86
+id:../Assets/Animations/KnightRunAnim.png
+0 0 80 80
+203 0 69 84
+390 13 79 74
+573 0 95 80
+768 0 89 84
+966 13 79 73
+id:../Assets/Animations/KnightAttackAnim.png 
+12 17 71 100
+203 13 72 104
+395 12 71 105
+606 24 108 102
+796 36 107 92 
+979 22 111 97
 id:../Assets/Animations/GoblinIdle.png
 10 8 76 79
 202 8 76 79

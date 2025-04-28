@@ -15,7 +15,7 @@ public:
 
 		std::cout << "enemy base destructor called" << std::endl;
 	};
-
+	sf::Vector2f getTargetPosition();
 	void collision(GameObject* other);
 	
     virtual EnemyBase* clone() { return nullptr; } 

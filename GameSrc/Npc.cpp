@@ -1,7 +1,7 @@
 #include "Npc.h"
 
 
-Character* Npc::getPlayerRef()
+Player * Npc::getPlayerRef()
 {
 	return m_playerRef;
 }
@@ -16,7 +16,7 @@ void Npc::setBaseSprite(std::shared_ptr<sf::Sprite>& spriteRef)
 
 	}
 }
-void Npc::setPlayerRef(Character* playerRef)
+void Npc::setPlayerRef(Player* playerRef)
 {
 	m_playerRef = playerRef;
 }
@@ -40,10 +40,7 @@ void Npc::updateGridTileState(gridTile* gridTile)
 
 }
 
-bool Npc::getIsAttacking() const
-{
-	return m_canAttack;
-}
+
 // used to copy an animation controller from one npc to another
 void Npc::copyAnimController(AnimationController* animationController)
 {
@@ -70,6 +67,7 @@ void Npc::getPathDir()
 	if (m_requestedPath.size()) {
 		sf::Vector2f positionToMoveTo = m_requestedPath[0]->worldPosition;
 		m_direction = normalize(positionToMoveTo - m_position);
+		updateLastKnownDirection(m_direction);
 		m_canAttack = false;
 	}
 	else {
@@ -101,7 +99,7 @@ void Npc::setCharacterTarget(Character* character)
 	m_characterTarget = character;
 
 }
-// setting the defualt booleans for when animations should trigger
+// setting the default booleans for when animations should trigger
 // according to default animations of npc class method can be overidden
 void Npc::setAnimStates()
 {
@@ -129,5 +127,7 @@ void Npc::getSprites(SpriteGenerator* spriteGenerator)
 
 sf::Vector2f Npc::getTargetPosition() 
 {
+	
+
 	return m_characterTarget->getPosition();
 }

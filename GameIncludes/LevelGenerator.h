@@ -27,9 +27,9 @@ public:
 	void parseLevelMaps();
 	void update(float dt);
 	void drawObjects(sf::RenderWindow* window);
-	void updatePlayerTileState();
+	void updatePlayerTileState(float dt);
 	void initManagerPools();
-	
+	void playerNextTileCheck(float dt);
 	~LevelGenerator();
 
 private:
@@ -50,6 +50,7 @@ private:
 	std::vector<sf::CircleShape> m_debugQuadTreePositions;
 	std::map<AreaTypes, AreaInitialiser> m_areas;
 	std::map <AreaTypes, std::vector<TileInitialiser>> m_randomMappedTiles;
+	int m_maxLevelAreaColTreeDepth;
 	AreaTypes m_startArea = GRASSLANDS;
 
 	std::map<AreaTypes, std::vector<std::string>> m_areaBackgroundTextures =
@@ -57,7 +58,7 @@ private:
 		{GRASSLANDS,{"../Assets/Textures/GrassBackground0.png"}}
 
 	};
-
+	
 	std::map<AreaTypes, std::vector<std::string>> m_tileMapImages =
 	{
 		{GRASSLANDS,{"../Assets/TileMapImages/GrassLands/GrassLandsMap.png"}}

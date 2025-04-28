@@ -9,12 +9,13 @@ LevelGenerator::LevelGenerator(SpriteGenerator * spriteGenerator,sf::Vector2f st
 	m_ChunkSize = chunkDimensions; 
 	m_gridDimensions = gridDim;
 	m_playerRef = playerRef;
+	m_maxLevelAreaColTreeDepth = 8;
 
 	m_levelGrid = std::make_unique<LevelGrid>(LevelGrid((gridDim.x * chunkDimensions.x) / tileDimensions.x, (gridDim.y * chunkDimensions.y) / tileDimensions.y,tileDimensions));
-
+	
 	m_randomMappedTiles = 
 	{
-	{GRASSLANDS,{TileInitialiser(new ForestTile())}}
+	{GRASSLANDS,{TileInitialiser(new ForestTile()),TileInitialiser(new RockTile())}}
 
 	};
 	m_imageMappedTiles = 
@@ -46,11 +47,21 @@ LevelGenerator::LevelGenerator(SpriteGenerator * spriteGenerator,sf::Vector2f st
 	// initialse level grid and current area
 	m_currentArea = m_areaContainersPool.back();
 	m_levelGrid.get()->setNewWorldArea(m_currentArea);
+	m_currentArea->initCollisionTree(m_maxLevelAreaColTreeDepth);
 	m_levelGrid.get()->generateTilesRelativeToArea(m_currentArea); 
+	
+	// initialise astar object with the current level grid 
 	m_astarObject = std::make_unique<Astar>(Astar(m_levelGrid.get()));
+	
+	// get the current player tile to keep track of and set the area bounds for the player
 	m_currentPlayerTile = m_levelGrid.get()->getWorldToLocalPosition(m_playerRef->getPosition());
+	m_playerRef->setCurrentLevelAreaBounds(m_currentArea->getBounds());
+	// intialse managers for allies and enemies 
 	m_enemyManager = std::make_unique<EnemyManager>(EnemyManager(m_playerRef,m_astarObject.get(),m_levelGrid.get()));
 	m_allyManager = std::make_unique<AllyManager>(m_playerRef, m_astarObject.get(), m_levelGrid.get());
+	
+	// intialise object pools for all managers that hold objects that there will
+	// be many instances of 
 	initManagerPools();
 	
 }
@@ -110,10 +121,11 @@ void LevelGenerator::parseLevelMaps()
 
 void LevelGenerator::update(float dt)
 { 
-	updatePlayerTileState();
+	updatePlayerTileState(dt);
+	m_playerRef->update(dt);
 	m_enemyManager.get()->update(dt);  
 	m_allyManager.get()->update(dt);
-	
+	m_allyManager.get()->updateEnemyCollision(m_enemyManager->getActiveEnemyBuffer());
 	
 }
 
@@ -124,16 +136,22 @@ void LevelGenerator::drawObjects(sf::RenderWindow* window)
 	m_allyManager.get()->drawAllies(window);
 }
 
-void LevelGenerator::updatePlayerTileState()
+void LevelGenerator::updatePlayerTileState(float dt)
 {
 	// get the real time position of the player within the level grid and the associated tile with that position
 	Tile* realPlayerTile = m_levelGrid.get()->getWorldToLocalPosition(m_playerRef->getPosition()); 
+	
+	playerNextTileCheck(dt);
+
+
 	if (m_currentPlayerTile != realPlayerTile) { // if the current tile is not equal to the currenlty recorded player tile
+		
 		if (m_currentPlayerTile) { // if the current tile is not nullptr reset its effect
 			m_currentPlayerTile->resetDynamicObjectEffect(m_playerRef);
 		}
 		m_currentPlayerTile = realPlayerTile; // set the current tile to the new player tile
 	}
+	
 	if (m_currentPlayerTile) { // update the player effect of the tile if we are on a tile with an effect(not null)
 		m_currentPlayerTile->dynamicObjectEffect(m_playerRef);
 	}
@@ -158,6 +176,18 @@ void LevelGenerator::initManagerPools()
 
 
 
+}
+
+void LevelGenerator::playerNextTileCheck(float dt)
+{
+
+	// ensure that the player cant move along unwalkable tiles 
+	bool collideOnNextUpdate = m_currentArea->testForUnwalkableTileCollisions(m_playerRef->getNexPos(dt));
+	m_playerRef->setCanMoveToNextTile(!collideOnNextUpdate);
+
+	
+
+	
 }
 
 

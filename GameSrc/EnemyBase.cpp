@@ -15,6 +15,7 @@ void EnemyBase::collision(GameObject* other)
 		// if that character was the enemy's target
 		
 		m_canAttack  = true;// enemy can attack 
+		m_direction = sf::Vector2f(0.0f, 0.0f);
 		//check if damage can be done based on current status of attack anim
 		if ( m_animationController->stateIsActive("attack") && 	 
 			 m_animationController->currentAnimAtEnd()) { 
@@ -43,7 +44,14 @@ void EnemyBase::draw(sf::RenderWindow* window)
 	}*/
 }
 
+sf::Vector2f EnemyBase::getTargetPosition()
+{
+	if (m_characterTarget == nullptr) {
+		m_characterTarget = m_playerRef;
+	}
 
+	return m_characterTarget->getPosition();
+}
 void EnemyBase::setAnimStates()
 {
 	Npc::setAnimStates();

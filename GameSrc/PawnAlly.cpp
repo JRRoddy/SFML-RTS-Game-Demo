@@ -29,8 +29,8 @@ AllyBase* Pawn::clone()
 
 void Pawn::update(float dt)
 {
-
-    flipSpriteX(m_direction.x);
+    checkFacingDirection();
+    flipSpriteX(m_facingDirection.x);
     setAnimStates();
     m_animationController.get()->update();
     updatePosition(dt);

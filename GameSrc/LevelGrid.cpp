@@ -13,7 +13,8 @@ LevelGrid::LevelGrid(int width, int height, sf::Vector2i tileDimensions)
 	m_resolution = width * height; 
 	// setting up variables used for random placement of tiles in the grid
 	m_maxRowGenerationAttempts = width / 2;
-	m_maxRowGenerationFailures = width;
+	m_maxRowGenerationFailures = width; 
+	std::cout << "max row generation failures " << m_maxRowGenerationFailures << " max row generation attemps" << m_maxRowGenerationAttempts << std::endl;
 	for (int i = 1; i <= m_height; i++){
 		for (int j = 1; j <= m_width; j++){ 
 
@@ -88,20 +89,21 @@ void LevelGrid::randomTilePlacementPass(LevelAreaContainer* currentArea)
 
 		if (m_localTiles[finalIndex].worldTileRef != nullptr) {
 			rowAttempts++; // if we get a tile that has already been filled then we increase the count for the number of times we have failed placing a tile on this particualr grid row 
-			if (rowAttempts == m_maxRowGenerationAttempts) { // if we reach the maximum number of attempts on particualr row we switch rows
+			if (rowAttempts >= m_maxRowGenerationAttempts) { // if we reach the maximum number of attempts on particualr row we switch rows
 				// same logic as for when we get a duplicate x value
-				
+				std::cout << "row generation max reached for particualr row" << std::endl;
 				randomiseTargetRow(randomY);
 				
 				
 				rowGenerationFailures++; // increase the generation failure each time we could not place a random tile on a row 
 			
 				currentTileRowCap = 0;
+				rowAttempts = 0;
 			   
 			}
 
 			// break if we reach the maximum number of times we can fail placing a tile across all the rows
-			if (rowGenerationFailures == m_maxRowGenerationFailures) {
+			if (rowGenerationFailures == m_maxRowGenerationFailures-1) {
 				std::cout<< "random generation pass ended " << std::endl;
 				break;
 			}
@@ -111,12 +113,15 @@ void LevelGrid::randomTilePlacementPass(LevelAreaContainer* currentArea)
 	    
 		sf::Vector2f position = (currentArea->getTopLeft() + m_localTiles[finalIndex].localPosition) - m_tileHalfExtents;
 		m_localTiles[finalIndex].worldTileRef = currentArea->initNewRandomTileInArea(position, m_tileDimensions.x, m_tileDimensions.y);
+		
 		currentTileRowCap++;
 		if (currentTileRowCap == m_localTiles[finalIndex].worldTileRef->getRowCap()) {
 			std::cout << "row cap hit " << std::endl;
 			randomiseTargetRow(randomY);
 		}
+
 		count++;
+		std::cout << "count for random tile placement increased" << std::endl;
 	}
 
 

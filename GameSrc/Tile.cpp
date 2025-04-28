@@ -9,9 +9,11 @@ Tile::Tile(sf::Vector2f position):StaticObject(position){
        
 }
 
-Tile::Tile(sf::Vector2f position, float width, float height)
+Tile::Tile(sf::Vector2f position, float width, float height):StaticObject(position)
 {
     // set up vertcies for this tile based on width and height
+    m_width = width;
+    m_height = height;
     m_tileVerticies.setPrimitiveType(sf::Quads); 
 
     m_tileVerticies[0] = sf::Vertex(sf::Vector2f(position.x - width / 2.0f, position.y - height / 2.0f), sf::Vector2f(0.0f, 0.0f));
@@ -25,12 +27,21 @@ Tile::Tile(sf::Vector2f position, float width, float height)
 
 Tile::~Tile(){}
 
+sf::FloatRect Tile::getBounds()
+{
+
+
+    return sf::FloatRect(sf::Vector2f(m_position - sf::Vector2f(m_width,m_height)/2.0f),sf::Vector2f(m_width,m_height));
+}
+
 
 
 
 void Tile::setVerticies(float width, float height, sf::Vector2f position)
 {
     // set up vertcies for this tile ot be drawn
+    m_width = width; 
+    m_height = height;
     m_position = position;
     m_tileVerticies.setPrimitiveType(m_primitveType);
     m_tileVerticies.resize(m_vertexCount);
@@ -51,6 +62,9 @@ void Tile::clone(Tile* copy)
     copy->setBaseSprite(this->m_baseSpriteRef);
     copy->setSpawnCap(this->m_spawnCap);
     copy->setSpeedModifier(this->m_speedModifier);
+    copy->setIsWalkable(this->m_walkable);
+    copy->setWidth(this->m_width);
+    copy->setHeight(this->m_height);
 }
 
 
@@ -79,3 +93,28 @@ void Tile::setSpeedModifier(float speedMod)
     m_speedModifier = speedMod;
 }
 
+bool Tile::isWalkable() const
+{
+    return m_walkable;
+}
+
+void Tile::setIsWalkable(bool walkable)
+{
+    m_walkable = walkable;
+}
+
+float Tile::getWidth() const
+{
+    return m_width;
+}
+float Tile::getHeight() const
+{
+    return m_height;
+}
+
+void Tile::setHeight(float& height) {
+    m_height = height;
+}
+void Tile::setWidth(float& width) {
+    m_width = width;
+}

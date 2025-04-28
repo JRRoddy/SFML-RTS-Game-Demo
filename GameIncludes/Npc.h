@@ -2,7 +2,8 @@
 #include "Character.h"
 #include "AstarNode.h"
 #include "AnimationController.h" 
-
+#include "Player.h"
+#include "gridTile.h"
 // abstract npc class for any characters that will make use of pathfinding see cpp for more detail
 class Npc :public Character {
 
@@ -11,15 +12,14 @@ public:
 	Npc() {}; 
 	virtual ~Npc(){}
 
-	Character* getPlayerRef();
+	Player * getPlayerRef();
 
 	void setBaseSprite(std::shared_ptr<sf::Sprite>& spriteRef);
 
-	void setPlayerRef(Character* playerRef);
+	void setPlayerRef(Player* playerRef);
 
 	virtual void updateGridTileState(gridTile* gridTile);
 
-	bool getIsAttacking() const;
 
 	void copyAnimController(AnimationController* animController);
 
@@ -46,11 +46,10 @@ public:
 	virtual sf::Vector2f getTargetPosition() ;
 protected:
 	Character* m_characterTarget = nullptr;
-	Character* m_playerRef = nullptr;
+	Player* m_playerRef = nullptr;
 	sf::Vector2f m_currentTargetPos;
 	std::vector<node*> m_requestedPath;
 	std::unique_ptr<AnimationController> m_animationController;
-	bool m_canAttack = false;
 	std::map<std::string, AnimationObject> m_animStates ={};
 	std::string m_idleAnimPath;
 	std::string m_runAnimPath;

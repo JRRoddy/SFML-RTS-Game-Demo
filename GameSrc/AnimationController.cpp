@@ -63,7 +63,7 @@ AnimationController::~AnimationController()
 
 
 // used to determine if default state should be active or not
-void AnimationController::setDefault(bool & isActive)
+void AnimationController::setDefault(bool isActive)
 {
 	
 	m_stateTriggerMap[m_defaultState] = isActive;
@@ -89,7 +89,7 @@ void AnimationController::setStates(std::map<std::string, AnimationObject>& stat
 
 }
 
-void AnimationController::setState(std::string state, bool & isActive)
+void AnimationController::setState(std::string state, bool isActive)
 {
 	
 	m_stateTriggerMap[state] = isActive;

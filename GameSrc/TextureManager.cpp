@@ -123,7 +123,7 @@ void TextureManager::loadAnims(std::string &pathToAnims)
 sf::Texture * TextureManager::getTexture(std::string &associatedPath)
 {
 
-	if (m_storedTextures.find(associatedPath) ==m_storedTextures.end()) {
+	if (m_storedTextures.find(associatedPath) == m_storedTextures.end()) {
 		std::cout << "texture path did not exsist : " << associatedPath << std::endl;
 	}
 

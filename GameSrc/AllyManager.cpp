@@ -14,23 +14,26 @@ AllyManager::~AllyManager()
 {
 
 
-
-
 }
 
 void AllyManager::spawnAllies()
 {
-	//std::cout << "waiting to spawn ally: " << m_refreshAlliesTimer.getElapsedTime().asSeconds() << std::endl;
 	if (m_refreshAlliesTimer.getElapsedTime().asSeconds() >= m_refereshTime.asSeconds()) {
-		// if we have hit our refresh timer cool donw for refreshing ally spawns
+		// if we have hit our refresh timer cool down for refreshing ally spawns
+		
+		// as allies have an inactive state where the player has not recurited them 
+		// we have a counter within the ally manager for each static ally which
+		// gets decremented each time the player recurits on ally 
+		// this is used to determine whether or not more ally objects need to 
+		// be requested from the pool
 		m_staticAlliesCount = std::max(0, m_staticAlliesCount);
 		if (m_currentPool->hasAvailabeObject() && m_staticAlliesCount != m_currentArea->getMaxAllyCap()) {
 			// if we had an avaialbe object in the current object pool we are using 
 			std::cout << "spawning ally "<<m_refereshTime.asSeconds()<<" refresh timmer: " << m_refreshAlliesTimer.getElapsedTime().asSeconds() << std::endl;
-			m_staticAlliesCount++; // increase the count of static alli es to recruit in the area
+			m_staticAlliesCount++; // increase the count of static allies to recruit in the area
 			AllyBase* ally = m_currentPool->activateObject();  // get  availabe object from pool
 			gridTile* randomTile = m_levelGrid->getRandomLocationInGrid();// get ally loc
-			// set ally loc world pos based on grid tile generated 
+			// set ally  world pos based on grid tile generated 
 			ally->setPosition(m_levelGrid->getWorldPositionAtIndex(randomTile->fullIndex));
 			ally->setGridTile(randomTile); 
 			m_activeBuffer.push_back(ally);
@@ -64,8 +67,7 @@ void AllyManager::update(float dt)
 		
 
 	}
-	// reset collision tree ready for next update 
-	m_AllyCollisionHandler.get()->resetCollisionTreeItems();
+
 
 	// check to see if we need to spawn allies 
 	// and get them from the current ally object pool
@@ -86,16 +88,12 @@ void AllyManager::initAllyPools(AreaTypes areaType, std::vector<AllyInitialiser>
 	for (int i = 0; i < alliesToInit.size(); i++)
 	{ 
 		alliesToInit[i].getHeldObject()->setPlayerRef(m_playerRef);
-		alliesToInit[i].getHeldObject()->setTargetPlayer();
 		alliesToInit[i].getHeldObject()->getSprites(spriteGenerator);
 	}
 	// generate object pool from the ally initialisers that hold the base 
     // objects to be copied from according to the current area type
 	m_areaPools.emplace(areaType, alliesToInit);
 	
-
-
-
 }
 
 void AllyManager::setCurrentArea(LevelAreaContainer* levelArea)
@@ -116,7 +114,6 @@ void AllyManager::checkAllyRemoval(int index)
 {
 	// if we need to remove an ally as it has been marked as inactive 
 	if (!m_activeBuffer[index]->getIsActive()) {
-		std::cout << "removing ally was not active " << std::endl;
 		// remove it from active buffer and the active buffer of the pool we 
 		// are using as they line up in memory 
 		m_activeBuffer.erase(m_activeBuffer.begin() + index); 
@@ -139,11 +136,10 @@ void AllyManager::updateAllySelectedStatus(AllyBase * ally)
 	// was the ally clicked 
 	if (m_playerRef->isMouseReleased(sf::Mouse::Left) &&
 		ally->getBounds().contains(m_playerRef->getMousePosition())) {
-		std::cout << "was mouse inside ally collsion box" << ally->getBounds().contains(m_playerRef->getMousePosition()) << std::endl;
 		bool isRecurited = ally->isRecurited(); // temporarily store if the ally 
 		//was recurited or not to ensure that the inactive allies count is 
 		// accurate
-		ally->playerInteract(); // potentially recurit ally
+		ally->playerInteract(); // interact with ally and potentially recurit them 
 		if (isRecurited == false && ally->isRecurited() ) {
 			// if ally was recruited decriment the static ally count
 			// as they are now movebale by the player 
@@ -153,9 +149,39 @@ void AllyManager::updateAllySelectedStatus(AllyBase * ally)
 		}
 		return;
 	}
-	// if ally's boudning box didnt contain mouse pos it is not selected 
+	// if ally's bounding box didnt contain mouse pos ally is not selected 
 	ally->setIsSelected(false);
 
+}
+// update ally collisions with enemies using a passed in buffer of enemies 
+// this buffer is of EnemyBase class pointers allowing it to be generic 
+// and any enemy derrived from EnemyBase to be passed into the buffer
+// this means there is no requirement for multiple vectors of enemies of different types
+void AllyManager::updateEnemyCollision(std::vector<EnemyBase*> & Buffer)
+{
+	// go through the buffer
+	for (EnemyBase* enemy : Buffer) { 
+
+		std::vector<quadTreeItem<AllyBase>> result; 
+		// query the collision tree within the ally manager 
+		// with the bounding box of the current enemy being checked
+		m_AllyCollisionHandler->queryCollisionTree(enemy->getBounds(), result);
+		// if we had any items contained within the result i.e the enemy's 
+		//collision box overlapped space that conatains allies
+		for (quadTreeItem<AllyBase> &allyItem : result) {
+			// call the collision method for the intersecting allies on the enemy
+			// to be accounted for 
+			allyItem.gameObject->collision(enemy);
+
+
+		}
+        
+
+
+	}
+	
+	// reset collision tree ready for next update 
+	m_AllyCollisionHandler.get()->resetCollisionTreeItems();
 }
 
 void AllyManager::updateAllyPath(AllyBase* ally)
@@ -176,6 +202,6 @@ void AllyManager::drawAllies(sf::RenderWindow * window)
 
 		m_activeBuffer[i]->draw(window);
 	}
-	m_AllyCollisionHandler->drawCollisionTree(window);
+	//m_AllyCollisionHandler->drawCollisionTree(window);
 } 
 

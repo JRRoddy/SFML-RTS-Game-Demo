@@ -7,6 +7,7 @@ class StaticObject : public virtual GameObject { // a game object class that wil
 public:
 	StaticObject() {};
 	StaticObject(sf::Vector2f position);
+	
 	StaticObject(sf::Sprite* sprite);
 	~StaticObject();
      

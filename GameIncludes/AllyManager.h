@@ -21,6 +21,7 @@ public:
 	void checkAllyRemoval(int index);
 	void resetSpawnDelay();
 	void updateAllySelectedStatus(AllyBase * ally);
+	void updateEnemyCollision(std::vector<EnemyBase*> &enemyBuffer);
 	void updateAllyPath(AllyBase* ally);
 	void drawAllies(sf::RenderWindow * window);
 private:

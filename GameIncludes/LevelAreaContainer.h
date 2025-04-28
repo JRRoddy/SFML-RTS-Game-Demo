@@ -7,10 +7,12 @@
 #include "EnemyInitialsier.h"
 #include "AllyInitialiser.h"
 #include "random.h"
+#include "collisionHandler.h"
+
 // this class will be the main representation of the current level area the player is in 
 // and has things such as tiles that are in the current area and visible to the player 
 // along with its draw method(overridden from the base game object class) being used to display the background image for 
-// the current area its main respobility is storing data associated with level areas and processing the data when needed  
+// the current area its main responsibility is storing data associated with level areas and processing the data when needed  
 
 class LevelAreaContainer: public GameObject  {
 
@@ -36,16 +38,16 @@ public:
 
 	std::vector<std::string >& getBackgroundTexturePaths();
 	
+	bool testForUnwalkableTileCollisions(sf::Vector2f &pos);
 	// setters and getters for the area type 
 	AreaTypes getAreaType();  
 	void setAreaType(AreaTypes areaType);
 
 	//setters and getters for the tile initialisers used to generate randomly positioned tiles in area
 	void setRandomlyGeneratedTiles(std::vector<TileInitialiser>& tiles);
-	std::vector<TileInitialiser>& getRandomlyGeneratedTiles();
+	std::vector<TileInitialiser> getRandomlyGeneratedTiles();
 	
-
-
+	
 	// setters and getters for the paths used to load the image maps to generate tiles from an image 
 	std::vector<std::string>& getTileMapPaths(); 
 	void setTileMapPaths(std::vector<std::string>& tileMapPaths);
@@ -63,7 +65,7 @@ public:
 	// setters and getters for colour mapped to tile ids(from parsing the image map info file associated with this area)
 	void setTileInfoColoursMap(std::map<imageMapColour, std::string>& tileInfocoloursMap);
 	std::map<imageMapColour, std::string>& getTileInfoColourMap();
-
+	sf::FloatRect getBounds();
 	// initialsie grid associated with area 
 	void initGrid();
 
@@ -98,7 +100,7 @@ public:
 	// get enemy initialisers associated with area
 	std::vector<EnemyInitialiser>& getEnemyIntialisers();
 	std::vector<AllyInitialiser>& getAllyIntialisers();
-
+	void initCollisionTree(int maxCollisionTreeDepth);
 	void setEnemyIntialisers(std::vector<EnemyInitialiser>& enemyInitialisers); 
 	void setAllyInitialisers(std::vector<AllyInitialiser>& allyInitalisers);
 	float getRandomSpawnDelay();
@@ -154,7 +156,7 @@ protected:
 	std::vector<sf::Image> m_loadedTileMaps;
 	// store the current level image map being used by the area
 	sf::Image * m_currentTileMapImage  = nullptr;
-	
+
 	// store specifc enemy instialisers associated 
 	// with this area used to generate pooling objects for enemies 
 	std::vector<EnemyInitialiser> m_enemies;
@@ -166,5 +168,10 @@ protected:
 	std::vector<AllyInitialiser> m_allies;
 	float m_allyRefreshCoolDown = 0.0f;
 	int m_maxAllyCap = 0;
+
+private:
+
+	std::shared_ptr<CollisonHandler<Tile>> m_collisionTreeForUnwalkableTiles;
+
 	
 };

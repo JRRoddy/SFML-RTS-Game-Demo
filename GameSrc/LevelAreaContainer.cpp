@@ -2,7 +2,7 @@
 
 
 // this constructor will create a grid based on defined dimesnions and the size of the area passed in 
-// genertaing a space that repsens the current area that encapsulates the player 
+// genertaing a space that represents the current area that encapsulates the player 
 LevelAreaContainer::LevelAreaContainer(SpriteGenerator* spriteGenerator, sf::Vector2f offsetPosition ,std::string backGroundTexture,sf::Vector2i gridDimensions, sf::Vector2f gridSectionSize):GameObject(offsetPosition)
 {
 	// defining the dimensions for the grid 
@@ -61,7 +61,7 @@ LevelAreaContainer::LevelAreaContainer(SpriteGenerator* spriteGenerator, std::ve
 	
 
 
-
+	
 }
 
 LevelAreaContainer::LevelAreaContainer(){}
@@ -73,6 +73,15 @@ LevelAreaContainer::LevelAreaContainer(SpriteGenerator* spriteGenerator)
 }
 
 
+bool LevelAreaContainer::testForUnwalkableTileCollisions(sf::Vector2f & pos) {
+
+	std::vector<quadTreeItem<Tile>> result;
+	m_collisionTreeForUnwalkableTiles.get()->queryCollisionTree(pos, result);
+
+	return result.size();
+
+}
+
 void LevelAreaContainer::draw(sf::RenderWindow* window)
 {
 	
@@ -82,7 +91,7 @@ void LevelAreaContainer::draw(sf::RenderWindow* window)
 		m_worldTiles[i]->draw(window);
 	}
 
-
+	m_collisionTreeForUnwalkableTiles->drawCollisionTree(window);
 }
 
 
@@ -250,9 +259,14 @@ Tile * LevelAreaContainer::initTileFromSelectedMap(sf::Vector2i imageMapTexcoord
 		}
 
 		Tile* worldTile = m_imageMappedTiles[tileNameId].getHeldObjectCopy();  // get a copy from the tile initialiser stored as a value associated with a particular string id parsed from the associated imageMap info file for this area 
+		
+		
 		worldTile->setVerticies(width, height, position);
+		
 		m_worldTiles.push_back(worldTile);
-
+		if (!worldTile->isWalkable()) {
+			m_collisionTreeForUnwalkableTiles->insertItem(worldTile->getBounds(), worldTile);
+		}
 		return worldTile; // return the new world tile 
 		
 	}
@@ -272,6 +286,15 @@ std::vector<EnemyInitialiser>& LevelAreaContainer::getEnemyIntialisers()
 std::vector<AllyInitialiser>& LevelAreaContainer::getAllyIntialisers()
 {
 	return m_allies;
+}
+
+void LevelAreaContainer::initCollisionTree(int maxCollisionTreeDepth)
+{
+	m_collisionTreeForUnwalkableTiles = std::make_shared<CollisonHandler<Tile>>((CollisonHandler<Tile>(getBounds(),maxCollisionTreeDepth )));
+
+
+
+
 }
 
 void LevelAreaContainer::setEnemyIntialisers(std::vector<EnemyInitialiser>& enemyInitialisers)
@@ -347,7 +370,7 @@ void LevelAreaContainer::setDimensionsForArea(sf::Vector2i &gridDimensions, sf::
 	m_gridSectionSize = tileSize;
 }
 
-std::vector<TileInitialiser>& LevelAreaContainer::getRandomlyGeneratedTiles()
+std::vector<TileInitialiser> LevelAreaContainer::getRandomlyGeneratedTiles()
 {
 	return m_randomPositionedTiles;
 }
@@ -400,14 +423,27 @@ Tile* LevelAreaContainer::initNewRandomTileInArea(sf::Vector2f position, float w
 {
 	// get a random index into the random positioned tiles vector which stores all of the tile initialiser objects for this area 
 	// that hold tiles that can be randomly generated 
-	size_t randomTileIndex = rand() % m_randomPositionedTiles.size();
+	size_t randomTileIndex =  rand() % m_randomPositionedTiles.size();
+	// ensure that random tiles do not go over their spawn cap
+	// based on the number of recorded instances within this current level area 
+	if (m_randomPositionedTiles[randomTileIndex].hasHitInitialiseCap()) {
+		m_randomPositionedTiles.erase(m_randomPositionedTiles.begin() + randomTileIndex);
+	    randomTileIndex = rand() % m_randomPositionedTiles.size();
+
+	}
 	Tile* worldTileToInit = m_randomPositionedTiles[randomTileIndex].getHeldObjectCopy();   // initialise a new world tile from the selected tile initialsier
-
+	
+	std::cout << "level area initialising random tile of type " << typeid(worldTileToInit).name() <<std::endl;
 	worldTileToInit->setVerticies(width, height, position); // set the quad for the tile 
+	
+	
 	m_worldTiles.push_back(worldTileToInit); // add it to world tiles vector for it to be drawn to the screen 
-
+	if (!worldTileToInit->isWalkable()) {
+		m_collisionTreeForUnwalkableTiles->insertItem(worldTileToInit->getBounds(), worldTileToInit);
+	}
 	return m_worldTiles.back(); // retrun the initialised tile 
 }
+
 
 std::vector<std::string>& LevelAreaContainer::getTileMapPaths()
 {
@@ -459,7 +495,12 @@ std::map<imageMapColour, std::string>& LevelAreaContainer::getTileInfoColourMap(
 {
 	return m_tileInfocoloursMap;
 
-};
+}
+sf::FloatRect LevelAreaContainer::getBounds()
+{
+	return sf::FloatRect(m_topLeft,getWorldDimensions());
+}
+;
 
 
 sf::Vector2f LevelAreaContainer::getTopLeft()

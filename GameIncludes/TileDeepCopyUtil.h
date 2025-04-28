@@ -38,13 +38,23 @@ public:
 
 		Tile * copy;  // create a pointer to assign the allocated memory from the current held tile's clone method 
 		copy = basePtr->clone(); // assign the heap allocated memeory to the unique ptr to be managed
-		
+
+		// keep track of the number of times we initilalise a
+		// tile of the type held by this tile initialiser 
+		// as some tiles have spawn caps
+		m_tileInitCount++;  
 		return copy; // return the deep copy 
 
 
 	};
-
-
+	// used to check if we have initialise the tile more than or equal to its spawn cap
+	// tiles with spawn cap 0 have no spawn cap
+	bool hasHitInitialiseCap() {
+		return  basePtr->getSpawnCap()>0 && m_tileInitCount >= basePtr->getSpawnCap();
+	}
+	int getTileInitCound() {
+		return m_tileInitCount;
+	}
 	~TileInitialiser() {
 		delete basePtr;
 	}
@@ -55,7 +65,7 @@ public:
 
 private:
 	Tile* basePtr = nullptr;
-
+	int m_tileInitCount = 0;
 
 
 };

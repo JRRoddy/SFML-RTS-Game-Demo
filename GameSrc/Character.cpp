@@ -47,9 +47,18 @@ void Character::setGridTile(gridTile* gridTile)
 	m_currentTile = gridTile;
 }
 
+bool Character::getIsAttacking() const
+{
+	return m_canAttack;
+}
 int Character::getCurrentGold()
 {
 	return m_gold;
+}
+
+bool Character::getAttackFinished()const
+{
+	return m_attackFinished;
 }
 
 

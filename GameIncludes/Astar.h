@@ -2,6 +2,7 @@
 #include "LevelGrid.h"
 #include "AstarNode.h"
 
+// class that encapsulates the astar algorithm used for pathfinding for npc's 
 class Astar {
 
 public:

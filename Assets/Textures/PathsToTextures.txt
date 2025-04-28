@@ -1,3 +1,5 @@
 ../Assets/Textures/GrassBackground0.png
 ../Assets/Textures/ForestTile.png
 ../Assets/Textures/CobblePathTile.png
+../Assets/Textures/flagIndicator.png
+../Assets/Textures/RockTile.png

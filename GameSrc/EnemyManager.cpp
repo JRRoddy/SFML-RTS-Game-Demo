@@ -4,7 +4,8 @@
 void EnemyManager::update(float dt) {
 
 	// main update loop for the enemy manager 
-	// this pass information to enemies and sets data such as their current path 
+   // this pass information to enemies and sets data such as their current path 
+
 	for (int i = 0; i < m_activeEnemyBuffer.size();i++)
 	{   
 		checkEnemyRemoval(i);// check if the enemy needs to be removed from active buffer
@@ -19,9 +20,9 @@ void EnemyManager::update(float dt) {
 	    
 	
 	}
-	//update any collisions within the collision tree and reset it ready for next update
+	//update any collisions within the collision tree and 
+	// reset it ready for next update
 	updateCollision();
-	m_enemyCollisonHandler.get()->resetCollisionTreeItems();
 
 	spawnEnemy();
 	
@@ -74,6 +75,11 @@ void EnemyManager::getNewSpawnDelay()
 
 }
 
+std::vector<EnemyBase*>& EnemyManager::getActiveEnemyBuffer()
+{
+	return m_activeEnemyBuffer;
+}
+
 void EnemyManager::updateCollision()
 { 
 	// go through all of the items in the collision buffer 
@@ -100,6 +106,7 @@ void EnemyManager::updateCollision()
 		}
 
 	}
+	m_enemyCollisonHandler.get()->resetCollisionTreeItems();
 
 }
 

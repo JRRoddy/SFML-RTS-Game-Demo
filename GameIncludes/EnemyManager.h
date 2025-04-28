@@ -21,6 +21,7 @@ public:
 	void setCurrentEnemyPool(AreaTypes areaType);
 	void checkEnemyRemoval(int index);
 	void getNewSpawnDelay(); 
+	std::vector<EnemyBase*>& getActiveEnemyBuffer();
 	void updateCollision();
 	void setCurrentArea(LevelAreaContainer* levelArea);
 	void spawnEnemy();

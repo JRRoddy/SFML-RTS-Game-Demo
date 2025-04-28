@@ -8,22 +8,33 @@ AllyBase::AllyBase()
 
 void AllyBase::collision(GameObject* other)
 {
-	// if the type of object we are colliding with is a character
-	
-	
-		Character* character = CheckObjecType<Character>(other);
-		if (character != nullptr && character == m_characterTarget) {
-			// if that character was the enemy's target
 
-			m_canAttack = true;// enemy can attack 
+	  // ally targeting for enemies is based on when an enemy enters the space 
+	// they cover around them i.e their collision box 
+	// therfore if we dont have a current target we check if the target 
+	// is an enemy through the CheckObjectType utility which makes use of 
+	// a dynmaic cast to attempt ot downcast the object to an enemy
+	// if this function fails it returns nullptr allowing for us to check 
+	// if the down cast was safe by check if the assigment to the m_characterTarget
+	//pointer was null or not 
+	   if (m_characterTarget == nullptr) {
+		    
+		   m_characterTarget = CheckObjecType<EnemyBase>(other);
+	   }
+		
+		if ( m_characterTarget != nullptr) {
+			// if that character was a valid target i.e an enemy
+			m_canAttack = true;// ally can attack the enemy its colliding with 
 			//check if damage can be done based on current status of attack anim
 			if (m_animationController->stateIsActive("attack") &&
 				m_animationController->currentAnimAtEnd()) {
 
-				character->takeDamage(m_damage); // call that characters take damage method
+				m_characterTarget->takeDamage(m_damage); // call that characters take damage method
 
 			}
 		}
+	
+		
 	
 	
 	
@@ -48,6 +59,21 @@ void AllyBase::setAnimStates()
 {
 
 	Npc::setAnimStates();
+}
+
+sf::Vector2f AllyBase::getTargetPosition()
+{
+    
+	if (!m_playerRef->recallingAllies()) {
+		
+		m_worldPositionTarget = m_characterTarget == nullptr ? m_playerRef->getMovementOrderPos() : m_characterTarget->getPosition();
+		return m_worldPositionTarget;
+	}
+	
+    return m_worldPositionTarget = m_playerRef->getPosition();
+	
+
+	
 }
 
 void AllyBase::getSprites(SpriteGenerator* spriteGenerator)
@@ -83,4 +109,15 @@ void AllyBase::setIsSelected(bool isSelected)
 bool AllyBase::getSelected()
 {
 	return m_selected;
+}
+
+void AllyBase::checkFacingDirection()
+{
+	if (m_characterTarget != nullptr && m_canAttack) {
+
+		m_facingDirection = normalize(m_characterTarget->getPosition() - m_position);
+		return;
+	}
+	m_facingDirection = m_direction;
+
 }

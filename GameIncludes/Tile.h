@@ -12,7 +12,7 @@ public:
 	Tile(sf::Vector2f position);
 	Tile(sf::Vector2f position, float width, float height);
 	virtual ~Tile();
-	
+	sf::FloatRect getBounds();
 	// each tile will have a player effect and therefore this method has been made virtual allowing for it to have its own 
     // implmentation across each child that through dynamic linkage will be maintained when assigned to a base class refernce 
 	virtual void dynamicObjectEffect(DynamicObject* object) = 0;
@@ -26,14 +26,21 @@ public:
 	void setSpawnCap(int spawnCap);
 	void draw(sf::RenderWindow* window);
 	void setSpeedModifier(float speedMod);
-
+	bool isWalkable() const;
+	void setIsWalkable(bool walkable);
+	float getWidth()const; 
+	float getHeight()const; 
+	void setWidth(float& height); 
+	void setHeight(float& width);
  protected:
+	bool m_walkable = true;
 	int m_rowCap = 0;
 	float m_speedModifier = 1.0f;
 	sf::VertexArray m_tileVerticies;
 	size_t m_vertexCount = 4;
 	sf::PrimitiveType m_primitveType = sf::Quads;
-
+	float m_width = 0.0f;
+	float m_height = 0.0f;
  private:
 
 };

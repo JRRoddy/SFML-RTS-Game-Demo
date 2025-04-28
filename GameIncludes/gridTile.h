@@ -9,12 +9,36 @@ struct gridTile {
 	int indexX = 0;
 	int indexY = 0;
 	int fullIndex = 0;
+	bool walkable = true;
 	gridTile(sf::Vector2f _localPosition, Tile* _worldTileRef, int _indexX, int _indexY, int _fullIndex) {
 		localPosition = _localPosition; // current local position based on indcices of local tile
 		worldTileRef = _worldTileRef; // ref to world tile
 		indexX = _indexX; // index positions in grid 
 		indexY = _indexY;
 		fullIndex = _fullIndex; // full location index in grid 
-	};
+		walkable = true; // default of gridTiles is that they are walkable 
+		
+
+	}; 
+
+	bool isWalkable() const {
+
+		if (worldTileRef != nullptr) {
+			return worldTileRef->isWalkable();
+		}
+
+		return walkable;
+
+	}
+
+
+	
+
+	
+
+
+	
+
+
 
 };

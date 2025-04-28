@@ -19,7 +19,7 @@ public:
 	}
 	CollisonHandler(sf::FloatRect& totalAreaForCollisionTree , int maxTreeDepth )
 	{
-		m_CollisionTree = std::make_shared<QuadTree<objectType>>( (new QuadTree<objectType>(totalAreaForCollisionTree, maxTreeDepth)));
+		m_CollisionTree = std::make_shared<QuadTree<objectType>>( ( QuadTree<objectType>(totalAreaForCollisionTree, maxTreeDepth)));
 	}
 	// when resizing the tree it will invalidate the current section of all the children so 
 	// we will need to clear the entire tree and set the new bounds
@@ -53,7 +53,7 @@ public:
 
 	}
 
-	void queryCollisionTree(sf::Vector2f& position, std::vector<QuadTree<objectType>>& insert) {
+	void queryCollisionTree(sf::Vector2f& position, std::vector<quadTreeItem<objectType>>& insert) {
 		m_CollisionTree.get()->query(position, insert);
 	}
 
