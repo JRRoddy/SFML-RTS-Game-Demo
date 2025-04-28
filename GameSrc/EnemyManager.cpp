@@ -102,7 +102,7 @@ void EnemyManager::updateCollision()
 		for (quadTreeItem<EnemyBase>& collideResult : resultingCollisionItems) {
 
 			collideResult.gameObject->collision(m_collisionBuffer[i]);
-
+			m_collisionBuffer[i]->collision(collideResult.gameObject);
 		}
 
 	}

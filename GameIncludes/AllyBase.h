@@ -26,7 +26,9 @@ public:
 	void playerInteract(); 
 	void setIsSelected(bool isSelected);
 	bool getSelected();
+	void reset();
 	void checkFacingDirection();
+	void getPathDir();
 protected:
 	bool m_selected = false;
 	bool m_recruited = false;
@@ -34,6 +36,7 @@ protected:
 	// we need to have a seperate direction for them to face when they are attacking 
 	// and running towards the player 
 	sf::Vector2f m_facingDirection;
+	sf::Vector2f m_previousMovementOrder;
 	sf::Vector2f m_worldPositionTarget;
 
 

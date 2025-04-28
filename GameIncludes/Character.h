@@ -24,9 +24,11 @@ public:
 	void setGridTile(gridTile* gridTile);
 	int getCurrentGold();
 	bool getAttackFinished()const;
+	bool isDead() const;
 protected:
 	float m_damage = 0.0f;
 	float m_health = 0.0f;
+	float m_baseHealth = 0.0f;
 	int m_cellWidth = 1;
 	gridTile* m_currentTile = nullptr;
 	bool m_canAttack = false;

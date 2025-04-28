@@ -5,6 +5,7 @@ Pawn::Pawn()
 {
     m_damage = 15.0f;
     m_health = 40.0f;
+    m_baseHealth = 40.0f;
     m_speed = 150.0f;
     m_idleAnimPath = "../Assets/Animations/PawnIdleAnim.png";
     m_runAnimPath = "../Assets/Animations/PawnRunAnim.png";
@@ -12,7 +13,7 @@ Pawn::Pawn()
     m_runAnimDelay = 70.0f;
     m_idleAnimDelay = 70.0f;
     m_attackAnimDelay = 70.0f;
-    m_spawnCap = 5;
+    m_spawnCap = 1;
     m_gold = 0;
     m_debugCircle.setFillColor(sf::Color::Magenta);
     m_debugCircle.setRadius(5.0f);

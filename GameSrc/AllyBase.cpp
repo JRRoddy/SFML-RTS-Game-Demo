@@ -17,7 +17,9 @@ void AllyBase::collision(GameObject* other)
 	// if this function fails it returns nullptr allowing for us to check 
 	// if the down cast was safe by check if the assigment to the m_characterTarget
 	//pointer was null or not 
-	   if (m_characterTarget == nullptr) {
+
+	// if ally is recruited by the player and the ally doesnt have a target 
+	   if (m_recruited && m_characterTarget == nullptr) {
 		    
 		   m_characterTarget = CheckObjecType<EnemyBase>(other);
 	   }
@@ -65,7 +67,16 @@ sf::Vector2f AllyBase::getTargetPosition()
 {
     
 	if (!m_playerRef->recallingAllies()) {
-		
+		// if the ally is in combat and the player gives a movement order 
+		// then they are no longer considered in combat
+		if (m_previousMovementOrder != m_playerRef->getMovementOrderPos() && m_canAttack ) 
+		{
+			// no longer target the character so that the ally moves towards
+			// the player's movement order
+			m_characterTarget = nullptr;
+		}
+		// check if the ally has a target if not move to the last given player movement 
+		//order(if the player is not recalling all their allies)
 		m_worldPositionTarget = m_characterTarget == nullptr ? m_playerRef->getMovementOrderPos() : m_characterTarget->getPosition();
 		return m_worldPositionTarget;
 	}
@@ -111,6 +122,15 @@ bool AllyBase::getSelected()
 	return m_selected;
 }
 
+void AllyBase::reset()
+{
+	m_health = m_baseHealth; 
+	m_recruited = false; 
+
+
+
+}
+
 void AllyBase::checkFacingDirection()
 {
 	if (m_characterTarget != nullptr && m_canAttack) {
@@ -119,5 +139,26 @@ void AllyBase::checkFacingDirection()
 		return;
 	}
 	m_facingDirection = m_direction;
+
+}
+
+void AllyBase::getPathDir()
+{
+	if (m_requestedPath.size()) {
+		sf::Vector2f positionToMoveTo = m_requestedPath[0]->worldPosition;
+		m_direction = normalize(positionToMoveTo - m_position);
+		updateLastKnownDirection(m_direction);
+		m_canAttack = false;
+	}
+	else {
+		// ensure to update the previous movement order to the current player 
+		// movement order for the ally helping to keep track of when the ally needs
+		// to move out of things such as combat 
+		m_previousMovementOrder = m_playerRef->getMovementOrderPos();
+		m_direction = sf::Vector2f(0.0f, 0.0f);
+		
+	}
+
+	m_direction* float((!getIsAttacking()));
 
 }

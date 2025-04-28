@@ -13,7 +13,7 @@ Goblin::Goblin()
     m_runAnimDelay = 70.0f;
     m_idleAnimDelay = 70.0f; 
     m_attackAnimDelay = 70.0f; 
-    m_spawnCap = 10;
+    m_spawnCap = 1;
     m_debugCircle.setFillColor(sf::Color::Red); 
     m_debugCircle.setRadius(5.0f); 
     m_debugCircle.setOrigin(5.0f / 2.0f, 5.0f / 2.0f); 

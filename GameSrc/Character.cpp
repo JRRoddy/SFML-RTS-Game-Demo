@@ -13,6 +13,7 @@ void Character::setDamage(float& damage)
 
 void Character::setHealth(float& health)
 {
+	m_baseHealth = health;
 	m_health = health;
 }
 
@@ -59,6 +60,11 @@ int Character::getCurrentGold()
 bool Character::getAttackFinished()const
 {
 	return m_attackFinished;
+}
+
+bool Character::isDead() const
+{
+	return m_health <= 0.0f;
 }
 
 

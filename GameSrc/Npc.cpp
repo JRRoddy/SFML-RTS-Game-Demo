@@ -47,6 +47,10 @@ void Npc::copyAnimController(AnimationController* animationController)
 	m_animationController = std::make_unique<AnimationController>(AnimationController(animationController, m_baseSpriteRef));
 
 }
+bool Npc::getIsActive()
+{
+	return !isDead();
+}
 // deep copy method 
 void Npc::clone(Npc* copy)
 {

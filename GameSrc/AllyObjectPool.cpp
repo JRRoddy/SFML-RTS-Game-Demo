@@ -45,6 +45,7 @@ AllyObjectPool::~AllyObjectPool()
 void AllyObjectPool::resetActiveObject(int index)
 {
 	m_pool.push_back(m_activeObjects[index]);
+	m_pool[index]->reset();
 	m_activeObjects.erase(m_activeObjects.begin() + index);
 
 }

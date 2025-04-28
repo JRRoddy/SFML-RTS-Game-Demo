@@ -22,7 +22,7 @@ public:
 	void setScale(sf::Vector2f scale);
 	int getSpawnCap(); 
 	void setIsActive(bool isActive);
-	bool getIsActive();
+	virtual bool getIsActive();
 	virtual void setBaseSprite(std::shared_ptr<sf::Sprite>& spriteRef);
 	sf::Vector2f getScale();
 	sf::Vector2f getPosition();
@@ -34,8 +34,8 @@ public:
 	// virtual functions to update and draw the object allowing for different methods of vertices for drawing i.e vertcies or using the sfml shape classes
 	// update will define what the game object will be doing during 
 	virtual void collision(GameObject* other) {};
-	
 	virtual void collisionResponse(GameObject* other) {};
+	virtual void reset() {};
 	virtual void update(float dt);
 	virtual void draw(sf::RenderWindow * window) ;
 	virtual void getSprites(SpriteGenerator* spriteGenerator);

@@ -87,6 +87,9 @@ void Player::update(float dt)
 void Player::collision(GameObject* other)
 {
 	
+	
+
+
     
 
 }
@@ -177,7 +180,7 @@ bool Player::recallingAllies() const
 
 bool Player::checkAttack()
 {
-
+	// if the player inputs a direction cancel their attack
 	if (m_direction != sf::Vector2f(0.0f, 0.0f)) {
 		m_canAttack = false; 
 		m_attackFinished = false;

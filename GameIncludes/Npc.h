@@ -22,7 +22,7 @@ public:
 
 
 	void copyAnimController(AnimationController* animController);
-
+	bool getIsActive();
 	virtual void clone(Npc* copy);
 
 	virtual void getPathDir();
