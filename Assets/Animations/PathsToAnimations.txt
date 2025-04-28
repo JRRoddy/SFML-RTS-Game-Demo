@@ -63,3 +63,10 @@ id:../Assets/Animations/PawnAttackAnim.png
 584 6 94 68
 776 6 97 68
 970 6 81 68
+id:../Assets/Animations/EnemyDeathAnim.png
+37 18 109 112 
+292 16 112 115
+547 11 115 122
+800 7 121 128
+1055 3 123 133
+1309 1 126 137

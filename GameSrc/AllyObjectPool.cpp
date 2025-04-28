@@ -45,14 +45,14 @@ AllyObjectPool::~AllyObjectPool()
 void AllyObjectPool::resetActiveObject(int index)
 {
 	m_pool.push_back(m_activeObjects[index]);
-	m_pool[index]->reset();
+
 	m_activeObjects.erase(m_activeObjects.begin() + index);
 
 }
 void AllyObjectPool::refreshActiveObjects() {
 	for (int i = 0; i < m_activeObjects.size(); i++) {
 		if (!m_activeObjects[i]->getIsActive()) {
-
+			
 			m_pool.push_back(m_activeObjects[i]);
 			m_activeObjects.erase(m_activeObjects.begin() + i);
 
@@ -65,7 +65,7 @@ AllyBase* AllyObjectPool::activateObject()
 	if (hasAvailabeObject()) {
 		int randomEnemyIndexSelection = rand() % m_pool.size();
 		AllyBase* ally = m_pool[randomEnemyIndexSelection];
-		ally->setIsActive(true);
+		ally->reset();
 		m_activeObjects.push_back(m_pool[randomEnemyIndexSelection]);
 		m_pool.erase(m_pool.begin() + randomEnemyIndexSelection);
 		return ally;

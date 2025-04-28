@@ -1,6 +1,5 @@
 #pragma once
 #include "Npc.h"
-#include "Player.h"
 #include "CheckObjectType.h"
 // main abstract class for all enemies 
 class EnemyBase : public Npc {
@@ -20,7 +19,7 @@ public:
 	
     virtual EnemyBase* clone() { return nullptr; } 
 	virtual void clone(EnemyBase* copy);
-
+	void reset();
 	void draw(sf::RenderWindow * window);
 	
 	virtual void setAnimStates();

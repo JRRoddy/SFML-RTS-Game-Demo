@@ -18,7 +18,7 @@ public:
 	void update(float dt);
 	void initAllyPools(AreaTypes areaType, std::vector<AllyInitialiser>& m_alliesToInit, SpriteGenerator * spriteGenerator);
 	void setCurrentArea(LevelAreaContainer * levelArea);
-	void checkAllyRemoval(int index);
+	bool checkAllyRemoval(int index);
 	void resetSpawnDelay();
 	void updateAllySelectedStatus(AllyBase * ally);
 	void updateEnemyCollision(std::vector<EnemyBase*> &enemyBuffer);

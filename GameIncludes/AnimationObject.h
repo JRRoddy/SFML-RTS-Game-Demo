@@ -9,6 +9,7 @@ public:
 	AnimationObject() {};
 	AnimationObject(std::vector<std::shared_ptr<sf::Sprite>> frames,std::shared_ptr<sf::Sprite> &baseSpriteReference,float &delay);
 	~AnimationObject() {};
+	bool animEndNoWait();
 	bool animAtEnd();
 	const sf::Texture * getAnimTexture();
 	AnimationObject(const AnimationObject& other);

@@ -12,11 +12,11 @@ public:
 	Npc() {}; 
 	virtual ~Npc(){}
 
-	Player * getPlayerRef();
+	Character * getPlayerCharacterRef();
 
 	void setBaseSprite(std::shared_ptr<sf::Sprite>& spriteRef);
 
-	void setPlayerRef(Player* playerRef);
+	void setPlayerCharacterRef(Character* playerRef);
 
 	virtual void updateGridTileState(gridTile* gridTile);
 
@@ -31,7 +31,7 @@ public:
 
 	Character* getCharacterTarget();
 
-	void setTargetPlayer();
+	virtual void setTargetPlayer();
 
 	void setCharacterTarget(Character* character);
 
@@ -41,21 +41,26 @@ public:
 	
 	// interact method that is generic across all npcs 
    // can be overriden to provide specifc npc's with specifc interactions with the player
+	
+	virtual void attack(Character* target);
 	virtual void playerInteract() {};
-
-	virtual sf::Vector2f getTargetPosition() ;
+	bool characterTargetDeathCheck();
+	virtual sf::Vector2f getTargetPosition();
+	bool deathAnimFinished();
 protected:
 	Character* m_characterTarget = nullptr;
-	Player* m_playerRef = nullptr;
+	Character* m_playerCharacterRef = nullptr;
 	sf::Vector2f m_currentTargetPos;
 	std::vector<node*> m_requestedPath;
 	std::unique_ptr<AnimationController> m_animationController;
 	std::map<std::string, AnimationObject> m_animStates ={};
 	std::string m_idleAnimPath;
 	std::string m_runAnimPath;
+	std::string m_deathAnimPath;
 	std::string m_attackAnimPath;
 	float m_attackAnimDelay = 0.0f;
 	float m_runAnimDelay = 0.0f;
+	float m_deathAnimDelay = 0.0f;
 	float m_idleAnimDelay = 0.0f;
 	
 };

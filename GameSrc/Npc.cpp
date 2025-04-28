@@ -1,9 +1,9 @@
 #include "Npc.h"
 
 
-Player * Npc::getPlayerRef()
+Character * Npc::getPlayerCharacterRef()
 {
-	return m_playerRef;
+	return m_playerCharacterRef;
 }
 void Npc::setBaseSprite(std::shared_ptr<sf::Sprite>& spriteRef)
 {
@@ -16,9 +16,9 @@ void Npc::setBaseSprite(std::shared_ptr<sf::Sprite>& spriteRef)
 
 	}
 }
-void Npc::setPlayerRef(Player* playerRef)
+void Npc::setPlayerCharacterRef(Character* playerRef)
 {
-	m_playerRef = playerRef;
+	m_playerCharacterRef = playerRef;
 }
 // update the current tile state of an npc 
 void Npc::updateGridTileState(gridTile* gridTile)
@@ -47,6 +47,7 @@ void Npc::copyAnimController(AnimationController* animationController)
 	m_animationController = std::make_unique<AnimationController>(AnimationController(animationController, m_baseSpriteRef));
 
 }
+
 bool Npc::getIsActive()
 {
 	return !isDead();
@@ -58,7 +59,7 @@ void Npc::clone(Npc* copy)
 	copy->setDamage(m_damage);
 	copy->setHealth(m_health);
 	copy->setSpeed(m_speed);
-	copy->setPlayerRef(m_playerRef);
+	copy->setPlayerCharacterRef(m_playerCharacterRef);
 	copy->setBaseSprite(m_baseSpriteRef);
 	copy->copyAnimController(m_animationController.get());
 	copy->setCharacterTarget(m_characterTarget);
@@ -95,7 +96,7 @@ Character* Npc::getCharacterTarget()
 
 void Npc::setTargetPlayer()
 {
-	m_characterTarget = m_playerRef;
+	m_characterTarget = m_playerCharacterRef;
 }
 
 void Npc::setCharacterTarget(Character* character)
@@ -109,7 +110,8 @@ void Npc::setAnimStates()
 {
 	bool runAnimBool = m_direction != sf::Vector2f(0.0f, 0.0f);
 	m_animationController->setState("move", runAnimBool);
-	m_animationController->setState("attack", m_canAttack);
+	m_animationController->setState("attack", m_canAttack && m_characterTarget != nullptr && !isDead());
+	//m_animationController->setState("death", isDead());
 	bool defaultAnimBool = (m_direction == sf::Vector2f(0.0f, 0.0f));
 	m_animationController->setDefault(defaultAnimBool);
 }
@@ -124,14 +126,40 @@ void Npc::getSprites(SpriteGenerator* spriteGenerator)
 	m_animStates["idle"] = spriteGenerator->generateAnimationObject(m_idleAnimPath, m_baseSpriteRef, m_idleAnimDelay);
 	m_animStates["move"] = spriteGenerator->generateAnimationObject(m_runAnimPath, m_baseSpriteRef, m_runAnimDelay);
 	m_animStates["attack"] = spriteGenerator->generateAnimationObject(m_attackAnimPath, m_baseSpriteRef, m_attackAnimDelay);
+	m_animStates["death"] = spriteGenerator->generateAnimationObject(m_deathAnimPath,m_baseSpriteRef,m_deathAnimDelay);
+	
 	m_animationController = std::make_unique<AnimationController>(AnimationController(m_animStates, std::string("idle")));
 
 
 }
 
-sf::Vector2f Npc::getTargetPosition() 
+void Npc::attack(Character* target)
+{
+	target->takeDamage(m_damage);
+
+
+}
+
+bool Npc::characterTargetDeathCheck()
+{
+	if (m_characterTarget->isDead())
+	{
+		std::cout << "target character is dead" << std::endl;
+		m_characterTarget = nullptr;
+		m_canAttack = false;
+	}
+	return m_characterTarget == nullptr;
+}
+
+sf::Vector2f Npc::getTargetPosition()
 {
 	
 
 	return m_characterTarget->getPosition();
+}
+
+bool Npc::deathAnimFinished()
+{
+	return (m_animationController->stateIsActive("death") 
+		    && m_animationController->currentAnimAtEnd());
 }

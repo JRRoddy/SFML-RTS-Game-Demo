@@ -9,7 +9,7 @@ AllyBase::AllyBase()
 void AllyBase::collision(GameObject* other)
 {
 
-	  // ally targeting for enemies is based on when an enemy enters the space 
+	 // ally targeting for enemies is based on when an enemy enters the space 
 	// they cover around them i.e their collision box 
 	// therfore if we dont have a current target we check if the target 
 	// is an enemy through the CheckObjectType utility which makes use of 
@@ -26,16 +26,18 @@ void AllyBase::collision(GameObject* other)
 		
 		if ( m_characterTarget != nullptr) {
 			// if that character was a valid target i.e an enemy
+			
 			m_canAttack = true;// ally can attack the enemy its colliding with 
 			//check if damage can be done based on current status of attack anim
 			if (m_animationController->stateIsActive("attack") &&
 				m_animationController->currentAnimAtEnd()) {
 
 				m_characterTarget->takeDamage(m_damage); // call that characters take damage method
-
+				characterTargetDeathCheck(); // check that the target is not dead 
 			}
 		}
-	
+	   
+
 		
 	
 	
@@ -44,7 +46,10 @@ void AllyBase::collision(GameObject* other)
 
 void AllyBase::clone(AllyBase* copy)
 {
+	std::cout << "ally base clone called" << std::endl;
 	Npc::clone(copy); // call parent class clone to save on code duplication
+	copy->setPlayerRef(m_playerRef);
+
 }
 
 void AllyBase::draw(sf::RenderWindow* window)
@@ -96,14 +101,21 @@ bool AllyBase::isRecurited() const
 {
 	return m_recruited;
 }
-
+Player* AllyBase::getPlayerRef()
+{
+	return m_playerRef;
+}
+void AllyBase::setPlayerRef(Player* playerRef)
+{
+	m_playerCharacterRef = playerRef;
+	m_playerRef = playerRef;
+}
 void AllyBase::playerInteract()
 {
 
 	if (!m_recruited && m_playerRef->getCurrentGold() >= m_gold) {
 		std::cout << "recuriting ally" << std::endl;
 		m_recruited = true;
-	  	
 	}
 	if (m_recruited) {
 		m_selected = true;
@@ -123,9 +135,13 @@ bool AllyBase::getSelected()
 }
 
 void AllyBase::reset()
-{
+{	
+	// resetting ally object for when it goes back into its associated pool
+	m_active = true;
 	m_health = m_baseHealth; 
 	m_recruited = false; 
+	m_characterTarget = nullptr;
+	
 
 
 
@@ -161,4 +177,9 @@ void AllyBase::getPathDir()
 
 	m_direction* float((!getIsAttacking()));
 
+}
+
+void AllyBase::setTargetPlayer()
+{
+	m_characterTarget = m_playerRef;
 }

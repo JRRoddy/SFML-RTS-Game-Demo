@@ -19,9 +19,8 @@ void EnemyBase::collision(GameObject* other)
 		//check if damage can be done based on current status of attack anim
 		if ( m_animationController->stateIsActive("attack") && 	 
 			 m_animationController->currentAnimAtEnd()) { 
-			
-			character->takeDamage(m_damage); // call that characters take damage method
-		
+			attack(character); // call the attack method for this character 
+			characterTargetDeathCheck();
 		}
 	}
 
@@ -32,6 +31,15 @@ void EnemyBase::clone(EnemyBase* copy)
 {
 	std::cout << "enemyBase clone called" << std::endl;
 	Npc::clone(copy); // call parent class clone to save on code duplication
+}
+
+void EnemyBase::reset()
+{
+	m_active = true; 
+ 	m_health = m_baseHealth; 
+	std::cout << "resetting enemy base health is now " << m_health << std::endl;
+	m_characterTarget = nullptr;
+    	
 }
 
 void EnemyBase::draw(sf::RenderWindow* window)
@@ -47,7 +55,7 @@ void EnemyBase::draw(sf::RenderWindow* window)
 sf::Vector2f EnemyBase::getTargetPosition()
 {
 	if (m_characterTarget == nullptr) {
-		m_characterTarget = m_playerRef;
+		m_characterTarget = m_playerCharacterRef;
 	}
 
 	return m_characterTarget->getPosition();

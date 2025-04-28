@@ -55,7 +55,7 @@ void EnemyObjectPool::resetActiveObject(int index)
 	// and move it back into the main pool
 	
 	m_pool.push_back(m_activeObjects[index]);
-	m_pool[index]->reset();
+
 	m_activeObjects.erase(m_activeObjects.begin() + index);
 
 }
@@ -65,7 +65,9 @@ void EnemyObjectPool::refreshActiveObjects() {
 	for (int i = 0; i < m_activeObjects.size(); i++) {
 		if (!m_activeObjects[i]->getIsActive()) {
 
+			
 			m_pool.push_back(m_activeObjects[i]);
+			
 			m_activeObjects.erase(m_activeObjects.begin() + i);
 
 		}
@@ -75,10 +77,13 @@ void EnemyObjectPool::refreshActiveObjects() {
 EnemyBase* EnemyObjectPool::activateObject()
 {
 	if (hasAvailabeObject()) {
+		std::cout << "enemy pool has availabe object " << std::endl;
 		// select random enemy from pool and set it to be active
 		// return enemy for any further manipulation 
 		int randomEnemyIndexSelection = rand() % m_pool.size();
 		EnemyBase* enemy = m_pool[randomEnemyIndexSelection];
+		enemy->reset();
+		std::cout << "new object ref " << enemy << std::endl;
 		enemy->setIsActive(true);
 		// push enemy into active pool and erase it from the main pool
 		//as it is now active

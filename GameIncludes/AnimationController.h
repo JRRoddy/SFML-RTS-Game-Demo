@@ -9,6 +9,7 @@ public:
    
 	AnimationController(std::map<std::string, AnimationObject>& mapOfstates,std::string & defaultState);
 	AnimationController(AnimationController* animationController, std::shared_ptr<sf::Sprite>& baseSpriteOverride);
+	bool currentAnimAtEndNoWait();
 	~AnimationController(); 
 	void setDefault(bool  isActive); 
 	void setStates(std::map<std::string, AnimationObject>& states);

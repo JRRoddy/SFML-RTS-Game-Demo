@@ -8,12 +8,22 @@ AnimationObject::AnimationObject(std::vector<std::shared_ptr<sf::Sprite>> frames
 	m_currentFrameIndex = 0;// current index into frames vector
 }
 
-
+// will return true as soon as we reached the end frame index
+// this is for things that may feel bad delayed until the end of the animation 
+// such as player input for attacking 
+bool AnimationObject::animEndNoWait() 
+{
+	return m_currentFrameIndex == m_frames.size() - 1;
+};
 bool AnimationObject::animAtEnd()
 {
-	// if we reached end of animation
-	return m_currentFrameIndex == m_frames.size()-1;
+	// if we are on the end frame for the  end of animation and at the end 
+	std::cout << "frame timer elapsed " << m_frameTimer.getElapsedTime().asMilliseconds() << std::endl;
+	return m_currentFrameIndex == m_frames.size()-1 
+		&& m_frameTimer.getElapsedTime().asMilliseconds()<=0.0f;
 }
+
+
 
 const sf::Texture* AnimationObject::getAnimTexture()
 {
@@ -80,6 +90,7 @@ void AnimationObject::play()
 	// if we have reached our frame delay
 	if (m_frameTimer.getElapsedTime().asMilliseconds() >= m_frameDelay.asMilliseconds()) {
 		// cycle to next frame and reset timer
+		
 		m_currentFrameIndex = (++m_currentFrameIndex) % m_frames.size();
 		m_frameTimer.restart();
 	}
@@ -90,7 +101,7 @@ void AnimationObject::reset()
 {
 	m_currentFrameIndex = 0;
 	m_frameTimer.restart();
-
+	
 }
 
 void AnimationObject::setFrameDelay(float& miliDelay)

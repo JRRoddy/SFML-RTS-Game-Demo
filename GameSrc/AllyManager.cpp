@@ -55,7 +55,7 @@ void AllyManager::update(float dt)
 
 	for (int i = 0; i < m_activeBuffer.size(); i++) {
 
-		checkAllyRemoval(i); // check if ally should be removed from active buffer
+		if(checkAllyRemoval(i)) continue; // check if ally should be removed from active buffer
 		AllyBase* ally = m_activeBuffer[i]; 
 		
 		updateAllySelectedStatus(ally); // update recruited status and selected status of ally
@@ -110,7 +110,7 @@ void AllyManager::setCurrentArea(LevelAreaContainer* levelArea)
 
 }
 
-void AllyManager::checkAllyRemoval(int index)
+bool AllyManager::checkAllyRemoval(int index)
 {
 	// if we need to remove an ally as it has been marked as inactive 
 	if (!m_activeBuffer[index]->getIsActive()) {
@@ -118,9 +118,9 @@ void AllyManager::checkAllyRemoval(int index)
 		// are using as they line up in memory 
 		m_activeBuffer.erase(m_activeBuffer.begin() + index); 
 		m_currentPool->resetActiveObject(index);
-
+		return true;
 	}
-
+	return false;
 }
 
 void AllyManager::resetSpawnDelay()

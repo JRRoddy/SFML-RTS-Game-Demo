@@ -14,7 +14,6 @@ class Player: public Character {
 	void draw(sf::RenderWindow* window);
 	void updateCommandFlag();
 	void updateCamera(); 
-	bool checkRunAnim();
 	void update(float dt);
 	void collision(GameObject* other);
 	void getSprites(SpriteGenerator * spriteGenerator);
@@ -23,6 +22,8 @@ class Player: public Character {
 	bool checkAttack();
 	void updateAllyMovementOrder();
 	void updateAnimStates();
+	void reset();
+	void checkReset();
 	sf::Vector2f getMovementOrderPos();
 	
 
@@ -33,6 +34,7 @@ class Player: public Character {
 	 float m_baseSpeed = 300.0f;
 	 bool m_recallAllies = true;
 	 
+	 sf::Vector2f m_startPosition;
 	 sf::Vector2f m_movmentOrderPos;
 	 sf::Keyboard::Key m_allyFollowPlayerKey = sf::Keyboard::Key::F;
 	 sf::Mouse::Button m_allyMoveMouseButton = sf::Mouse::Right;
@@ -52,7 +54,7 @@ class Player: public Character {
 	 std::map<std::string, AnimationObject> m_animStates;
 	 float m_idleAnimDelay = 70.0f;
 	 float m_runAnimDelay = 70.0f;
-	 float m_attackAnimDelay = 70.0f;
+	 float m_attackAnimDelay = 100.0f;
 
 
 

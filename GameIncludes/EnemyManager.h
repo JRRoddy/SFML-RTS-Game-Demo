@@ -19,7 +19,7 @@ public:
 	void update(float dt); 
 	void drawEnemies(sf::RenderWindow * window);
 	void setCurrentEnemyPool(AreaTypes areaType);
-	void checkEnemyRemoval(int index);
+	bool checkEnemyRemoval(int index);
 	void getNewSpawnDelay(); 
 	std::vector<EnemyBase*>& getActiveEnemyBuffer();
 	void updateCollision();

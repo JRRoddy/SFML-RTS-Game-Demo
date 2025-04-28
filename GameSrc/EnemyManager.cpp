@@ -8,7 +8,7 @@ void EnemyManager::update(float dt) {
 
 	for (int i = 0; i < m_activeEnemyBuffer.size();i++)
 	{   
-		checkEnemyRemoval(i);// check if the enemy needs to be removed from active buffer
+		if(checkEnemyRemoval(i)) continue;// check if the enemy needs to be removed from active buffer
 		EnemyBase* enemyToUpdate = m_activeEnemyBuffer[i];
 		// get the current path and set it for the enemy to folllow 
 		m_activeEnemyBuffer[i]->updateGridTileState(m_levelGrid->getGridTile(enemyToUpdate->getPosition()));
@@ -52,7 +52,7 @@ void EnemyManager::setCurrentEnemyPool(AreaTypes areaType)
 
 }
 
-void EnemyManager::checkEnemyRemoval(int index)
+bool EnemyManager::checkEnemyRemoval(int index)
 {
 	// since the active enemy buffer for the enemy manager lines up with the 
 	// buffer of the current enemy pool we can match the index of the enemy
@@ -60,8 +60,9 @@ void EnemyManager::checkEnemyRemoval(int index)
 	if (!m_activeEnemyBuffer[index]->getIsActive()) {
 		m_currentEnemyPool->resetActiveObject(index);
 		m_activeEnemyBuffer.erase(m_activeEnemyBuffer.begin() + index);
-
+		return true;
 	}
+	return false;
 }
 
 // get new spawn delay for enemies based on current level area
@@ -171,7 +172,7 @@ EnemyManager::~EnemyManager()
 void EnemyManager::initEnemyPool(AreaTypes areaType, std::vector<EnemyInitialiser>& enemies, SpriteGenerator * spriteGenerator)
 {
 	for (int i = 0; i < enemies.size(); i++) {
-		enemies[i].getHeldObject()->setPlayerRef(m_playerRef);
+		enemies[i].getHeldObject()->setPlayerCharacterRef(m_playerRef);
 		enemies[i].getHeldObject()->setTargetPlayer();
 		enemies[i].getHeldObject()->getSprites(spriteGenerator);
 	}

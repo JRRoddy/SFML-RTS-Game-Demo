@@ -10,9 +10,11 @@ Pawn::Pawn()
     m_idleAnimPath = "../Assets/Animations/PawnIdleAnim.png";
     m_runAnimPath = "../Assets/Animations/PawnRunAnim.png";
     m_attackAnimPath = "../Assets/Animations/PawnAttackAnim.png";
+    m_deathAnimPath = "../Assets/Animations/EnemyDeathAnim.png";
     m_runAnimDelay = 70.0f;
     m_idleAnimDelay = 70.0f;
-    m_attackAnimDelay = 70.0f;
+    m_attackAnimDelay = 85.0f;
+    m_deathAnimDelay = 85.0f;
     m_spawnCap = 1;
     m_gold = 0;
     m_debugCircle.setFillColor(sf::Color::Magenta);
@@ -24,7 +26,7 @@ AllyBase* Pawn::clone()
 {
 
 	Pawn *copy  = new Pawn();
-	Npc::clone(copy);
+	AllyBase::clone(copy);
 	return copy;
 }
 

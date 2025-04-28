@@ -2,6 +2,7 @@
 #include "Npc.h"
 #include "CheckObjectType.h" 
 #include "EnemyBase.h"
+#include "Player.h"
 // base class of all ally objects
 class AllyBase:public Npc {
 public:
@@ -24,11 +25,14 @@ public:
 	void getSprites(SpriteGenerator* spriteGenerator);
 	bool isRecurited() const; 
 	void playerInteract(); 
+	void setPlayerRef(Player* playerRef);
+	Player* getPlayerRef();
 	void setIsSelected(bool isSelected);
 	bool getSelected();
 	void reset();
 	void checkFacingDirection();
 	void getPathDir();
+	void setTargetPlayer();
 protected:
 	bool m_selected = false;
 	bool m_recruited = false;
@@ -38,6 +42,8 @@ protected:
 	sf::Vector2f m_facingDirection;
 	sf::Vector2f m_previousMovementOrder;
 	sf::Vector2f m_worldPositionTarget;
+	Player* m_playerRef = nullptr;
+
 
 
 };

@@ -10,9 +10,11 @@ Goblin::Goblin()
     m_idleAnimPath = "../Assets/Animations/GoblinIdle.png";
     m_runAnimPath = "../Assets/Animations/goblinRunAnim.png";
     m_attackAnimPath = "../Assets/Animations/GoblinAttackAnim.png";
+    m_deathAnimPath = "../Assets/Animations/EnemyDeathAnim.png";
     m_runAnimDelay = 70.0f;
     m_idleAnimDelay = 70.0f; 
-    m_attackAnimDelay = 70.0f; 
+    m_attackAnimDelay = 80.0f; 
+    m_deathAnimDelay = 85.0f;
     m_spawnCap = 1;
     m_debugCircle.setFillColor(sf::Color::Red); 
     m_debugCircle.setRadius(5.0f); 
@@ -36,7 +38,6 @@ void Goblin::update(float dt)
 {
     
     flipSpriteX(m_direction.x); 
-   
     setAnimStates();
     m_animationController.get()->update();
     updatePosition(dt);

@@ -10,7 +10,9 @@ Player::Player(sf::Vector2f position, SpriteGenerator *spriteGenerator,InputMana
 	m_input = input;
 	m_speed = m_baseSpeed;
 	m_damage = 30.0f;
-
+	m_startPosition = position;
+	m_baseHealth = 100.0f;
+	m_health = m_baseHealth;
 	// add directional maps to the input manager through its refernce
 	// this allows directions to be mapped to keys 
 	// such as a being the directional value of -1 etc
@@ -30,6 +32,9 @@ Player::Player(sf::Vector2f position, SpriteGenerator* spriteGenerator, InputMan
 	m_active = true;
 	m_input = input;
 	m_speed = m_baseSpeed;
+	m_baseHealth = 100.0f;
+	m_health = m_baseHealth;
+	m_startPosition = position;
 	m_input->addDirectionalMapping(m_vertInputMapName, m_vertcialDirectionMap);
 	m_input->addDirectionalMapping(m_horiInputMapName, m_horizontalDirectionMap);
 	
@@ -76,7 +81,7 @@ void Player::update(float dt)
 	updateAllyMovementOrder();
 	updateCommandFlag();
 	m_debugCircle.setPosition(m_nextPos);
-	
+	checkReset();
 	
 	
 	
@@ -180,27 +185,32 @@ bool Player::recallingAllies() const
 
 bool Player::checkAttack()
 {
+	
 	// if the player inputs a direction cancel their attack
 	if (m_direction != sf::Vector2f(0.0f, 0.0f)) {
 		m_canAttack = false; 
 		m_attackFinished = false;
 		return false;
 	}
-
+	bool attackFinished = false;
 	// check if the player has inputted to attack 
-	if (m_input->mouseReleased(sf::Mouse::Left) ) {
-
+	if (m_input->mouseReleased(sf::Mouse::Left)   ) {
+		
 		m_canAttack = true;
+		
+		std::cout << "player attacked " << std::endl;
 	}
 	// if they can attack update the current state of the attack
-	if (m_canAttack) {
+	if (m_canAttack ) {
 		// if we have reached the full end of the animation then we have finished
-		m_attackFinished = m_animationController->currentAnimAtEnd(); 
+		
+		attackFinished = m_animationController->currentAnimAtEndNoWait();
+		m_canAttack = !attackFinished;
+		std::cout << "player attack finished" << attackFinished << std::endl;
+		return m_canAttack;
 		// the player is not attacking the frame after they've finished swinging 
-		m_canAttack = !m_attackFinished;
 	}
-	// if the player has not completed the attack and can attack they are attacking 
-	return m_canAttack && !m_attackFinished;
+	return false;
 }
 
 void Player::updateAllyMovementOrder()
@@ -211,7 +221,6 @@ void Player::updateAllyMovementOrder()
 	}
 	if (m_input->mouseReleased(m_allyMoveMouseButton)) {
 		m_recallAllies = false; 
-
 		m_movmentOrderPos = getMousePosition();
 
 
@@ -228,6 +237,24 @@ void Player::updateAnimStates()
 	
 	m_animationController->setDefault(!runAnim);
 
+}
+
+void Player::reset()
+{
+
+	
+		m_health = m_baseHealth; 
+		setPosition(m_startPosition);
+
+
+}
+
+void Player::checkReset()
+{
+	if (isDead()) {
+		std::cout << "player health dropped below 0 resetting:"<<m_health << std::endl;
+		reset();
+	}
 }
 
 
