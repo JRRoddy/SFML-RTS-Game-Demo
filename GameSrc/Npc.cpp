@@ -50,7 +50,8 @@ void Npc::copyAnimController(AnimationController* animationController)
 
 bool Npc::getIsActive()
 {
-	return !isDead();
+	// an npc is active if haven't died and finished their death animation
+	return !deathAnimFinished();
 }
 // deep copy method 
 void Npc::clone(Npc* copy)
@@ -111,7 +112,7 @@ void Npc::setAnimStates()
 	bool runAnimBool = m_direction != sf::Vector2f(0.0f, 0.0f);
 	m_animationController->setState("move", runAnimBool);
 	m_animationController->setState("attack", m_canAttack && m_characterTarget != nullptr && !isDead());
-	//m_animationController->setState("death", isDead());
+	m_animationController->setState("death", isDead());
 	bool defaultAnimBool = (m_direction == sf::Vector2f(0.0f, 0.0f));
 	m_animationController->setDefault(defaultAnimBool);
 }
@@ -144,10 +145,11 @@ bool Npc::characterTargetDeathCheck()
 {
 	if (m_characterTarget->isDead())
 	{
-		std::cout << "target character is dead" << std::endl;
+		
 		m_characterTarget = nullptr;
 		m_canAttack = false;
 	}
+	
 	return m_characterTarget == nullptr;
 }
 
@@ -159,7 +161,9 @@ sf::Vector2f Npc::getTargetPosition()
 }
 
 bool Npc::deathAnimFinished()
-{
-	return (m_animationController->stateIsActive("death") 
-		    && m_animationController->currentAnimAtEnd());
+{   
+	
+  // otherwise return if death animation has finished
+	return isDead()&& (m_animationController->stateIsActive("death") && 
+		   m_animationController->currentAnimAtEndNoWait());
 }

@@ -24,17 +24,18 @@ void AllyBase::collision(GameObject* other)
 		   m_characterTarget = CheckObjecType<EnemyBase>(other);
 	   }
 		
-		if ( m_characterTarget != nullptr) {
+		if ( m_characterTarget != nullptr ) {
 			// if that character was a valid target i.e an enemy
 			
 			m_canAttack = true;// ally can attack the enemy its colliding with 
 			//check if damage can be done based on current status of attack anim
 			if (m_animationController->stateIsActive("attack") &&
 				m_animationController->currentAnimAtEnd()) {
-
-				m_characterTarget->takeDamage(m_damage); // call that characters take damage method
-				characterTargetDeathCheck(); // check that the target is not dead 
+				std::cout << "ally attacking "<< (m_animationController->stateIsActive("attack")&& m_animationController->currentAnimAtEnd()) << std::endl;
+				attack(m_characterTarget); // call that characters take damage method
 			}
+			characterTargetDeathCheck(); // check that the target is not dead 
+
 		}
 	   
 

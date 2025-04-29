@@ -198,7 +198,7 @@ bool Player::checkAttack()
 		
 		m_canAttack = true;
 		
-		std::cout << "player attacked " << std::endl;
+		//std::cout << "player attacked " << std::endl;
 	}
 	// if they can attack update the current state of the attack
 	if (m_canAttack ) {
@@ -206,7 +206,7 @@ bool Player::checkAttack()
 		
 		attackFinished = m_animationController->currentAnimAtEndNoWait();
 		m_canAttack = !attackFinished;
-		std::cout << "player attack finished" << attackFinished << std::endl;
+		//std::cout << "player attack finished" << attackFinished << std::endl;
 		return m_canAttack;
 		// the player is not attacking the frame after they've finished swinging 
 	}

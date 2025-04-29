@@ -17,8 +17,8 @@ bool AnimationObject::animEndNoWait()
 };
 bool AnimationObject::animAtEnd()
 {
-	// if we are on the end frame for the  end of animation and at the end 
-	std::cout << "frame timer elapsed " << m_frameTimer.getElapsedTime().asMilliseconds() << std::endl;
+	// if we are on the end frame of animation and at the end 
+	// ( frame time cycled back to 0)
 	return m_currentFrameIndex == m_frames.size()-1 
 		&& m_frameTimer.getElapsedTime().asMilliseconds()<=0.0f;
 }

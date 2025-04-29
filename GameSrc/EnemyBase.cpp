@@ -20,8 +20,9 @@ void EnemyBase::collision(GameObject* other)
 		if ( m_animationController->stateIsActive("attack") && 	 
 			 m_animationController->currentAnimAtEnd()) { 
 			attack(character); // call the attack method for this character 
-			characterTargetDeathCheck();
 		}
+		characterTargetDeathCheck();
+
 	}
 
 

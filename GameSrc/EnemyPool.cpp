@@ -53,11 +53,12 @@ void EnemyObjectPool::resetActiveObject(int index)
 {
 	// remove object from specifc index within active pool
 	// and move it back into the main pool
-	
+	std::cout << "removing active object at index " << index << std::endl;
 	m_pool.push_back(m_activeObjects[index]);
-
+	std::cout << "pool objects size " << m_pool.size() << std::endl;
 	m_activeObjects.erase(m_activeObjects.begin() + index);
-
+	std::cout <<"active objects size"<< m_activeObjects.size() << std::endl;
+	
 }
 void EnemyObjectPool::refreshActiveObjects() {
 	// loop through all objects and check if any need to be removed from the 

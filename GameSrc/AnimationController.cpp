@@ -95,7 +95,9 @@ void AnimationController::setState(std::string state, bool isActive)
 	m_stateTriggerMap[state] = isActive;
 	// set current state to state being passed in 
 	// if it should be active 
-	
+	if (state == "death" && isActive) {
+		std::cout << "switching to death animation" << std::endl;
+	}
 	if (state != m_currentState && isActive == true) {
 		// reset current state and set to state passed in
 		m_mappedstates[m_currentState].reset(); 
@@ -110,7 +112,7 @@ bool AnimationController::currentAnimAtEndNoWait() {
 	return m_mappedstates[m_currentState].animEndNoWait();
 }
 bool AnimationController::currentAnimAtEnd()
-{
+{ 
 	return m_mappedstates[m_currentState].animAtEnd();
 }
 
