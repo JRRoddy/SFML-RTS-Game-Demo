@@ -12,10 +12,10 @@ public:
 
 	DynamicObject(float speed); 
 	DynamicObject(float speed, sf::Vector2f position); 
-	
+	virtual ~DynamicObject() {};
 	float getSpeed();
 	void setSpeed(float speed);
-	void updatePosition(float dt);
+	virtual void updatePosition(float dt);
 	void updatePosition(float dt, sf::FloatRect boundsToContainObject);
 	sf::Vector2f& getNexPos(float dt);
 	void updateLastKnownDirection(sf::Vector2f &direction);

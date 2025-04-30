@@ -4,7 +4,7 @@
 #ifndef VECTOR_MATH
 #define VECTOR_MATH
 
-inline sf::Vector2f normalize(sf::Vector2f& vector) {
+inline sf::Vector2f normalize(sf::Vector2f vector) {
 	float lenght = sqrt((vector.x * vector.x + vector.y * vector.y));
 
 	if (lenght == 0.0f) {// prevents divide by 0

@@ -194,7 +194,6 @@ void LevelGenerator::playerNextTileCheck(float dt)
 
 LevelGenerator::~LevelGenerator()
 {
-	std::cout << "LEVEL GENERATOR DESTRUCTOR CALLED" << std::endl;
 	for (int i = 0; i < m_areaContainersPool.size(); i++) {
 
 		delete m_areaContainersPool[i];

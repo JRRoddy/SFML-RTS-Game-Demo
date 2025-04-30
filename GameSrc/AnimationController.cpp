@@ -4,12 +4,9 @@
 
 AnimationController::AnimationController(std::map<std::string, AnimationObject> &mapOfstates, std::string & defaultState)
 {
-	std::cout << "generating anim controller" << std::endl;
 	m_mappedstates = mapOfstates;
-	std::cout << "mapped states size  " << m_mappedstates.size() << std::endl;
 	
 	m_defaultState = defaultState;
-	std::cout << "default state " << m_defaultState <<std::endl;
 	m_currentState = m_defaultState; 
 	m_baseSpriteRef = m_mappedstates[defaultState].getSpriteRef();
 
@@ -46,9 +43,7 @@ AnimationController::AnimationController(AnimationController* animationControlle
 		m_currentState = m_defaultState;
 		m_stateTriggerMap = animationController->getTriggerMap();
 
-		if (m_stateTriggerMap.find(m_defaultState) != m_stateTriggerMap.end()) {
-			std::cout << "trigger map default state found" << std::endl;
-		}
+		
 		m_stateTriggerMap[m_defaultState] = true; // set default state for this anim controller to true
 
 

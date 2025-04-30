@@ -29,7 +29,6 @@ void AllyManager::spawnAllies()
 		m_staticAlliesCount = std::max(0, m_staticAlliesCount);
 		if (m_currentPool->hasAvailabeObject() && m_staticAlliesCount != m_currentArea->getMaxAllyCap()) {
 			// if we had an avaialbe object in the current object pool we are using 
-			std::cout << "spawning ally "<<m_refereshTime.asSeconds()<<" refresh timmer: " << m_refreshAlliesTimer.getElapsedTime().asSeconds() << std::endl;
 			m_staticAlliesCount++; // increase the count of static allies to recruit in the area
 			AllyBase* ally = m_currentPool->activateObject();  // get  availabe object from pool
 			gridTile* randomTile = m_levelGrid->getRandomLocationInGrid();// get ally loc
@@ -80,7 +79,6 @@ void AllyManager::update(float dt)
 
 void AllyManager::initAllyPools(AreaTypes areaType, std::vector<AllyInitialiser> & alliesToInit, SpriteGenerator *spriteGenerator)
 {
-	std::cout<< "initialsing ally pools" << std::endl;
 
 	// initialse all of the objects in each of the ally initialisers 
 	// that will be used to instantiate all allies in the particualr 
@@ -98,7 +96,6 @@ void AllyManager::initAllyPools(AreaTypes areaType, std::vector<AllyInitialiser>
 
 void AllyManager::setCurrentArea(LevelAreaContainer* levelArea)
 {
-	std::cout << "setting ally manager area" << std::endl;
 	m_currentArea = levelArea; // set current area object ref
 	// time between refreshing ally spawns 
 	m_refereshTime = sf::seconds(m_currentArea->getAllyRefreshCoolDown());

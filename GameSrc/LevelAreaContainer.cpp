@@ -13,7 +13,6 @@ LevelAreaContainer::LevelAreaContainer(SpriteGenerator* spriteGenerator, sf::Vec
 	// define a refernce point for which the first grid item will be centred 
 	sf::Vector2f topLeftcentre = sf::Vector2f(m_position.x - m_gridSectionSize.x/2.0f,m_position.y - m_gridSectionSize.y/2.0f);
 
-	std::cout <<"levelgrid top left centre "<< topLeftcentre.x << ":" << m_topLeft.y << std::endl;
 
 	//defining a top left for the current area that can be used to track where the player is in the current area a
 	// and calculate an index into the global area grid held within the level generator class
@@ -161,7 +160,6 @@ void LevelAreaContainer::setAreaType(AreaTypes areaType)
 
 LevelAreaContainer::~LevelAreaContainer()
 {
-	std::cout << "deallocating tile stored in memory for level area" << std::endl;
 	for (int i = 0; i < m_worldTiles.size(); i++) {
 		delete m_worldTiles[i];
 	}
@@ -180,7 +178,6 @@ sf::Vector2f LevelAreaContainer::getEnemySpawnPosition(GameObject * enemy)
 	sf::FloatRect enemySpriteBounds = enemy->getBaseSprite()->getGlobalBounds();
 
 	sf::Vector2f positionOnEdge = getRandomEdgePosition(enemySpriteBounds);
-	std::cout << "position for enemy " << positionOnEdge.x << ":" << positionOnEdge.y << std::endl;
 	return positionOnEdge;
 }
 
@@ -188,7 +185,6 @@ void LevelAreaContainer::setSpawnDelays(float& min, float &max)
 {
 	m_minSpawnCoolDown = min;  
 	m_maxSpawnCoolDown = max;
-	std::cout << "spawn delay min " << m_minSpawnCoolDown <<  ":" << m_maxSpawnCoolDown << std::endl;
 }
 
 //  below two methods are used for deep copying one level area container and creating a copy of it(new heap allocated memeory at a new address)
@@ -359,9 +355,6 @@ void LevelAreaContainer::init(SpriteGenerator* spriteGenerator)
 	initTiles(spriteGenerator);
 	initLevelMaps();
 
-
-
-
 }
 
 void LevelAreaContainer::setDimensionsForArea(sf::Vector2i &gridDimensions, sf::Vector2f &tileSize)
@@ -411,7 +404,6 @@ void LevelAreaContainer::initLevelMaps()
 		{
 			std::cout << "could not load tile map image " << m_tileMapPaths[i] << std::endl;
 		};
-		std::cout << "loaded tile image map " << m_tileMapPaths[i] << std::endl;
 
 	}
 	
@@ -433,7 +425,6 @@ Tile* LevelAreaContainer::initNewRandomTileInArea(sf::Vector2f position, float w
 	}
 	Tile* worldTileToInit = m_randomPositionedTiles[randomTileIndex].getHeldObjectCopy();   // initialise a new world tile from the selected tile initialsier
 	
-	std::cout << "level area initialising random tile of type " << typeid(worldTileToInit).name() <<std::endl;
 	worldTileToInit->setVerticies(width, height, position); // set the quad for the tile 
 	
 	

@@ -31,8 +31,7 @@ void AllyBase::collision(GameObject* other)
 			//check if damage can be done based on current status of attack anim
 			if (m_animationController->stateIsActive("attack") &&
 				m_animationController->currentAnimAtEnd()) {
-				std::cout << "ally attacking "<< (m_animationController->stateIsActive("attack")&& m_animationController->currentAnimAtEnd()) << std::endl;
-				attack(m_characterTarget); // call that characters take damage method
+				attackCharacter(m_characterTarget); // call that characters take damage method
 			}
 			characterTargetDeathCheck(); // check that the target is not dead 
 
@@ -47,7 +46,7 @@ void AllyBase::collision(GameObject* other)
 
 void AllyBase::clone(AllyBase* copy)
 {
-	std::cout << "ally base clone called" << std::endl;
+
 	Npc::clone(copy); // call parent class clone to save on code duplication
 	copy->setPlayerRef(m_playerRef);
 
@@ -115,7 +114,6 @@ void AllyBase::playerInteract()
 {
 
 	if (!m_recruited && m_playerRef->getCurrentGold() >= m_gold) {
-		std::cout << "recuriting ally" << std::endl;
 		m_recruited = true;
 	}
 	if (m_recruited) {
@@ -145,6 +143,19 @@ void AllyBase::reset()
 	
 
 
+
+}
+
+// generic update function for allies 
+// controlling their facing direction and updating their position
+void AllyBase::update(float dt)
+{
+	checkFacingDirection();
+	flipSpriteX(m_facingDirection.x);
+	setAnimStates();
+	m_animationController.get()->update();
+	updatePosition(dt);
+	m_debugCircle.setPosition(m_position);
 
 }
 

@@ -12,7 +12,6 @@ GrassLandsArea::GrassLandsArea(SpriteGenerator* spriteGenerator,std::vector<Tile
 	m_enemies = { EnemyInitialiser(new Goblin()) }; 
 	// same as above but for allies associated with area
 	m_allies = { AllyInitialiser(new Pawn()) };
-	std::cout << "grass lands setting allies " << m_allies.size() << std::endl;
 	m_maxSpawnCoolDown = 10.0f; 
 	m_minSpawnCoolDown = 8.0f; 
 	m_allyRefreshCoolDown = 3.0f;

@@ -1,6 +1,6 @@
 #include "AnimationObject.h"
 
-AnimationObject::AnimationObject(std::vector<std::shared_ptr<sf::Sprite>> frames, std::shared_ptr<sf::Sprite> &baseSpriteReference, float & miliDelay)
+AnimationObject::AnimationObject(std::shared_ptr<std::vector<sf::Sprite>> frames, std::shared_ptr<sf::Sprite> &baseSpriteReference, float & miliDelay)
 {
 	m_frames = frames; // sprite frames for animation
 	m_frameDelay = sf::milliseconds(miliDelay); // delay between frames
@@ -13,13 +13,13 @@ AnimationObject::AnimationObject(std::vector<std::shared_ptr<sf::Sprite>> frames
 // such as player input for attacking 
 bool AnimationObject::animEndNoWait() 
 {
-	return m_currentFrameIndex == m_frames.size() - 1;
+	return m_currentFrameIndex == m_frames->size() - 1;
 };
 bool AnimationObject::animAtEnd()
 {
 	// if we are on the end frame of animation and at the end 
 	// ( frame time cycled back to 0)
-	return m_currentFrameIndex == m_frames.size()-1 
+	return m_currentFrameIndex == m_frames->size()-1 
 		&& m_frameTimer.getElapsedTime().asMilliseconds()<=0.0f;
 }
 
@@ -27,8 +27,8 @@ bool AnimationObject::animAtEnd()
 
 const sf::Texture* AnimationObject::getAnimTexture()
 {
-	if (m_frames.size()) {
-		return m_frames[0].get()->getTexture();
+	if (m_frames->size()) {
+		return (m_frames.get()->data()->getTexture());
 	}
 	std::cout<< "animation object sprite frames not set" << std::endl;
 	return nullptr;
@@ -66,7 +66,7 @@ AnimationObject::AnimationObject(AnimationObject* animToCopy)
 	
 }
 
-std::vector<std::shared_ptr<sf::Sprite>>& AnimationObject::getframes()
+std::shared_ptr< std::vector<sf::Sprite>>& AnimationObject::getframes()
 {
 	return m_frames;
 }
@@ -75,7 +75,6 @@ void AnimationObject::setBaseSpirteRef(sf::Sprite* sprite)
 {
 
 	m_baseSpriteRef = sprite;
-	std::cout << "animation object base sprite set" << m_baseSpriteRef << std::endl;
 
 }
 
@@ -84,14 +83,14 @@ void AnimationObject::play()
 	// set up the sprite to animate for the frame 
 	m_baseSpriteRef->setTexture(*getAnimTexture()); // set the texture to the texture being used by this anim
 	// set correct texture rect according to current frame index
-	m_baseSpriteRef->setTextureRect(m_frames[m_currentFrameIndex]->getTextureRect()); 
+	m_baseSpriteRef->setTextureRect(m_frames.get()->at(m_currentFrameIndex).getTextureRect());
 	// set origin according to current frame index
-	m_baseSpriteRef->setOrigin(m_frames[m_currentFrameIndex]->getOrigin());
+	m_baseSpriteRef->setOrigin((m_frames.get()->at(m_currentFrameIndex).getOrigin()));
 	// if we have reached our frame delay
 	if (m_frameTimer.getElapsedTime().asMilliseconds() >= m_frameDelay.asMilliseconds()) {
 		// cycle to next frame and reset timer
 		
-		m_currentFrameIndex = (++m_currentFrameIndex) % m_frames.size();
+		m_currentFrameIndex = (++m_currentFrameIndex) % m_frames->size();
 		m_frameTimer.restart();
 	}
 
@@ -127,7 +126,7 @@ int AnimationObject::getCurrentFrameIndex()
 	return m_currentFrameIndex;
 }
 
-void AnimationObject::setFrames(std::vector<std::shared_ptr<sf::Sprite>>& frames)
+void AnimationObject::setFrames(std::shared_ptr<std::vector<sf::Sprite>>& frames)
 {
 	m_frames = frames;
 }

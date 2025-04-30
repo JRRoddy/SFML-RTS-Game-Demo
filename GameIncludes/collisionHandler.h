@@ -15,7 +15,6 @@ public:
 	CollisonHandler() {
 	    
 		m_CollisionTree = std::make_shared<QuadTree<objectType>>(QuadTree<objectType>());
-		std::cout << "collision tree " << m_CollisionTree.get() << std::endl;
 	}
 	CollisonHandler(sf::FloatRect& totalAreaForCollisionTree , int maxTreeDepth )
 	{

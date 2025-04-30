@@ -10,17 +10,13 @@ public:
 	AllyBase();
 	// virtual constructor here to ensure that memory allocated on the heap for any derrived classes is deallocated 
 	// correctly when delloacting the memory via the delete key word
-	virtual ~AllyBase()
-	{
-
-		std::cout << "ally base destructor called" << std::endl;
-	};
+	virtual ~AllyBase(){};
 
 	void collision(GameObject* other);
 	virtual AllyBase* clone() { return nullptr; }
 	virtual void clone(AllyBase* copy);
 	void draw(sf::RenderWindow* window);
-	virtual void setAnimStates();
+	virtual void setAnimStates(); 
 	sf::Vector2f getTargetPosition();
 	void getSprites(SpriteGenerator* spriteGenerator);
 	bool isRecurited() const; 
@@ -30,6 +26,7 @@ public:
 	void setIsSelected(bool isSelected);
 	bool getSelected();
 	void reset();
+	void update(float dt);
 	void checkFacingDirection();
 	void getPathDir();
 	void setTargetPlayer();

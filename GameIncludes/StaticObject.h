@@ -9,7 +9,7 @@ public:
 	StaticObject(sf::Vector2f position);
 	
 	StaticObject(sf::Sprite* sprite);
-	~StaticObject();
+	virtual ~StaticObject();
      
 
 };

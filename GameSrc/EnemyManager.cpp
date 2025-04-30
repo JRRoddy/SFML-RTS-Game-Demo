@@ -69,9 +69,7 @@ void EnemyManager::getNewSpawnDelay()
 {
 
 	m_spawnTimer.restart(); 
-	std::cout << "restarting spawn timer " << m_spawnTimer.getElapsedTime().asSeconds() << std::endl;
 	m_spawnDelay = sf::seconds(m_currentArea->getRandomSpawnDelay());
-	std::cout << "new spawn delay is " << m_spawnDelay.asSeconds() << std::endl;
 
 }
 
@@ -123,7 +121,7 @@ void EnemyManager::spawnEnemy()
 	// used to spawn enemies based on a specifc timing range determined by the current area 
 	if (m_spawnTimer.getElapsedTime().asSeconds() >= m_spawnDelay.asSeconds() && m_currentEnemyPool->hasAvailabeObject()) {
 
-		std::cout << "spawning enemy elapsed time was "<<m_spawnTimer.getElapsedTime().asSeconds()<<"  spawn delay was "<<m_spawnDelay.asSeconds() << std::endl;
+		//std::cout << "spawning enemy elapsed time was "<<m_spawnTimer.getElapsedTime().asSeconds()<<"  spawn delay was "<<m_spawnDelay.asSeconds() << std::endl;
 		EnemyBase * enemyToSpawn = m_currentEnemyPool->activateObject(); 
 		enemyToSpawn->setPosition(m_currentArea->getEnemySpawnPosition(enemyToSpawn));
 		enemyToSpawn->setGridTile(m_levelGrid->getGridTile(enemyToSpawn->getPosition()));
@@ -156,7 +154,6 @@ EnemyManager::EnemyManager(Player * player,Astar * astar,LevelGrid * levelGrid)
 	m_maxCollisionTreeDepth = 8;
 	m_AStar = astar;
 	m_enemyCollisonHandler = std::make_shared<CollisonHandler<EnemyBase>>(CollisonHandler<EnemyBase>());
-	std::cout <<"collision handler ptr "<< m_enemyCollisonHandler.get() << std::endl; 
 	m_enemyCollisonHandler.get()->setTreeMaxDepth(m_maxCollisionTreeDepth);
 
 }

@@ -56,15 +56,7 @@ void Tile::setVerticies(float width, float height, sf::Vector2f position)
 // used for deep copying tiles
 void Tile::clone(Tile* copy)
 {
-
-
-    copy->setPosition(this->m_position);
     copy->setBaseSprite(this->m_baseSpriteRef);
-    copy->setSpawnCap(this->m_spawnCap);
-    copy->setSpeedModifier(this->m_speedModifier);
-    copy->setIsWalkable(this->m_walkable);
-    copy->setWidth(this->m_width);
-    copy->setHeight(this->m_height);
 }
 
 

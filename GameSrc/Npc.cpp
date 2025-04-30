@@ -13,8 +13,8 @@ void Npc::setBaseSprite(std::shared_ptr<sf::Sprite>& spriteRef)
 		m_baseSpriteRef = std::make_shared<sf::Sprite>();
 		m_baseSpriteRef.reset(copy);
 		m_baseSpriteRef.get()->setOrigin(copy->getTextureRect().width / 2.0f, copy->getTextureRect().height / 2.0f);
-
 	}
+
 }
 void Npc::setPlayerCharacterRef(Character* playerRef)
 {
@@ -56,15 +56,11 @@ bool Npc::getIsActive()
 // deep copy method 
 void Npc::clone(Npc* copy)
 {
-
-	copy->setDamage(m_damage);
-	copy->setHealth(m_health);
-	copy->setSpeed(m_speed);
 	copy->setPlayerCharacterRef(m_playerCharacterRef);
 	copy->setBaseSprite(m_baseSpriteRef);
 	copy->copyAnimController(m_animationController.get());
 	copy->setCharacterTarget(m_characterTarget);
-
+	
 }
 // get the direction to the current waypoint the npc is moving towards taking 
 //into account their current actions
@@ -120,21 +116,18 @@ void Npc::setAnimStates()
 // however this method can be overidden by derived classes if that is not the case
 void Npc::getSprites(SpriteGenerator* spriteGenerator)
 {
-	std::cout << "Npc base get sprites called " << std::endl;
 	m_baseSpriteRef = std::make_shared<sf::Sprite>();
 	m_baseSpriteRef.reset(spriteGenerator->getAnimSection(0, m_idleAnimPath));
-	std::cout << "base sprite ref after getting anim section " << m_baseSpriteRef.get() << std::endl;
 	m_animStates["idle"] = spriteGenerator->generateAnimationObject(m_idleAnimPath, m_baseSpriteRef, m_idleAnimDelay);
 	m_animStates["move"] = spriteGenerator->generateAnimationObject(m_runAnimPath, m_baseSpriteRef, m_runAnimDelay);
 	m_animStates["attack"] = spriteGenerator->generateAnimationObject(m_attackAnimPath, m_baseSpriteRef, m_attackAnimDelay);
 	m_animStates["death"] = spriteGenerator->generateAnimationObject(m_deathAnimPath,m_baseSpriteRef,m_deathAnimDelay);
-	
 	m_animationController = std::make_unique<AnimationController>(AnimationController(m_animStates, std::string("idle")));
 
 
 }
 
-void Npc::attack(Character* target)
+void Npc::attackCharacter(Character* target)
 {
 	target->takeDamage(m_damage);
 

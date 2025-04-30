@@ -30,13 +30,4 @@ AllyBase* Pawn::clone()
 	return copy;
 }
 
-void Pawn::update(float dt)
-{
-    checkFacingDirection();
-    flipSpriteX(m_facingDirection.x);
-    setAnimStates();
-    m_animationController.get()->update();
-    updatePosition(dt);
-    m_debugCircle.setPosition(m_position);
 
-}

@@ -9,7 +9,7 @@ Player::Player(sf::Vector2f position, SpriteGenerator *spriteGenerator,InputMana
 	m_active = true;
 	m_input = input;
 	m_speed = m_baseSpeed;
-	m_damage = 12.0f;
+	m_damage = 15.0f;
 	m_startPosition = position;
 	m_baseHealth = 100.0f;
 	m_health = m_baseHealth;
@@ -33,7 +33,7 @@ Player::Player(sf::Vector2f position, SpriteGenerator* spriteGenerator, InputMan
 	m_input = input;
 	m_speed = m_baseSpeed;
 	m_baseHealth = 100.0f;
-	m_damage = 12.0f;
+	m_damage = 15.0f;
 	m_health = m_baseHealth;
 	m_startPosition = position;
 	m_input->addDirectionalMapping(m_vertInputMapName, m_vertcialDirectionMap);
@@ -48,7 +48,6 @@ Player::Player(sf::Vector2f position, SpriteGenerator* spriteGenerator, InputMan
 	getSprites(spriteGenerator);
 	m_camera = camera;
 	camera->setPosition(m_position); // camera that willl follow player 
-	std::cout <<"camera view" <<camera->getView().getCenter().x<<":"<< camera->getView().getCenter().y << std::endl;
 
 
 }
@@ -56,10 +55,7 @@ Player::Player(sf::Vector2f position, SpriteGenerator* spriteGenerator, InputMan
 void Player::updateCamera(){
 
 	if (m_camera != nullptr) {
-
 		m_camera->moveToPos(m_position);
-
-
 	}
 }
 
@@ -94,12 +90,12 @@ void Player::collision(GameObject* other)
 		// ensure that the player is attacking in the right direction for the
 		// enemy to take damage
 		sf::Vector2f directionToEnemy = normalize( enemy->getPosition() - m_position);
-		float attackConfirm = v2Dot(normalize(m_lastKnownDirection), directionToEnemy);
+		sf::Vector2f lastKnownLookingDir = normalize(sf::Vector2f(m_lastKnownDirection.x, 0.0f));
+		float attackConfirm = v2Dot(lastKnownLookingDir, directionToEnemy);
 		// if attack animation is at end and attack dir has beem confirmed 
 		if (m_animationController->stateIsActive("attack")
-			&& m_animationController->currentAnimAtEnd() && attackConfirm >=0.0f){
+			&& m_animationController->currentAnimAtEnd() && attackConfirm>=0.0f ){
 			enemy->takeDamage(m_damage);
-			std::cout << "player delt damage to enemy " << std::endl;
 		}
     
        

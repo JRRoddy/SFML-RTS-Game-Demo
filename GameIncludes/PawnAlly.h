@@ -4,13 +4,9 @@ class Pawn : public AllyBase {
 
 public:
 	Pawn();
-	~Pawn()
-	{
-		std::cout << "Pawn destructor called" << std::endl;
-
-	};
+	~Pawn(){};
 	AllyBase* clone();
-	void update(float dt);
+
 
 private:
 

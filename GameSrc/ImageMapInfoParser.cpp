@@ -17,7 +17,6 @@ std::map<imageMapColour, std::string> ImageMapInfoParser::parseImageMapInfoFile(
     if (!file.is_open()) {
         std::cout << "could not find  path to tile map info " << imageMapInfoPath << std::endl;
     }
-    std::cout << "PARSING TILE IMAGE MAP  path: " << imageMapInfoPath << std::endl;
     while (std::getline(file, line)) {
 
         if (line.find(":") != std::string::npos) {

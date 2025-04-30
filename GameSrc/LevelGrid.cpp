@@ -14,7 +14,6 @@ LevelGrid::LevelGrid(int width, int height, sf::Vector2i tileDimensions)
 	// setting up variables used for random placement of tiles in the grid
 	m_maxRowGenerationAttempts = width / 2;
 	m_maxRowGenerationFailures = width; 
-	std::cout << "max row generation failures " << m_maxRowGenerationFailures << " max row generation attemps" << m_maxRowGenerationAttempts << std::endl;
 	for (int i = 1; i <= m_height; i++){
 		for (int j = 1; j <= m_width; j++){ 
 
@@ -62,7 +61,6 @@ void LevelGrid::randomTilePlacementPass(LevelAreaContainer* currentArea)
 	// that can be distributed ranodmly around the area unlike for uniform tiles such as paths
 
 	int cap = currentArea->getRandomGeneratedTilesCap();  // get the sum of the spawn caps for each randomly generated tile that the level area can spawn
-	std::cout << "spawn cap for random pass " << cap << std::endl;
 	int count = 0; 
 	int rowAttempts = 0; // number of attempts allowed on a specific row 
 	// initial row x and y
@@ -91,7 +89,6 @@ void LevelGrid::randomTilePlacementPass(LevelAreaContainer* currentArea)
 			rowAttempts++; // if we get a tile that has already been filled then we increase the count for the number of times we have failed placing a tile on this particualr grid row 
 			if (rowAttempts >= m_maxRowGenerationAttempts) { // if we reach the maximum number of attempts on particualr row we switch rows
 				// same logic as for when we get a duplicate x value
-				std::cout << "row generation max reached for particualr row" << std::endl;
 				randomiseTargetRow(randomY);
 				
 				
@@ -116,12 +113,10 @@ void LevelGrid::randomTilePlacementPass(LevelAreaContainer* currentArea)
 		
 		currentTileRowCap++;
 		if (currentTileRowCap == m_localTiles[finalIndex].worldTileRef->getRowCap()) {
-			std::cout << "row cap hit " << std::endl;
 			randomiseTargetRow(randomY);
 		}
 
 		count++;
-		std::cout << "count for random tile placement increased" << std::endl;
 	}
 
 
@@ -169,7 +164,6 @@ std::vector<gridTile*> LevelGrid::getNeighbours(int& indexX, int& indexY)
 // main method for generating tiles on a particualr level area 
 void LevelGrid::generateTilesRelativeToArea(LevelAreaContainer* currentArea)
 {
-	      std::cout << "generating tiles relative to area size for grid is " << m_localTiles.size() << std::endl;
 		  imageMapPass(currentArea);
 		  randomTilePlacementPass(currentArea);
 	      

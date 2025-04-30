@@ -10,7 +10,6 @@ public:
 	void resetDynamicObjectEffect(DynamicObject* object) override;
 private:
 
-	float m_movementSpeedModifier = 1.25;
 
 
 

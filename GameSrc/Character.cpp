@@ -8,6 +8,7 @@ Character::Character(sf::Vector2f position):DynamicObject(position)
 // getters and setters for stats shared across all beings in the world
 void Character::setDamage(float& damage)
 { 
+	
 	m_damage = damage;
 }
 

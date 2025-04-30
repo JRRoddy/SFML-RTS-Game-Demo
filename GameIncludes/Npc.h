@@ -41,8 +41,9 @@ public:
 	// interact method that is generic across all npcs 
    // can be overriden to provide specifc npc's with specifc interactions with the player
 	
-	virtual void attack(Character* target);
+	virtual void attackCharacter(Character* target);
 	virtual void playerInteract() {};
+	
 	bool characterTargetDeathCheck();
 	virtual sf::Vector2f getTargetPosition();
 	bool deathAnimFinished();

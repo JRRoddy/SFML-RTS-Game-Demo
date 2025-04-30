@@ -8,17 +8,17 @@ class SpriteGenerator {
 public:
 	
 	SpriteGenerator(TextureManager * textureManager);
-	std::vector<std::shared_ptr<sf::Sprite>> &GenerateAnim(std::string &animPath);
-	std::vector<std::shared_ptr<sf::Sprite>> &GenerateSprite(std::string &spriteSheetPath, int sectionWidth, int sectionHeight);
+	std::shared_ptr<std::vector<sf::Sprite>>& SpriteGenerator::GenerateAnim(std::string& animPath);	
+	std::shared_ptr<std::vector<sf::Sprite>>& SpriteGenerator::GenerateSprite(std::string& spriteSheetPath, int desiredWidth, int desiredHeight);
 	std::shared_ptr<sf::Sprite> &GenerateSprite(std::string &spriteTexturePath);
 	AnimationObject generateAnimationObject(std::string& animPath,std::shared_ptr<sf::Sprite> &baseSpriteRef,float & miliDelay);
 	sf::Sprite * getAnimSection(int index,std::string & animPath);
 private:
 	// in this case each sprite is held in a map based on a path to its texture refernce giving it a unique id 
 	
-	std::map<std::string, std::vector<std::shared_ptr<sf::Sprite>>>   m_spriteSheets;
+	std::map<std::string, std::shared_ptr<std::vector<sf::Sprite>>>   m_spriteSheets;
 
-	std::map<  std::string, std::shared_ptr<sf::Sprite>   > m_singleSprite;
+	std::map<std::string, std::shared_ptr<sf::Sprite>   > m_singleSprite;
 
 	TextureManager * m_textureManager;
 

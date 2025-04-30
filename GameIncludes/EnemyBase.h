@@ -9,11 +9,7 @@ public:
 	EnemyBase();
 	// virtual constructor here to ensure that memory allocated on the heap for any derrived classes is deallocated 
     // correctly when delloacting the memory via the delete key word
-	virtual ~EnemyBase() 
-	{
-
-		std::cout << "enemy base destructor called" << std::endl;
-	};
+	virtual ~EnemyBase() {};
 	sf::Vector2f getTargetPosition();
 	void collision(GameObject* other);
 	
@@ -21,7 +17,7 @@ public:
 	virtual void clone(EnemyBase* copy);
 	void reset();
 	void draw(sf::RenderWindow * window);
-	
+	void update(float dt);
 	virtual void setAnimStates();
 	void getSprites(SpriteGenerator* spriteGenerator);
 protected:
