@@ -18,7 +18,6 @@ void EnemyManager::update(float dt) {
 		//  update enemies status in collision tree
 	    m_enemyCollisonHandler.get()->insertItem(enemyToUpdate->getBounds(), enemyToUpdate);
 	    
-	
 	}
 	//update any collisions within the collision tree and 
 	// reset it ready for next update

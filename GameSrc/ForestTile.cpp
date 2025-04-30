@@ -30,6 +30,7 @@ Tile* ForestTile::clone()
 
 void ForestTile::dynamicObjectEffect(DynamicObject* object)
 {
+    
     object->setSpeedModfier(m_speedModifier);
 }
 

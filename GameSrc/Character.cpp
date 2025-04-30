@@ -21,7 +21,6 @@ void Character::takeDamage(float& damage)
 {
 	
 	m_health -= damage;
-	std::cout << "dealing damage to character damage " << damage << std::endl;
 
 }
 

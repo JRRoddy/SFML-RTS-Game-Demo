@@ -14,6 +14,10 @@ inline sf::Vector2f normalize(sf::Vector2f& vector) {
 	return sf::Vector2f(vector.x / lenght, vector.y / lenght);
 }
 
+inline float v2Dot(sf::Vector2f left, sf::Vector2f right) {
+
+	return left.x * right.x + left.y * right.y;
+}
 
 #endif // !VECTOR_MATH
 

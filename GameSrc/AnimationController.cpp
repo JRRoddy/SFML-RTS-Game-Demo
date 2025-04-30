@@ -8,7 +8,6 @@ AnimationController::AnimationController(std::map<std::string, AnimationObject> 
 	m_mappedstates = mapOfstates;
 	std::cout << "mapped states size  " << m_mappedstates.size() << std::endl;
 	
-
 	m_defaultState = defaultState;
 	std::cout << "default state " << m_defaultState <<std::endl;
 	m_currentState = m_defaultState; 
@@ -95,9 +94,6 @@ void AnimationController::setState(std::string state, bool isActive)
 	m_stateTriggerMap[state] = isActive;
 	// set current state to state being passed in 
 	// if it should be active 
-	if (state == "death" && isActive) {
-		std::cout << "switching to death animation" << std::endl;
-	}
 	if (state != m_currentState && isActive == true) {
 		// reset current state and set to state passed in
 		m_mappedstates[m_currentState].reset(); 
@@ -145,7 +141,7 @@ bool AnimationController::stateIsActive(std::string state)
 		
 	}
 	catch (...) {
-		std::cout << "state being checked " << state << " was not int anim controller" << std::endl;
+		std::cout << "state being checked " << state << " was not in anim controller" << std::endl;
 	}
 
 	return false;

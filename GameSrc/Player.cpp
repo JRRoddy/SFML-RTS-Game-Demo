@@ -9,7 +9,7 @@ Player::Player(sf::Vector2f position, SpriteGenerator *spriteGenerator,InputMana
 	m_active = true;
 	m_input = input;
 	m_speed = m_baseSpeed;
-	m_damage = 30.0f;
+	m_damage = 12.0f;
 	m_startPosition = position;
 	m_baseHealth = 100.0f;
 	m_health = m_baseHealth;
@@ -33,6 +33,7 @@ Player::Player(sf::Vector2f position, SpriteGenerator* spriteGenerator, InputMan
 	m_input = input;
 	m_speed = m_baseSpeed;
 	m_baseHealth = 100.0f;
+	m_damage = 12.0f;
 	m_health = m_baseHealth;
 	m_startPosition = position;
 	m_input->addDirectionalMapping(m_vertInputMapName, m_vertcialDirectionMap);
@@ -62,10 +63,6 @@ void Player::updateCamera(){
 	}
 }
 
-
-
-
-
 void Player::update(float dt)
 {
 
@@ -92,7 +89,21 @@ void Player::update(float dt)
 void Player::collision(GameObject* other)
 {
 	
-	
+	EnemyBase* enemy = CheckObjecType<EnemyBase>(other); 
+	if (enemy != nullptr) {
+		// ensure that the player is attacking in the right direction for the
+		// enemy to take damage
+		sf::Vector2f directionToEnemy = normalize( enemy->getPosition() - m_position);
+		float attackConfirm = v2Dot(normalize(m_lastKnownDirection), directionToEnemy);
+		// if attack animation is at end and attack dir has beem confirmed 
+		if (m_animationController->stateIsActive("attack")
+			&& m_animationController->currentAnimAtEnd() && attackConfirm >=0.0f){
+			enemy->takeDamage(m_damage);
+			std::cout << "player delt damage to enemy " << std::endl;
+		}
+    
+       
+	}
 
 
     
@@ -194,7 +205,7 @@ bool Player::checkAttack()
 	}
 	bool attackFinished = false;
 	// check if the player has inputted to attack 
-	if (m_input->mouseReleased(sf::Mouse::Left)   ) {
+	if (m_input->mouseReleased(sf::Mouse::Left) && !m_canAttack   ) {
 		
 		m_canAttack = true;
 		

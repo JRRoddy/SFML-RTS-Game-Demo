@@ -15,7 +15,7 @@ Pawn::Pawn()
     m_idleAnimDelay = 70.0f;
     m_attackAnimDelay = 85.0f;
     m_deathAnimDelay = 85.0f;
-    m_spawnCap = 1;
+    m_spawnCap = 5;
     m_gold = 0;
     m_debugCircle.setFillColor(sf::Color::Magenta);
     m_debugCircle.setRadius(5.0f);

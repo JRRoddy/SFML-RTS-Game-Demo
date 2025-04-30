@@ -145,7 +145,6 @@ bool Npc::characterTargetDeathCheck()
 {
 	if (m_characterTarget->isDead())
 	{
-		
 		m_characterTarget = nullptr;
 		m_canAttack = false;
 	}

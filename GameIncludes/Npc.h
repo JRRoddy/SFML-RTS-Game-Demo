@@ -2,7 +2,6 @@
 #include "Character.h"
 #include "AstarNode.h"
 #include "AnimationController.h" 
-#include "Player.h"
 #include "gridTile.h"
 // abstract npc class for any characters that will make use of pathfinding see cpp for more detail
 class Npc :public Character {

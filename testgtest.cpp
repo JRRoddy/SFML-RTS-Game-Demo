@@ -111,7 +111,7 @@ TEST_F(tileDeepCopytest, deepCopyingTilesTest) {
 
     EXPECT_NE(m_tileCopyDestination.get()->getPosition().x, m_newDeepCopyObject.getHeldObject()->getPosition().x); // expect the new set position for the copy to not be equal to the object held in the deep copy object 
     std::cout << "new copy type "<<typeid(*m_tileCopyDestination.get()).name() << std::endl;
-    m_tileCopyDestination.get()->playerEffect(&m_player);
+    m_tileCopyDestination.get()->dynamicObjectEffect(&m_player);
 
 
 

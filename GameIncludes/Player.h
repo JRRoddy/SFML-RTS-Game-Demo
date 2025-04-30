@@ -3,6 +3,8 @@
 #include "InputManager.h"
 #include "Camera.h"
 #include "AnimationController.h"
+#include "EnemyBase.h"
+#include "CheckObjectType.h"
 class Player: public Character {
  public:
 	Player();
