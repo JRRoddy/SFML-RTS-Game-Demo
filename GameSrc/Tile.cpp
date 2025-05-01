@@ -56,6 +56,7 @@ void Tile::setVerticies(float width, float height, sf::Vector2f position)
 // used for deep copying tiles
 void Tile::clone(Tile* copy)
 {
+    copy->setPosition(this->getPosition());
     copy->setBaseSprite(this->m_baseSpriteRef);
 }
 

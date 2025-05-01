@@ -9,10 +9,9 @@ Player::Player(sf::Vector2f position, SpriteGenerator *spriteGenerator,InputMana
 	m_active = true;
 	m_input = input;
 	m_speed = m_baseSpeed;
-	m_damage = 15.0f;
 	m_startPosition = position;
-	m_baseHealth = 100.0f;
-	m_health = m_baseHealth;
+	m_currentStats = characterStats(100.0f, 15.0f, 0);
+	
 	// add directional maps to the input manager through its refernce
 	// this allows directions to be mapped to keys 
 	// such as a being the directional value of -1 etc
@@ -32,9 +31,9 @@ Player::Player(sf::Vector2f position, SpriteGenerator* spriteGenerator, InputMan
 	m_active = true;
 	m_input = input;
 	m_speed = m_baseSpeed;
-	m_baseHealth = 100.0f;
-	m_damage = 15.0f;
-	m_health = m_baseHealth;
+	// set up base stats for character
+    // base health, damage, gold
+	m_currentStats = characterStats(100.0f, 15.0f, 0);
 	m_startPosition = position;
 	m_input->addDirectionalMapping(m_vertInputMapName, m_vertcialDirectionMap);
 	m_input->addDirectionalMapping(m_horiInputMapName, m_horizontalDirectionMap);
@@ -95,7 +94,8 @@ void Player::collision(GameObject* other)
 		// if attack animation is at end and attack dir has beem confirmed 
 		if (m_animationController->stateIsActive("attack")
 			&& m_animationController->currentAnimAtEnd() && attackConfirm>=0.0f ){
-			enemy->takeDamage(m_damage);
+			enemy->takeDamage(m_currentStats.damage);
+			std::cout << "player dealt damage to enemy " << m_currentStats.damage << std::endl;
 		}
     
        
@@ -130,7 +130,6 @@ void Player::updateCommandFlag()
 		// move the recalled command flag indciator to the correct side of the player
 		// based on their last movement direction 
 		float commandFlagPosX = m_position.x + (m_baseSpriteRef->getGlobalBounds().getSize().x / 2.0f) * -m_lastKnownDirection.x;
-
 		sf::Vector2f commandFlagPos = sf::Vector2f(commandFlagPosX, m_position.y);
 		// update command flag position 
 		m_commandFlag->setPosition(commandFlagPos);
@@ -190,34 +189,37 @@ bool Player::recallingAllies() const
 	return m_recallAllies;
 }
 
-bool Player::checkAttack()
+void Player::checkAttack()
 {
 	
 	// if the player inputs a direction cancel their attack
 	if (m_direction != sf::Vector2f(0.0f, 0.0f)) {
-		m_canAttack = false; 
-		m_attackFinished = false;
-		return false;
-	}
-	bool attackFinished = false;
-	// check if the player has inputted to attack 
-	if (m_input->mouseReleased(sf::Mouse::Left) && !m_canAttack   ) {
-		
-		m_canAttack = true;
-		
-		//std::cout << "player attacked " << std::endl;
-	}
-	// if they can attack update the current state of the attack
-	if (m_canAttack ) {
+		m_animationController->setState("attack", false);
+		return;
+	} 
+	m_canAttack = m_input->mouseReleased(sf::Mouse::Left);
+	// if the player inputs an attack continue the attack animation
+	// allowing the player to buffer attack inputs by continuing to 
+	//cycle the animation 
+	if (m_canAttack  ) {
 		// if we have reached the full end of the animation then we have finished
+		m_animationController->setState("attack", m_canAttack);
 		
-		attackFinished = m_animationController->currentAnimAtEndNoWait();
-		m_canAttack = !attackFinished;
 		//std::cout << "player attack finished" << attackFinished << std::endl;
-		return m_canAttack;
-		// the player is not attacking the frame after they've finished swinging 
+	
 	}
-	return false;
+	// if no input buffered and our attack animation has reached the 
+	// end stop the player from attacking this ensures that there 
+	// is no point where the player's input could be missed due to 
+	// them inputting the frame the animation ends
+	if (!m_canAttack && m_animationController->stateIsActive("attack")
+		&& m_animationController->currentAnimAtEndNoWait()) {
+		m_animationController->setState("attack", false);
+
+	}
+
+
+	
 }
 
 void Player::updateAllyMovementOrder()
@@ -240,7 +242,7 @@ void Player::updateAnimStates()
 	bool runAnim = m_direction != sf::Vector2f(0.0f, 0.0f);
 
 	m_animationController->setState("move", runAnim);
-	m_animationController->setState("attack", checkAttack());
+	checkAttack();
 	
 	m_animationController->setDefault(!runAnim);
 
@@ -248,18 +250,14 @@ void Player::updateAnimStates()
 
 void Player::reset()
 {
-
-	
-		m_health = m_baseHealth; 
+	    m_currentStats.health = m_currentStats.baseHealth;
 		setPosition(m_startPosition);
-
-
+		
 }
 
 void Player::checkReset()
 {
 	if (isDead()) {
-		std::cout << "player health dropped below 0 resetting:"<<m_health << std::endl;
 		reset();
 	}
 }

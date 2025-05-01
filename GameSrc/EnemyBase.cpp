@@ -2,13 +2,11 @@
 
 
 
-EnemyBase::EnemyBase()
-{
-}
+EnemyBase::EnemyBase(){}
 
 void EnemyBase::collision(GameObject* other)
 {  
-
+	
 	// if the type of object we are colliding with is a character
 	Character* character = CheckObjecType<Character>(other); 
 	if (character != nullptr && character == m_characterTarget) {
@@ -35,10 +33,12 @@ void EnemyBase::clone(EnemyBase* copy)
 
 void EnemyBase::reset()
 {
-	m_active = true; 
- 	m_health = m_baseHealth; 
+	resetStatusEffectManager();
+	m_active = false; 
+ 	m_currentStats.health = m_currentStats.baseHealth; 
 	m_characterTarget = nullptr;
-    	
+	m_taunted = false;
+
 }
 
 void EnemyBase::draw(sf::RenderWindow* window)
@@ -57,6 +57,7 @@ void EnemyBase::update(float dt)
 	setAnimStates();
 	m_animationController.get()->update();
 	updatePosition(dt);
+	m_statusEffectManager.get()->update();
 	m_debugCircle.setPosition(m_position);
 }
 
@@ -65,7 +66,6 @@ sf::Vector2f EnemyBase::getTargetPosition()
 	if (m_characterTarget == nullptr) {
 		m_characterTarget = m_playerCharacterRef;
 	}
-
 	return m_characterTarget->getPosition();
 }
 void EnemyBase::setAnimStates()

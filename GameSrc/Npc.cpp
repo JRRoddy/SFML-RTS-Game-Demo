@@ -61,6 +61,7 @@ void Npc::clone(Npc* copy)
 	copy->copyAnimController(m_animationController.get());
 	copy->setCharacterTarget(m_characterTarget);
 	
+	
 }
 // get the direction to the current waypoint the npc is moving towards taking 
 //into account their current actions
@@ -85,22 +86,19 @@ void Npc::setPath(std::vector<node*>& path)
 	m_requestedPath = path;
 	getPathDir();
 }
-// setters and getters for target char for npc to move towards
-Character* Npc::getCharacterTarget()
-{
-	return m_characterTarget;
-}
+
+
+
+
+
+
 
 void Npc::setTargetPlayer()
 {
 	m_characterTarget = m_playerCharacterRef;
 }
 
-void Npc::setCharacterTarget(Character* character)
-{
-	m_characterTarget = character;
 
-}
 // setting the default booleans for when animations should trigger
 // according to default animations of npc class method can be overidden
 void Npc::setAnimStates()
@@ -127,11 +125,19 @@ void Npc::getSprites(SpriteGenerator* spriteGenerator)
 
 }
 
+void Npc::copyStats(characterStats& stats)
+{
+	m_currentStats = characterStats(stats);
+
+}
+
 void Npc::attackCharacter(Character* target)
 {
-	target->takeDamage(m_damage);
-
-
+	if (target->getDamage() == 0.0f) {
+		std::cout << " attacking character type: " << typeid(*target).name() << std::endl;
+	}
+	target->takeDamage(m_currentStats.damage);
+	
 }
 
 bool Npc::characterTargetDeathCheck()

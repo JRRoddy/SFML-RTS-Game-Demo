@@ -169,7 +169,7 @@ void AllyManager::updateEnemyCollision(std::vector<EnemyBase*> & Buffer)
 			// call the collision method for the intersecting allies on the enemy
 			// to be accounted for 
 			allyItem.gameObject->collision(enemy);
-
+			enemy->collision(allyItem.gameObject);
 
 		}
         

@@ -3,5 +3,4 @@
 enum StatusEffectIds
 {
 	TAUNT,
-
 };

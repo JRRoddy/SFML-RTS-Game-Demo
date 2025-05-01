@@ -18,6 +18,7 @@ void InputManager::pollEvents(sf::Event& event)
 		//std::cout << "polling events" << std::endl;
 		if (event.type == sf::Event::Closed) m_windowHandle->close(); 
 		if (event.type == event.MouseButtonReleased) {
+			std::cout << "mouse released" << std::endl;
 			m_mouseButtons[event.mouseButton.button] = true; // update mouse state
 		}
 		// event polling is used to track singualr key presses therefore the state of a key being pressed is only updated on release 

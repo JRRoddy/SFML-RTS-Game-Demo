@@ -2,6 +2,5 @@
 
 enum AreaTypes
 {
-	NONE,
 	GRASSLANDS
 };

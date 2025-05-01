@@ -256,7 +256,6 @@ Tile * LevelAreaContainer::initTileFromSelectedMap(sf::Vector2i imageMapTexcoord
 
 		Tile* worldTile = m_imageMappedTiles[tileNameId].getHeldObjectCopy();  // get a copy from the tile initialiser stored as a value associated with a particular string id parsed from the associated imageMap info file for this area 
 		
-		
 		worldTile->setVerticies(width, height, position);
 		
 		m_worldTiles.push_back(worldTile);

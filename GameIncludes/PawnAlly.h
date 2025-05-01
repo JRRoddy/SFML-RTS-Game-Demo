@@ -6,7 +6,7 @@ public:
 	Pawn();
 	~Pawn(){};
 	AllyBase* clone();
-
+	void attackCharacter(Character * character);
 
 private:
 

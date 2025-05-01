@@ -1,23 +1,24 @@
 #pragma once
 #include "StatusEffect.h"
 #include "StatusEffectIds.h"
-
+#include "map"
+#include "vector"
+#include "iostream"
 class StatusEffectManager {
 
 public:
-	 
-	StatusEffectManager(std::map<StatusEffectIds, StatusEffect*>& statusEffectsToManage, Character * characterRef); 
-
+	StatusEffectManager() {};
+	~StatusEffectManager() {};
+	StatusEffectManager(std::map<StatusEffectIds, std::shared_ptr<StatusEffect>>& statusEffectsToManage,characterStats * characterRef);
 	void update();
-
-	void activateStatusEffect(StatusEffectIds id, Character * initiater);
-
+	bool activateStatusEffect(StatusEffectIds id, characterStats * initiater);
+	void reset();
 
 
 
 
 private:
-	std::map<StatusEffectIds, StatusEffect*> m_statusEffects;
+	std::map<StatusEffectIds, std::shared_ptr<StatusEffect>> m_statusEffects;
 	std::vector<StatusEffect*> m_activeStatusEffects;
-	Character* m_characterRef;
+	characterStats* m_characterStatsRef = nullptr;
 };

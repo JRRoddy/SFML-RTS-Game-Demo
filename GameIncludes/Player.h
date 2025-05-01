@@ -21,7 +21,7 @@ class Player: public Character {
 	void getSprites(SpriteGenerator * spriteGenerator);
 	void setCurrentLevelAreaBounds(sf::FloatRect& levelAreaBounds);
 	bool recallingAllies() const;
-	bool checkAttack();
+	void checkAttack();
 	void updateAllyMovementOrder();
 	void updateAnimStates();
 	void reset();

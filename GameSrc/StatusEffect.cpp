@@ -1,6 +1,14 @@
 #include "StatusEffect.h"
 
 
+void StatusEffect::clone(StatusEffect* copy)
+{
+    copy->setDuration(m_duration);
+    
+}
+
+
+
 bool StatusEffect::durationFinished()
 {
 
@@ -8,9 +16,9 @@ bool StatusEffect::durationFinished()
 
 }
 
-void StatusEffect::setInitiater(Character* character)
+void StatusEffect::setInitiater(characterStats* statsForInitiater)
 {
-    m_initiater = character;
+    m_initiaterStats = statsForInitiater;
 }
 
 void StatusEffect::activate()
@@ -23,15 +31,31 @@ void StatusEffect::activate()
 
 void StatusEffect::reset()
 {
-    m_initiater = nullptr; 
+    m_initiaterStats = nullptr; 
     m_durationTimer.restart();
+    m_isActive = false;
 }
-
 
 
 float StatusEffect::getDuration() const
 {
     return m_duration;
+}
+
+void StatusEffect::setDuration(float& duration)
+{
+    m_duration = duration; 
+    m_endTime = sf::seconds(duration);
+}
+
+void StatusEffect::setStatusEffectId(StatusEffectIds id)
+{
+    m_statusEffectId = id;
+}
+
+StatusEffectIds StatusEffect::getStatusEffectId()
+{
+    return m_statusEffectId;
 }
 
 bool StatusEffect::hasDuration() const

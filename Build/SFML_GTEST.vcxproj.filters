@@ -103,6 +103,9 @@
     <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\StatusEffectManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\TauntStatusEffect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\TextureManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -145,6 +148,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\Character.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\CharacterStats.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\CheckObjectType.h">
@@ -228,7 +234,13 @@
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\StatusEffectIds.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\StatusEffectInitialiser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\StatusEffectManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\TauntStatusEffect.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\TextureManager.h">

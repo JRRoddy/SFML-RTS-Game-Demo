@@ -9,7 +9,6 @@ StaticObject::StaticObject(sf::Sprite* sprite)
 {
 	m_position = sprite->getPosition();
 	m_baseSpriteRef.reset(sprite);
-	std::cout << "sprite global bounds " << sprite->getGlobalBounds().left << ":" << sprite->getGlobalBounds().top << ":" << sprite->getGlobalBounds().width << ":" << sprite->getGlobalBounds().height << std::endl;
 
 }
 

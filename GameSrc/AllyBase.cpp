@@ -113,7 +113,7 @@ void AllyBase::setPlayerRef(Player* playerRef)
 void AllyBase::playerInteract()
 {
 
-	if (!m_recruited && m_playerRef->getCurrentGold() >= m_gold) {
+	if (!m_recruited && m_playerRef->getCurrentGold() >= m_currentStats.gold) {
 		m_recruited = true;
 	}
 	if (m_recruited) {
@@ -137,8 +137,8 @@ void AllyBase::reset()
 {	
 	// resetting ally object for when it goes back into its associated pool
 	m_active = true;
-	m_health = m_baseHealth; 
-	m_recruited = false; 
+	m_currentStats.health = m_currentStats.baseHealth; 
+	m_recruited = false;
 	m_characterTarget = nullptr;
 	
 

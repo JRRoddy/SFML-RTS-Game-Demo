@@ -137,7 +137,7 @@ protected:
 	sf::Vector2i m_gridDimensions; // dimensions for the area alowing calculation of full width and height of the area 
 	sf::Vector2f m_gridSectionSize;
 	
-	AreaTypes m_areaType = NONE;
+	AreaTypes m_areaType = AreaTypes();
 
 	std::vector<TileInitialiser>  m_randomPositionedTiles;
 	int m_generatedTilesCap = 0;
