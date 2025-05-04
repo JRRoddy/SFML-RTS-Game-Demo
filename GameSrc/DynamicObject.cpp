@@ -120,3 +120,8 @@ void DynamicObject::setCanMoveToNextTile(bool canMoveToNextTile)
 	
 	m_canMoveToNextTile = canMoveToNextTile;
 }
+
+float DynamicObject::getSpeedModifier() const
+{
+	return m_speedModifier;
+}

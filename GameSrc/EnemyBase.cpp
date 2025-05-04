@@ -38,6 +38,7 @@ void EnemyBase::reset()
  	m_currentStats.health = m_currentStats.baseHealth; 
 	m_characterTarget = nullptr;
 	m_taunted = false;
+	m_requestedPath.clear();
 
 }
 

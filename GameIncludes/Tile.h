@@ -20,6 +20,8 @@ public:
 	void setVerticies(float width, float height, sf::Vector2f position);
 	// used to get a deep copy of a tile allowing for a single instance of a tile to be held in a data structure 
      // and then copied throughout them game in order to create new tiles of different types
+	
+	sf::VertexArray getVerticies();
 	virtual Tile*clone() = 0; 
 	virtual void clone(Tile* copy);
 	int getRowCap();
@@ -32,6 +34,7 @@ public:
 	float getHeight()const; 
 	void setWidth(float& height); 
 	void setHeight(float& width);
+	float getSpeedModifier()const;
  protected:
 	bool m_walkable = true;
 	int m_rowCap = 0;

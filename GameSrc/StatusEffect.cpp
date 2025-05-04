@@ -48,15 +48,8 @@ void StatusEffect::setDuration(float& duration)
     m_endTime = sf::seconds(duration);
 }
 
-void StatusEffect::setStatusEffectId(StatusEffectIds id)
-{
-    m_statusEffectId = id;
-}
 
-StatusEffectIds StatusEffect::getStatusEffectId()
-{
-    return m_statusEffectId;
-}
+
 
 bool StatusEffect::hasDuration() const
 {

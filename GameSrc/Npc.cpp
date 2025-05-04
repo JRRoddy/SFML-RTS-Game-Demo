@@ -67,17 +67,27 @@ void Npc::clone(Npc* copy)
 //into account their current actions
 void Npc::getPathDir()
 {
-	if (m_requestedPath.size()) {
+	// if we have a path to follow and the npc is not dead
+	if (m_requestedPath.size() &&!isDead()) {
+		// get a direction to the current node 
 		sf::Vector2f positionToMoveTo = m_requestedPath[0]->worldPosition;
+        // update the direction
 		m_direction = normalize(positionToMoveTo - m_position);
+		// update the last known  heading direction of the npc
 		updateLastKnownDirection(m_direction);
+		// cancel the npc attack animation
 		m_canAttack = false;
 	}
 	else {
+		// otherwise we dont move in any direction
 		m_direction = sf::Vector2f(0.0f, 0.0f);
-
+		// call the npc's path end function 
+		// allowing for a reset of values once the npc reaches the end of their 
+		// allocated path 
+		onPathEnd();
 	}
-
+	// ensure that the npc cant move whenn attacking 
+	// which could result in sliding and  odd transitions between animations
 	m_direction* float((!getIsAttacking()));
 }
 

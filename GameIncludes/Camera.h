@@ -6,7 +6,7 @@ public:
 
 	Camera(sf::RenderWindow * window,sf::FloatRect & initialArea);
 	~Camera() {};
-
+	void setWindow(sf::RenderWindow* window);
 	void setPosition(sf::Vector2f& centrePos);
 	sf::Vector2f pixelToWorldCoords(sf::Vector2f &position);
 	sf::Vector2f worldToPixelCoords(sf::Vector2f& position);

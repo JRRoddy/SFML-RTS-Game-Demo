@@ -7,21 +7,27 @@ Goblin::Goblin()
     
     m_speed = 200.0f;  
     // initialise stats such as base health damage and gold count
-    m_currentStats = characterStats(40.0f, 0.0f, 0);
+    m_currentStats = characterStats(40.0f, 15.0f, 0);
+    // set up asset paths for animations that need to be requested 
+    // for the animation controller 
     m_idleAnimPath = "../Assets/Animations/GoblinIdle.png";
     m_runAnimPath = "../Assets/Animations/goblinRunAnim.png";
     m_attackAnimPath = "../Assets/Animations/GoblinAttackAnim.png";
     m_deathAnimPath = "../Assets/Animations/EnemyDeathAnim.png";
+    // set up milisecond delays for swapping between frames
     m_runAnimDelay = 70.0f;
     m_idleAnimDelay = 70.0f; 
-    m_attackAnimDelay = 80.0f; 
+    m_attackAnimDelay = 100.0f; 
     m_deathAnimDelay = 85.0f;
+    // spawn cap(number that can be present and on screen at once)
     m_spawnCap = 1;
 
+    // all known status effects that can be applied to this enemy
     m_appliableStatusEffectsMap = {
         {TAUNT, std::shared_ptr<TauntStatusEffect>(new TauntStatusEffect())},
     };
-    
+    // create the status effect manager for managing all status effects 
+    // applied to this enemy 
     m_statusEffectManager = std::shared_ptr<StatusEffectManager>(new StatusEffectManager(m_appliableStatusEffectsMap, &m_currentStats));
 
     m_debugCircle.setFillColor(sf::Color::Red); 

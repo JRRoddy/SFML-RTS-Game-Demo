@@ -56,13 +56,14 @@ void AllyManager::update(float dt)
 
 		if(checkAllyRemoval(i)) continue; // check if ally should be removed from active buffer
 		AllyBase* ally = m_activeBuffer[i]; 
-		
 		updateAllySelectedStatus(ally); // update recruited status and selected status of ally
 		updateAllyPath(ally); // update path for ally to follow 
 		ally->update(dt);// call ally update function 
 		// insert active ally into collision tree to check for collision 
 		// between other objects 
 		m_AllyCollisionHandler.get()->insertItem(ally->getBounds(), ally);
+
+		
 		
 
 	}

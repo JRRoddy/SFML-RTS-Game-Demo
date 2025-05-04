@@ -42,7 +42,7 @@ public:
 	
 	virtual void attackCharacter(Character* target);
 	virtual void playerInteract() {};
-	
+	virtual void onPathEnd() {};
 	bool characterTargetDeathCheck();
 	virtual sf::Vector2f getTargetPosition();
 	bool deathAnimFinished();

@@ -12,12 +12,13 @@ void EnemyManager::update(float dt) {
 		EnemyBase* enemyToUpdate = m_activeEnemyBuffer[i];
 		// get the current path and set it for the enemy to folllow 
 		m_activeEnemyBuffer[i]->updateGridTileState(m_levelGrid->getGridTile(enemyToUpdate->getPosition()));
-		
-		m_activeEnemyBuffer[i]->setPath(m_AStar->getPath(enemyToUpdate->getPosition(),enemyToUpdate->getTargetPosition()));
+		m_activeEnemyBuffer[i]->setPath(m_AStar->getPath(enemyToUpdate->getPosition(), enemyToUpdate->getTargetPosition()));
 		m_activeEnemyBuffer[i]->update(dt); // update enemy 
 		//  update enemies status in collision tree
-	    m_enemyCollisonHandler.get()->insertItem(enemyToUpdate->getBounds(), enemyToUpdate);
-	    
+		m_enemyCollisonHandler.get()->insertItem(enemyToUpdate->getBounds(), enemyToUpdate);
+
+		
+		
 	}
 	//update any collisions within the collision tree and 
 	// reset it ready for next update

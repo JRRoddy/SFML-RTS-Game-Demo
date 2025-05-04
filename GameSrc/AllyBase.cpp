@@ -56,7 +56,6 @@ void AllyBase::draw(sf::RenderWindow* window)
 {
 	window->draw(*m_baseSpriteRef.get());
 	window->draw(m_debugCircle);
-
 	for (int i = 0; i < m_requestedPath.size(); i++) {
 		m_requestedPath[i]->draw(window);
 	}
@@ -66,6 +65,14 @@ void AllyBase::setAnimStates()
 {
 
 	Npc::setAnimStates();
+}
+void AllyBase::onPathEnd()
+{
+	// ensure to update the previous movement order to the current player 
+	// movement order for the ally helping to keep track of when the ally needs
+	// to move out of things such as combat 
+	m_previousMovementOrder = m_playerRef->getMovementOrderPos();
+
 }
 
 sf::Vector2f AllyBase::getTargetPosition()
@@ -135,13 +142,13 @@ bool AllyBase::getSelected()
 
 void AllyBase::reset()
 {	
-	// resetting ally object for when it goes back into its associated pool
+	// resetting ally object for when it is chosen from its associated pool
+	// prepping it to be spawned in
 	m_active = true;
 	m_currentStats.health = m_currentStats.baseHealth; 
 	m_recruited = false;
 	m_characterTarget = nullptr;
-	
-
+	m_requestedPath.clear();
 
 
 }
@@ -170,26 +177,6 @@ void AllyBase::checkFacingDirection()
 
 }
 
-void AllyBase::getPathDir()
-{
-	if (m_requestedPath.size()) {
-		sf::Vector2f positionToMoveTo = m_requestedPath[0]->worldPosition;
-		m_direction = normalize(positionToMoveTo - m_position);
-		updateLastKnownDirection(m_direction);
-		m_canAttack = false;
-	}
-	else {
-		// ensure to update the previous movement order to the current player 
-		// movement order for the ally helping to keep track of when the ally needs
-		// to move out of things such as combat 
-		m_previousMovementOrder = m_playerRef->getMovementOrderPos();
-		m_direction = sf::Vector2f(0.0f, 0.0f);
-		
-	}
-
-	m_direction* float((!getIsAttacking()));
-
-}
 
 void AllyBase::setTargetPlayer()
 {

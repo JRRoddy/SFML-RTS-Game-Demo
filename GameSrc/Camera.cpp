@@ -9,6 +9,11 @@ Camera::Camera(sf::RenderWindow* window, sf::FloatRect& initialArea):m_cameraVie
 
 }
 
+void Camera::setWindow(sf::RenderWindow* window)
+{
+	m_window = window;
+}
+
 void Camera::setPosition(sf::Vector2f& centrePos)
 {
    

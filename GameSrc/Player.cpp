@@ -1,7 +1,13 @@
 #include "Player.h"
 
 
-Player::Player(){}
+Player::Player(){
+	m_speed = m_baseSpeed;
+	/*m_input->addDirectionalMapping(m_vertInputMapName, m_vertcialDirectionMap);
+	m_input->addDirectionalMapping(m_horiInputMapName, m_horizontalDirectionMap);*/
+	
+
+}
 
 Player::Player(sf::Vector2f position, SpriteGenerator *spriteGenerator,InputManager * input):Character(position)
 { 
@@ -33,7 +39,7 @@ Player::Player(sf::Vector2f position, SpriteGenerator* spriteGenerator, InputMan
 	m_speed = m_baseSpeed;
 	// set up base stats for character
     // base health, damage, gold
-	m_currentStats = characterStats(100.0f, 15.0f, 0);
+	m_currentStats = characterStats(100.0f, 18.0f, 0);
 	m_startPosition = position;
 	m_input->addDirectionalMapping(m_vertInputMapName, m_vertcialDirectionMap);
 	m_input->addDirectionalMapping(m_horiInputMapName, m_horizontalDirectionMap);

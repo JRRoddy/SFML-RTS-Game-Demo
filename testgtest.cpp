@@ -10,9 +10,13 @@
 #include "GameIncludes/GameObject.h"
 #include "GameIncludes/TileDeepCopyUtil.h"
 #include "GameIncludes/ForestTile.h"
+#include "PathTile.h"
+#include "RockTile.h"
 #include "GameIncludes/Player.h"
 #include "GameIncludes/DynamicObject.h"
 #include "TextureManager.h" 
+#include "PawnAlly.h"
+#include "Camera.h"
 #include "Goblin.h"
 // GameObject class unit tests:
 class GameObjectTests: public::testing::Test {
@@ -60,10 +64,6 @@ protected:
 }; 
 
 
-
-
-
-
 TEST_F(GameObjectTests, GameObjectUnitTest) {
 
     // testing getters and setters for gameObject i.e setting postion rot and scale
@@ -97,7 +97,6 @@ protected:
 
 };
 
-
 TEST_F(tileDeepCopytest, deepCopyingTilesTest) {
     
     std::cout << "DEEP COPY TEST" << std::endl;
@@ -117,21 +116,197 @@ TEST_F(tileDeepCopytest, deepCopyingTilesTest) {
 
 
 }
+// test fixture to wrap all the tile types under one test class 
+class TileTesting:public::testing::Test {
 
-class  EnemyStatsTest: public::testing::Test {
+public:
+
+    TileTesting() {
+
+        m_forestTile = std::make_unique<ForestTile>(ForestTile());
+        m_pathTile = std::make_unique<PathTile>(PathTile());
+        m_rockTile = std::make_unique<RockTile>(RockTile());
+
+        m_player = std::make_unique<Player>(Player());
+        m_tileWidth = 64.0f;
+        m_tileHeight = 64.0f;
+        m_positionToSet = sf::Vector2f(10.0f, 0.0f);
+        m_tileExpectedVertices.setPrimitiveType(sf::Quads);
+        m_tileExpectedVertices.resize(4);
+        m_tileExpectedVertices[0] = sf::Vertex(sf::Vector2f(m_positionToSet.x - m_tileWidth / 2.0f, m_positionToSet.y - m_tileHeight / 2.0f), sf::Vector2f(0.0f, 0.0f));
+        m_tileExpectedVertices[1] = sf::Vertex(sf::Vector2f(m_positionToSet.x - m_tileWidth / 2.0f, m_positionToSet.y + m_tileHeight / 2.0f), sf::Vector2f(0.0f, m_tileHeight));
+        m_tileExpectedVertices[2] = sf::Vertex(sf::Vector2f(m_positionToSet.x + m_tileWidth / 2.0f, m_positionToSet.y + m_tileHeight / 2.0f), sf::Vector2f(m_tileWidth, m_tileHeight));
+        m_tileExpectedVertices[3] = sf::Vertex(sf::Vector2f(m_positionToSet.x + m_tileWidth / 2.0f, m_positionToSet.y - m_tileHeight / 2.0f), sf::Vector2f(m_tileWidth, 0.0f));
+
+
+        
+    };
+    ~TileTesting() {};
+
+
+protected:
+    std::unique_ptr<ForestTile> m_forestTile;
+    std::unique_ptr<PathTile> m_pathTile;
+    std::unique_ptr<RockTile> m_rockTile;
+    std::unique_ptr<Player> m_player;
+    float m_tileWidth = 0.0f;
+    float m_tileHeight = 0.0f; 
+    sf::Vector2f m_positionToSet;
+    sf::VertexArray m_tileExpectedVertices; 
+
+
+
+
+
+};
+// testing tile effects 
+TEST_F(TileTesting, ForestTileEffectTest) {
+
+    m_forestTile->dynamicObjectEffect(m_player.get()); 
+
+    EXPECT_EQ(m_player->getSpeedModifier(),m_forestTile->getSpeedModifier());
+    
+
+
+
+
+}
+TEST_F(TileTesting, PathTileEffectTest) {
+
+    m_pathTile->dynamicObjectEffect(m_player.get());
+
+    EXPECT_EQ(m_player->getSpeedModifier(), m_pathTile->getSpeedModifier());
+
+
+}
+// testing setting position of tiles and ensuring the verticies 
+// end up in the correct positions based on defined width and height 
+// for the tile 
+TEST_F(TileTesting, TilePositionTest) {
+
+    
+    m_forestTile->setVerticies(m_tileWidth,m_tileHeight,m_positionToSet );
+    EXPECT_EQ(m_forestTile->getPosition().x, m_positionToSet.x);
+    EXPECT_EQ(m_tileWidth, m_forestTile->getWidth()); 
+    EXPECT_EQ(m_tileHeight, m_forestTile->getHeight());
+
+    // loop through expected verts and check against set ones
+    for (int i = 0; i < 4; i++) {
+
+        EXPECT_EQ(m_tileExpectedVertices[i].position.x, m_forestTile->getVerticies()[i].position.x);
+        EXPECT_EQ(m_tileExpectedVertices[i].position.y, m_forestTile->getVerticies()[i].position.y);
+
+    }
+
+
+
+
+
+}
+
+TEST_F(TileTesting, TileWorldAttributesTest) {
+
+    // testing default walakble values for tiles
+    EXPECT_TRUE(m_forestTile->isWalkable());
+    EXPECT_TRUE(m_pathTile->isWalkable());
+    EXPECT_FALSE(m_rockTile->isWalkable());
+    //testing setting walkable values
+    m_forestTile->setIsWalkable(false);
+    EXPECT_FALSE(m_forestTile->isWalkable());
+    // testing spawn cap setting
+    m_rockTile->setSpawnCap(4);
+    EXPECT_EQ(m_rockTile->getSpawnCap(), 4);
+
+
+
+
+
+
+
+}
+
+
+// camera test class 
+class CameraTest : public::testing::Test {
+
+public:
+
+    CameraTest() {
+    
+        m_positionToSet = sf::Vector2f(10.0f, 10.0f);
+        m_positionToMoveTo = sf::Vector2f(20.0f, 20.0f); 
+        m_defaultView = sf::FloatRect(0.0f, 0.0f, 200.0f, 200.0f);
+        m_resizedView = sf::FloatRect(0.0, 0.0f, 800.0f, 600.0f);
+    };
+    ~CameraTest() {}; 
+
+
+
+protected:
+    sf::Vector2f m_positionToSet; 
+    sf::Vector2f m_positionToMoveTo;
+    sf::FloatRect m_defaultView;
+    sf::FloatRect m_resizedView;
+
+
+
+};
+
+// checking camera positioning 
+TEST_F(CameraTest,CameraPositioningTest) {
+    
+    sf::RenderWindow window = sf::RenderWindow();
+    Camera cam = Camera(&window, m_defaultView);  
+
+    cam.setPosition(m_positionToSet); 
+
+    EXPECT_EQ(cam.getView().getCenter().x, m_positionToSet.x);
+    
+}
+
+// checking camera positioning 
+TEST_F(CameraTest, CameraResizeViewTest) {
+
+    sf::RenderWindow window = sf::RenderWindow();
+    Camera cam = Camera(&window, m_defaultView);
+   
+    cam.resSize(m_resizedView);
+
+    EXPECT_EQ(cam.getView().getViewport().width, m_resizedView.getSize().x);
+    EXPECT_EQ(cam.getView().getViewport().height, m_resizedView.getSize().y);
+
+}
+
+TEST_F(CameraTest, CameraRepositionTest) {
+
+    sf::RenderWindow window = sf::RenderWindow();
+    Camera cam = Camera(&window, m_defaultView);
+
+    cam.setPosition(m_positionToSet); 
+    cam.moveToPos(m_positionToMoveTo);
+    EXPECT_EQ(cam.getView().getCenter().x, m_positionToMoveTo.x);
+    EXPECT_EQ(cam.getView().getCenter().y, m_positionToMoveTo.y);
+
+
+
+}
+
+
+// character tests
+class  CharacterStatsTest: public::testing::Test {
 public:
      
-    std::vector<EnemyBase*> m_enemiesToTest{ new Goblin() }; 
+    std::vector<Character*> m_charactersToTest{ new Goblin(),new Pawn()};
     
-    EnemyStatsTest() {
+    CharacterStatsTest() {
        
         m_positionToSet = sf::Vector2f(10.0f, 50.0f); 
         m_damageToSet = 10.0f;
         m_healthToSet = 50.0f;
     }; 
-    ~EnemyStatsTest() {
-        for (int i = 0; i < m_enemiesToTest.size(); i++) {
-            delete m_enemiesToTest[i];
+    ~CharacterStatsTest() {
+        for (int i = 0; i < m_charactersToTest.size(); i++) {
+            delete m_charactersToTest[i];
         }
     }
     
@@ -150,22 +325,23 @@ protected:
 
 };
 
-// test all stat setting of enemies 
-TEST_F(EnemyStatsTest, enemyStatsTest) {
+// test all stat setting of characters 
+TEST_F(CharacterStatsTest, characterStatsTest) {
     std::cout << "testing stats of enemies" << std::endl;
-    for (int i = 0; i < m_enemiesToTest.size(); i++) {
+    for (int i = 0; i < m_charactersToTest.size(); i++) {
 
-        m_enemiesToTest[i]->setDamage(m_damageToSet); 
-        m_enemiesToTest[i]->setHealth(m_healthToSet); 
-        m_enemiesToTest[i]->setPosition(m_positionToSet); 
-        EXPECT_TRUE(m_positionToSet == m_enemiesToTest[i]->getPosition()); 
-        EXPECT_TRUE(m_damageToSet == m_enemiesToTest[i]->getDamage());
-        EXPECT_TRUE(m_healthToSet == m_enemiesToTest[i]->getHealth());
+        m_charactersToTest[i]->setDamage(m_damageToSet); 
+        m_charactersToTest[i]->setHealth(m_healthToSet); 
+        m_charactersToTest[i]->setPosition(m_positionToSet); 
+        EXPECT_TRUE(m_positionToSet.x == m_charactersToTest[i]->getPosition().x); 
+        EXPECT_TRUE(m_damageToSet == m_charactersToTest[i]->getDamage());
+        EXPECT_TRUE(m_healthToSet == m_charactersToTest[i]->getHealth());
 
     }
 
 
 }
+
 
 
 // dynamic object unit tests
@@ -216,13 +392,13 @@ public:
     
     void SetUp() {
 
-        m_pathToLoad = ".. /Assets/Textures/GrassBackground0.png";
+        m_pathToLoad = "../Assets/Textures/GrassBackground0.png";
             
     }
 protected:
     std::string m_pathToLoad;
     TextureManager m_textureManager;
-
+ 
 
 
 
@@ -236,6 +412,140 @@ TEST_F(TextureManagerTest, loadFileTest) {
     m_textureManager.loadTexture(m_pathToLoad); 
     EXPECT_NE(m_textureManager.getTexture(m_pathToLoad), nullptr);
 
+}
+
+
+class SpriteGeneratorTest: public::testing::Test {
+
+
+public:
+
+    SpriteGeneratorTest() {
+        m_textureManager = std::make_unique<TextureManager>(TextureManager());
+        m_textureManager->loadTextures(m_pathToTextures);
+        m_textureManager->loadAnims(m_pathToAnimations);
+        m_baseSpriteRef = std::make_shared<sf::Sprite>(sf::Sprite());
+        m_spriteGenerator = std::make_unique<SpriteGenerator>(SpriteGenerator(m_textureManager.get()));
+        m_singleSpriteTestDim = sf::Vector2f(35.0f, 64.0f);
+    }
+    ~SpriteGeneratorTest() { 
+    
+       
+    }
+
+
+
+
+protected:
+    
+    std::unique_ptr<TextureManager> m_textureManager; 
+    std::unique_ptr<SpriteGenerator> m_spriteGenerator;
+    std::shared_ptr<sf::Sprite> m_baseSpriteRef;
+    std::string m_pathToTextures = "../Assets/Textures/PathsToTextures.txt";
+    std::string m_animationPathToTest = "../Assets/Animations/KnightIdleBlue.png";
+    std::string m_pathToAnimations = "../Assets/Animations/PathsToAnimations.txt";
+    std::string m_singleSpritePath = "../Assets/Textures/flagIndicator.png";;
+    size_t m_testAnimationFrameSize = 6;
+    sf::Vector2f m_singleSpriteTestDim;
+    float m_testAnimationMiliDelay = 70.0f;
+};
+
+
+// test the generation of a single animation
+TEST_F(SpriteGeneratorTest, TestSingleAnimationCreation) {
+
+
+   std::shared_ptr<std::vector<sf::Sprite>> testAnimLoad =  m_spriteGenerator->GenerateAnim(m_animationPathToTest);
+   // test that the number of frames in the animation provided by sprite generator  is equal to the expected amount
+  
+   EXPECT_EQ(testAnimLoad.get()->size(), m_testAnimationFrameSize);
+
+}
+
+TEST_F(SpriteGeneratorTest, TestSingleSpriteGeneration) {
+
+   std::shared_ptr<sf::Sprite> sprite =  m_spriteGenerator->GenerateSprite(m_singleSpritePath);
+   // test the the sprite returned is not empty 
+   // i.e  here we assert as all proceeding test will cause errors if null result
+   ASSERT_NE(sprite.get(), nullptr); 
+   // test that the sprite returned has the macthing texture rect for the expected texture
+   EXPECT_EQ(sprite.get()->getTextureRect().getSize().x, m_singleSpriteTestDim.x);
+   EXPECT_EQ(sprite.get()->getTextureRect().getSize().y, m_singleSpriteTestDim.y);
+
+
+}
+
+TEST_F(SpriteGeneratorTest, AnimationObjectGenerationTest) {
+
+    
+    AnimationObject animationObject = m_spriteGenerator->generateAnimationObject(m_animationPathToTest, m_baseSpriteRef, m_testAnimationMiliDelay);
+    // test that animation object was set up correctly on generation in sprite generator
+    EXPECT_EQ(animationObject.getFrameDelay().asMilliseconds(), m_testAnimationMiliDelay); 
+    EXPECT_EQ(animationObject.getframes()->size(), m_testAnimationFrameSize); 
+    EXPECT_FALSE(animationObject.animAtEnd());
+
+   
+   
+
+}
+
+class AnimationObjectTests:public::testing::Test {
+
+public:
+    AnimationObjectTests() {
+        m_textureManager = std::make_unique<TextureManager>(TextureManager());
+        m_textureManager->loadAnims(m_pathToAnimations);
+        m_baseSpriteRef = std::make_shared<sf::Sprite>(sf::Sprite());
+        m_spriteGenerator = std::make_unique<SpriteGenerator>(SpriteGenerator(m_textureManager.get()));
+        m_animationMiliDelayTest = 70.0f;
+        m_animationObjectTest = std::make_unique<AnimationObject>(m_spriteGenerator->generateAnimationObject(m_animationPathToTest, m_baseSpriteRef, m_animationMiliDelayTest));
+   
+    };
+    ~AnimationObjectTests() {};
+
+protected:
+    std::unique_ptr<TextureManager> m_textureManager;
+    std::unique_ptr<AnimationObject> m_animationObjectTest;
+    std::unique_ptr<SpriteGenerator> m_spriteGenerator;
+    std::shared_ptr<sf::Sprite> m_baseSpriteRef;
+    float m_animationMiliDelayTest;
+    size_t m_testAnimationFrameSize = 6;
+    std::string m_pathToAnimations = "../Assets/Animations/PathsToAnimations.txt";
+    std::string m_animationPathToTest = "../Assets/Animations/KnightIdleBlue.png";
+
+};
+
+
+TEST_F(AnimationObjectTests, animationplayTest) {
+
+    // assert that the animation object was generated correctly with the correct number of frames
+    ASSERT_EQ(m_animationObjectTest->getframes()->size(), m_testAnimationFrameSize);
+    EXPECT_FALSE(m_animationObjectTest->animAtEnd()); 
+    // ensure that the last index into the frames stored in the anim object
+    // is equal to the expected value 
+    size_t lastFrameIndex = m_animationObjectTest->getframes()->size() - 1;
+    ASSERT_EQ(lastFrameIndex, m_testAnimationFrameSize-1);
+
+    while (!m_animationObjectTest->animAtEnd()) {
+
+
+        m_animationObjectTest->play();
+
+
+    }
+
+    sf::IntRect lastFrameSize = m_animationObjectTest->getframes()->at(lastFrameIndex).getTextureRect(); 
+    // expect the frame sizes of the sprite to be the same as the last frame of the animation
+    // being used by the animation object as we passed the base sprite ref variable by refernce 
+    // to the animation object for that sprite to be animated by the animation object
+    EXPECT_EQ(m_baseSpriteRef->getTextureRect().getSize().x, lastFrameSize.getSize().x);
+    EXPECT_EQ(m_baseSpriteRef->getTextureRect().getSize().y ,lastFrameSize.getSize().y);
+
+  
+   
+    
+
+    
 }
 
 

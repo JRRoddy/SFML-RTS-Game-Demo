@@ -11,7 +11,7 @@ public:
 	// virtual constructor here to ensure that memory allocated on the heap for any derrived classes is deallocated 
 	// correctly when delloacting the memory via the delete key word
 	virtual ~AllyBase(){};
-
+	void onPathEnd();
 	void collision(GameObject* other);
 	virtual AllyBase* clone() { return nullptr; }
 	virtual void clone(AllyBase* copy);
@@ -28,7 +28,6 @@ public:
 	void reset();
 	void update(float dt);
 	void checkFacingDirection();
-	void getPathDir();
 	void setTargetPlayer();
 protected:
 	bool m_selected = false;

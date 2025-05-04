@@ -22,7 +22,7 @@ public:
 	void resetSpeedModifier();
 	void setSpeedModfier(float speedModifer);
 	void setCanMoveToNextTile(bool canMoveToNextTile);
-
+	float getSpeedModifier()const;
 protected:
 	sf::Vector2f m_nextPos;
 	bool m_canMoveToNextTile = true;

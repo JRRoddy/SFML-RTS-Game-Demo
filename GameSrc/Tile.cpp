@@ -53,6 +53,11 @@ void Tile::setVerticies(float width, float height, sf::Vector2f position)
 }
 
 
+sf::VertexArray Tile::getVerticies()
+{
+    return m_tileVerticies;
+}
+
 // used for deep copying tiles
 void Tile::clone(Tile* copy)
 {
@@ -107,6 +112,10 @@ float Tile::getHeight() const
 
 void Tile::setHeight(float& height) {
     m_height = height;
+}
+float Tile::getSpeedModifier() const
+{
+    return m_speedModifier;
 }
 void Tile::setWidth(float& width) {
     m_width = width;
