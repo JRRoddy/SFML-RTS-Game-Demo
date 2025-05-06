@@ -90,7 +90,7 @@ void LevelAreaContainer::draw(sf::RenderWindow* window)
 		m_worldTiles[i]->draw(window);
 	}
 
-	m_collisionTreeForUnwalkableTiles->drawCollisionTree(window);
+	//m_collisionTreeForUnwalkableTiles->drawCollisionTree(window);
 }
 
 

@@ -7,7 +7,7 @@ Goblin::Goblin()
     
     m_speed = 200.0f;  
     // initialise stats such as base health damage and gold count
-    m_currentStats = characterStats(40.0f, 15.0f, 0);
+    m_currentStats = characterStats(40.0f, 14.0f, 0);
     // set up asset paths for animations that need to be requested 
     // for the animation controller 
     m_idleAnimPath = "../Assets/Animations/GoblinIdle.png";

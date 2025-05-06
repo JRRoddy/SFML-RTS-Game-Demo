@@ -55,7 +55,7 @@ class Player: public Character {
 	 std::unique_ptr<AnimationController> m_animationController;
 	 std::map<std::string, AnimationObject> m_animStates;
 	 float m_idleAnimDelay = 70.0f;
-	 float m_runAnimDelay = 70.0f;
+	 float m_runAnimDelay = 80.0f;
 	 float m_attackAnimDelay = 100.0f;
 
 

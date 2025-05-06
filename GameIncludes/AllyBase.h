@@ -27,7 +27,7 @@ public:
 	bool getSelected();
 	void reset();
 	void update(float dt);
-	void checkFacingDirection();
+
 	void setTargetPlayer();
 protected:
 	bool m_selected = false;

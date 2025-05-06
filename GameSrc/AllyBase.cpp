@@ -157,23 +157,12 @@ void AllyBase::reset()
 // controlling their facing direction and updating their position
 void AllyBase::update(float dt)
 {
-	checkFacingDirection();
+	checkAttackingFacingDirection();
 	flipSpriteX(m_facingDirection.x);
 	setAnimStates();
 	m_animationController.get()->update();
 	updatePosition(dt);
 	m_debugCircle.setPosition(m_position);
-
-}
-
-void AllyBase::checkFacingDirection()
-{
-	if (m_characterTarget != nullptr && m_canAttack) {
-
-		m_facingDirection = normalize(m_characterTarget->getPosition() - m_position);
-		return;
-	}
-	m_facingDirection = m_direction;
 
 }
 

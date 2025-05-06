@@ -63,6 +63,19 @@ void Npc::clone(Npc* copy)
 	
 	
 }
+
+// allows npc's to have a seperate facing direction for attacking one target but moving towards another
+void Npc::checkAttackingFacingDirection()
+{
+	if (m_characterTarget != nullptr && m_canAttack) {
+
+		m_facingDirection = normalize(m_characterTarget->getPosition() - m_position);
+		return;
+	}
+	m_facingDirection = m_direction;
+
+
+}
 // get the direction to the current waypoint the npc is moving towards taking 
 //into account their current actions
 void Npc::getPathDir()

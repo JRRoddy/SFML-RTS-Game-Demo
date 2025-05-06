@@ -53,8 +53,9 @@ void EnemyBase::draw(sf::RenderWindow* window)
 }
 
 void EnemyBase::update(float dt)
-{
-	flipSpriteX(m_direction.x);
+{ 
+	checkAttackingFacingDirection();
+	flipSpriteX(m_facingDirection.x);
 	setAnimStates();
 	m_animationController.get()->update();
 	updatePosition(dt);

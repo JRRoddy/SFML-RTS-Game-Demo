@@ -6,14 +6,14 @@ Pawn::Pawn()
     // set up base stats for character
     // base health, damage, gold
     m_currentStats = characterStats(80.0f,12.0f,0);
-    m_speed = 150.0f;
+    m_speed = 160.0f;
     m_idleAnimPath = "../Assets/Animations/PawnIdleAnim.png";
     m_runAnimPath = "../Assets/Animations/PawnRunAnim.png";
     m_attackAnimPath = "../Assets/Animations/PawnAttackAnim.png";
     m_deathAnimPath = "../Assets/Animations/EnemyDeathAnim.png";
     m_runAnimDelay = 70.0f;
     m_idleAnimDelay = 70.0f;
-    m_attackAnimDelay = 120.0f;
+    m_attackAnimDelay = 85.0f;
     m_deathAnimDelay = 85.0f;
     m_spawnCap = 1;      
     m_debugCircle.setFillColor(sf::Color::Magenta);

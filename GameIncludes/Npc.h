@@ -24,14 +24,17 @@ public:
 	void copyAnimController(AnimationController* animController);
 	bool getIsActive();
 	virtual void clone(Npc* copy);
-
+	void checkAttackingFacingDirection();
 	virtual void getPathDir();
 
 	void setPath(std::vector< node*>& path);
 	
 	virtual void setTargetPlayer();
 
-	
+	// since allies and enemies could be moving towards the player but be attacking other npcs
+	// we need to have a seperate direction for them to face when they are attacking 
+	// and running 
+	sf::Vector2f m_facingDirection;
 
 	virtual void setAnimStates();
 

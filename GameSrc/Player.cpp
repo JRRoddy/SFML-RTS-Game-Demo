@@ -3,8 +3,7 @@
 
 Player::Player(){
 	m_speed = m_baseSpeed;
-	/*m_input->addDirectionalMapping(m_vertInputMapName, m_vertcialDirectionMap);
-	m_input->addDirectionalMapping(m_horiInputMapName, m_horizontalDirectionMap);*/
+
 	
 
 }
@@ -78,7 +77,7 @@ void Player::update(float dt)
 	updateCamera();
 	updateAllyMovementOrder();
 	updateCommandFlag();
-	m_debugCircle.setPosition(m_nextPos);
+	m_debugCircle.setPosition(m_position);
 	checkReset();
 	
 	
