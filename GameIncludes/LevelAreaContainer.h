@@ -1,5 +1,6 @@
 #pragma once
 #include "AreaTypes.h"
+#include "FactionIds.h"
 #include "Tile.h"
 #include "TileDeepCopyUtil.h"
 #include "SFML/Graphics/Color.hpp"
@@ -18,8 +19,7 @@ class LevelAreaContainer: public GameObject  {
 
 public:
 
-	
-	LevelAreaContainer(); 
+	LevelAreaContainer();
 	LevelAreaContainer(SpriteGenerator* spriteGenerator);
 	LevelAreaContainer(SpriteGenerator* spriteGenerator, sf::Vector2f offsetPosition, std::string backGroundTexture, sf::Vector2i gridDimensions = sf::Vector2i(2,2), sf::Vector2f sectionSize = sf::Vector2f(512.0f,512.0f));
 
@@ -33,6 +33,8 @@ public:
 	void getSprites(SpriteGenerator * m_spriteGenerator); 
 	void setMaxAllySpawnCap(int spawnCap);
 
+	void setAllyFaction(AllyFactionIds factionId);
+	void setEnemyFaction(EnemyFactionIds factionId);
 	// setters and getters for background textures used when drawing the area 
 	void setBackgroundTexturePaths(std::vector<std::string>& paths);
 
@@ -100,6 +102,8 @@ public:
 	// get enemy initialisers associated with area
 	std::vector<EnemyInitialiser>& getEnemyIntialisers();
 	std::vector<AllyInitialiser>& getAllyIntialisers();
+	EnemyFactionIds getAssociatedEnemyFaction();
+	AllyFactionIds getAssociatedAllyFaction();
 	void initCollisionTree(int maxCollisionTreeDepth);
 	void setEnemyIntialisers(std::vector<EnemyInitialiser>& enemyInitialisers); 
 	void setAllyInitialisers(std::vector<AllyInitialiser>& allyInitalisers);
@@ -158,13 +162,15 @@ protected:
 	sf::Image * m_currentTileMapImage  = nullptr;
 
 	// store specifc enemy instialisers associated 
-	// with this area used to generate pooling objects for enemies 
+	// with this area used to generate pooling objects for enemies
+	EnemyFactionIds m_enemyFactionInArea = EnemyFactionIds();
 	std::vector<EnemyInitialiser> m_enemies;
 	float m_minSpawnCoolDown = 0.0f; 
 	float m_maxSpawnCoolDown = 0.0f;
 
 
 	//allies in area 
+	AllyFactionIds m_allyFactionInArea = AllyFactionIds();
 	std::vector<AllyInitialiser> m_allies;
 	float m_allyRefreshCoolDown = 0.0f;
 	int m_maxAllyCap = 0;

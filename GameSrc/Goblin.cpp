@@ -17,10 +17,10 @@ Goblin::Goblin()
     // set up milisecond delays for swapping between frames
     m_runAnimDelay = 70.0f;
     m_idleAnimDelay = 70.0f; 
-    m_attackAnimDelay = 100.0f; 
+    m_attackAnimDelay = 90.0f; 
     m_deathAnimDelay = 85.0f;
     // spawn cap(number that can be present and on screen at once)
-    m_spawnCap = 1;
+    m_spawnCap = 6;
 
     // all known status effects that can be applied to this enemy
     m_appliableStatusEffectsMap = {

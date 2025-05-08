@@ -15,7 +15,7 @@ public:
 	GameObject(sf::Vector2f position);
 	GameObject(sf::Vector2f position, float rotation,sf::Vector2f scale);
 	GameObject(sf::Sprite *sprite);
-	virtual ~GameObject() {};
+	virtual ~GameObject(){};
 	void updateBaseSprite();
 	void setPosition(sf::Vector2f position);
 	void setRotation(float rotation); 
@@ -37,7 +37,7 @@ public:
 	virtual void collisionResponse(GameObject* other) {};
 	virtual void reset() {};
 	virtual void update(float dt);
-	virtual void draw(sf::RenderWindow * window) ;
+	virtual void draw(sf::RenderWindow * window);
 	virtual void getSprites(SpriteGenerator* spriteGenerator);
 	virtual void getSprites(SpriteGenerator* spriteGenerator, std::string spriteTexturePath);
 	

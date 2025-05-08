@@ -8,7 +8,7 @@ public:
 	
 	EnemyBase();
 	// virtual constructor here to ensure that memory allocated on the heap for any derrived classes is deallocated 
-    // correctly when delloacting the memory via the delete key word
+    // and interrpreted correctly when doing so 
 	virtual ~EnemyBase() {};
 	sf::Vector2f getTargetPosition();
 	void collision(GameObject* other);

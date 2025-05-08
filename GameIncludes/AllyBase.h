@@ -9,7 +9,7 @@ public:
 
 	AllyBase();
 	// virtual constructor here to ensure that memory allocated on the heap for any derrived classes is deallocated 
-	// correctly when delloacting the memory via the delete key word
+	// and interrpreted correctly when doing so 
 	virtual ~AllyBase(){};
 	void onPathEnd();
 	void collision(GameObject* other);
@@ -27,15 +27,10 @@ public:
 	bool getSelected();
 	void reset();
 	void update(float dt);
-
 	void setTargetPlayer();
 protected:
 	bool m_selected = false;
 	bool m_recruited = false;
-	// since allies could be moving towards the player but be attacking enemies
-	// we need to have a seperate direction for them to face when they are attacking 
-	// and running towards the player 
-	sf::Vector2f m_facingDirection;
 	sf::Vector2f m_previousMovementOrder;
 	sf::Vector2f m_worldPositionTarget;
 	Player* m_playerRef = nullptr;

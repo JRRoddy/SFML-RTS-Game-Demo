@@ -62,11 +62,18 @@ void AllyObjectPool::refreshActiveObjects() {
 
 AllyBase* AllyObjectPool::activateObject()
 {
+	// check if the pool has an available object
 	if (hasAvailabeObject()) {
-		int randomEnemyIndexSelection = rand() % m_pool.size();
+		// select a random enemy to spawn out of the available pool
+		int randomEnemyIndexSelection = rand() % m_pool.size(); 
+		
 		AllyBase* ally = m_pool[randomEnemyIndexSelection];
+		// reset the ally ready for it to become active 
 		ally->reset();
+		// move the refernce to the ally in the active pool 
 		m_activeObjects.push_back(m_pool[randomEnemyIndexSelection]);
+		// remove the refernce to the ally in the available pool 
+		// as it is now in the active pool
 		m_pool.erase(m_pool.begin() + randomEnemyIndexSelection);
 		return ally;
 	}
@@ -77,6 +84,8 @@ AllyBase* AllyObjectPool::activateObject()
 
 bool AllyObjectPool::hasAvailabeObject()
 {
+	// if the size of the active objects pool
+	// is not equal to the max we have an avaialbe object in the m_pool vector
 	return m_activeObjects.size() != m_maxObjects;
 }
 

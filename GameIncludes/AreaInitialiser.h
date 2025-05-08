@@ -6,11 +6,11 @@ class AreaInitialiser {
 
 public:
 
-	
+
 	AreaInitialiser() {}
 
 	AreaInitialiser(const AreaInitialiser& other) {
-		
+
 		basePtr = other.basePtr->clone();
 		m_spriteGenerator = other.m_spriteGenerator;
 
@@ -26,16 +26,16 @@ public:
 
 
 	}
-	AreaInitialiser(LevelAreaContainer* LevelAreaContainer, SpriteGenerator * spriteGenerator) { // initialse the deep copy object with a ptr to the alloacted heap memory
+	AreaInitialiser(LevelAreaContainer* LevelAreaContainer, SpriteGenerator* spriteGenerator) { // initialse the deep copy object with a ptr to the alloacted heap memory
 
 		basePtr = LevelAreaContainer;
 		m_spriteGenerator = spriteGenerator;
 
 	}
 
-	LevelAreaContainer *  getNewAreaCopy(sf::Vector2f positionForArea,sf::Vector2i gridDim,sf::Vector2f tileSize) {
+	LevelAreaContainer* getNewAreaCopy(sf::Vector2f positionForArea, sf::Vector2i gridDim, sf::Vector2f tileSize) {
 
-		LevelAreaContainer * copyObjectToReturn; // create a new unique pointer to assign the allocated memeory from the current held LevelAreaContainer's clone method 
+		LevelAreaContainer* copyObjectToReturn; // create a new unique pointer to assign the allocated memeory from the current held LevelAreaContainer's clone method 
 		copyObjectToReturn = basePtr->clone(); // assign the heap allocated memeory to the unique ptr to be managed
 		copyObjectToReturn->getSprites(m_spriteGenerator); /// get the sprite ref for the new area
 		copyObjectToReturn->setDimensionsForArea(gridDim, tileSize); // set grid dimensions for new area
@@ -46,13 +46,16 @@ public:
 
 	};
 
-	
+	LevelAreaContainer* getDefaultCopy() {
+
+		return basePtr->clone();
+	}
 
 
 	LevelAreaContainer* getHeldObject() {
 		return basePtr;
 	}
-  
+
 	~AreaInitialiser() {
 		delete basePtr;
 	}

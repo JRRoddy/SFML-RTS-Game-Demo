@@ -8,6 +8,7 @@
 class Player: public Character {
  public:
 	Player();
+	Player(sf::Vector2f position, SpriteGenerator* spriteGenerator);
 	Player(sf::Vector2f position, SpriteGenerator * spriteGenerator,InputManager * input);
 	Player(sf::Vector2f position, SpriteGenerator* spriteGenerator, InputManager* input, Camera * camera);
 	bool isMouseDown(sf::Mouse::Button button);

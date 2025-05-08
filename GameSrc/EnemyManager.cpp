@@ -45,7 +45,7 @@ void EnemyManager::drawEnemies(sf::RenderWindow* window)
 
 
 
-void EnemyManager::setCurrentEnemyPool(AreaTypes areaType)
+void EnemyManager::setCurrentEnemyPool(EnemyFactionIds areaType)
 {
 
 	m_currentEnemyPool = &m_AreaPools[areaType];
@@ -112,7 +112,7 @@ void EnemyManager::updateCollision()
 void EnemyManager::setCurrentArea(LevelAreaContainer* levelArea)
 {
 	m_currentArea = levelArea;
-	m_currentEnemyPool = &m_AreaPools[levelArea->getAreaType()];
+	m_currentEnemyPool = &m_AreaPools[levelArea->getAssociatedEnemyFaction()];
 	m_enemyCollisonHandler.get()->resizeTree(sf::FloatRect(m_currentArea->getTopLeft(), m_currentArea->getWorldDimensions()));
 
 }
@@ -166,7 +166,7 @@ EnemyManager::~EnemyManager()
 
 
 // initialsier a new pool to be used and managed by the enemy manager
-void EnemyManager::initEnemyPool(AreaTypes areaType, std::vector<EnemyInitialiser>& enemies, SpriteGenerator * spriteGenerator)
+void EnemyManager::initEnemyPool(EnemyFactionIds areaType, std::vector<EnemyInitialiser>& enemies, SpriteGenerator * spriteGenerator)
 {
 	for (int i = 0; i < enemies.size(); i++) {
 		enemies[i].getHeldObject()->setPlayerCharacterRef(m_playerRef);

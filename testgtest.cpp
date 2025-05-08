@@ -120,7 +120,7 @@ TEST_F(tileDeepCopytest, deepCopyingTilesTest) {
 class TileTesting:public::testing::Test {
 
 public:
-
+    
     TileTesting() {
 
         m_forestTile = std::make_unique<ForestTile>(ForestTile());
@@ -128,6 +128,9 @@ public:
         m_rockTile = std::make_unique<RockTile>(RockTile());
 
         m_player = std::make_unique<Player>(Player());
+        // setting up data that will be used for tile testing such as 
+        // the width and height for each tile and the expected vertices 
+        // once they are set for the tile objects defined above
         m_tileWidth = 64.0f;
         m_tileHeight = 64.0f;
         m_positionToSet = sf::Vector2f(10.0f, 0.0f);
@@ -159,7 +162,7 @@ protected:
 
 
 };
-// testing tile effects 
+// testing tile effects and intergatting them with the player 
 TEST_F(TileTesting, ForestTileEffectTest) {
 
     m_forestTile->dynamicObjectEffect(m_player.get()); 
@@ -190,7 +193,7 @@ TEST_F(TileTesting, TilePositionTest) {
     EXPECT_EQ(m_tileWidth, m_forestTile->getWidth()); 
     EXPECT_EQ(m_tileHeight, m_forestTile->getHeight());
 
-    // loop through expected verts and check against set ones
+    // loop through the ste up data for  expected verts and check against set ones
     for (int i = 0; i < 4; i++) {
 
         EXPECT_EQ(m_tileExpectedVertices[i].position.x, m_forestTile->getVerticies()[i].position.x);
@@ -232,7 +235,8 @@ class CameraTest : public::testing::Test {
 public:
 
     CameraTest() {
-    
+        // setting up various pieces of data for the camera such as 
+        // position reszie data and a position to move the camera to 
         m_positionToSet = sf::Vector2f(10.0f, 10.0f);
         m_positionToMoveTo = sf::Vector2f(20.0f, 20.0f); 
         m_defaultView = sf::FloatRect(0.0f, 0.0f, 200.0f, 200.0f);
@@ -264,24 +268,24 @@ TEST_F(CameraTest,CameraPositioningTest) {
     
 }
 
-// checking camera positioning 
+// checking the process of resizing the camera view port  
 TEST_F(CameraTest, CameraResizeViewTest) {
 
     sf::RenderWindow window = sf::RenderWindow();
     Camera cam = Camera(&window, m_defaultView);
    
-    cam.resSize(m_resizedView);
+    cam.resize(m_resizedView);
 
     EXPECT_EQ(cam.getView().getViewport().width, m_resizedView.getSize().x);
     EXPECT_EQ(cam.getView().getViewport().height, m_resizedView.getSize().y);
 
 }
-
+// testing the process of rellocating the camera position 
 TEST_F(CameraTest, CameraRepositionTest) {
 
     sf::RenderWindow window = sf::RenderWindow();
     Camera cam = Camera(&window, m_defaultView);
-
+   
     cam.setPosition(m_positionToSet); 
     cam.moveToPos(m_positionToMoveTo);
     EXPECT_EQ(cam.getView().getCenter().x, m_positionToMoveTo.x);
@@ -292,14 +296,12 @@ TEST_F(CameraTest, CameraRepositionTest) {
 }
 
 
-// character tests
+// character tests for setting various properties 
 class  CharacterStatsTest: public::testing::Test {
 public:
      
-    std::vector<Character*> m_charactersToTest{ new Goblin(),new Pawn()};
-    
     CharacterStatsTest() {
-       
+        m_charactersToTest = { new Goblin(),new Pawn() };
         m_positionToSet = sf::Vector2f(10.0f, 50.0f); 
         m_damageToSet = 10.0f;
         m_healthToSet = 50.0f;
@@ -311,16 +313,11 @@ public:
     }
     
     
-
-
 protected:
-
+    std::vector<Character*> m_charactersToTest;
     sf::Vector2f m_positionToSet; 
     float m_damageToSet; 
     float m_healthToSet;
-
-     
-
 
 
 };
@@ -328,8 +325,12 @@ protected:
 // test all stat setting of characters 
 TEST_F(CharacterStatsTest, characterStatsTest) {
     std::cout << "testing stats of enemies" << std::endl;
+    // loop through al characters contained within the ccharacter vector 
+    // whihc is the base class for all npc's allowing for any npc to be included within this 
+    //test via upcating them to a character 
     for (int i = 0; i < m_charactersToTest.size(); i++) {
-
+        // set and check various values for the character we are currently 
+        // at accessing it via its index 
         m_charactersToTest[i]->setDamage(m_damageToSet); 
         m_charactersToTest[i]->setHealth(m_healthToSet); 
         m_charactersToTest[i]->setPosition(m_positionToSet); 
@@ -351,67 +352,175 @@ public:
     
     DynamicObjectTest() {
         m_dynamic = DynamicObject();
-        m_speedValue = 0.0f;
+        m_sprite = std::make_shared<sf::Sprite>(sf::Sprite());
+        m_dynamic.setBaseSprite(m_sprite);
+        m_speedValue = 0.0f; 
+        m_expectedSpeedModifer = 0.0f;
+     
+        m_elapsed = 0.0f;
+        m_positionToSet = sf::Vector2f(10.0f, 0.0f);
     }
     void SetUp() {
 
         m_speedValue = 10.0f;
-
+        m_expectedSpeedModifer = 1.0f;
+        m_directionToSet = sf::Vector2f(1.0f, 0.0f);
+        m_dynamic.setSpeed(m_speedValue);
+        m_dynamic.setSpeedModfier(m_expectedSpeedModifer);
+        m_dynamic.setDirection(m_directionToSet);
+        m_dynamic.setPosition(m_positionToSet);
+        
+        
     }
+
+   
 
 
 protected:
+    float m_elapsed;
+    sf::Vector2f m_positionToSet;
+    std::shared_ptr <sf::Sprite> m_sprite;
     DynamicObject m_dynamic;
     float m_speedValue;
+    float m_expectedSpeedModifer;
+    sf::Vector2f m_directionToSet;
+    
+    
 
 };
+
 
 // testing setting speed value of dynamic objects
 TEST_F(DynamicObjectTest, dynamicObjectSpeedSetTest) {
 
-      
-    m_dynamic.setSpeed(m_speedValue); 
-
+     
     EXPECT_EQ(m_dynamic.getSpeed(), m_speedValue);
+
+
+}
+TEST_F(DynamicObjectTest, SpeedModifierTest) {
+
+
+   
+    EXPECT_EQ(m_dynamic.getSpeedModifier(), m_expectedSpeedModifer);
+
+}
+TEST_F(DynamicObjectTest, setDirectionTest) {
+
+
+ 
+    EXPECT_EQ(m_dynamic.getDirection().x, m_directionToSet.x);
+    EXPECT_EQ(m_dynamic.getDirection().y, m_directionToSet.y);
+
+}
+
+TEST_F(DynamicObjectTest,dynamicObjectMovementTestSixtyFramesAsecond) {
+
+    m_elapsed = 1.0f / 60.0f;
+    m_dynamic.updatePosition(m_elapsed); 
+    // the expected postion for dynamic object based its set movement parameters
+    sf::Vector2f newExpectedPosition = m_positionToSet + ((m_directionToSet * m_speedValue)*m_expectedSpeedModifer) * m_elapsed;
+    
+    EXPECT_EQ(m_dynamic.getPosition().x, newExpectedPosition.x);
+    EXPECT_EQ(m_dynamic.getPosition().y, newExpectedPosition.y);
+    // check that the sprites position was set correctly based on the dynamic object's new position
+    EXPECT_EQ(m_dynamic.getBaseSprite()->getPosition().x, newExpectedPosition.x);
+    EXPECT_EQ(m_dynamic.getBaseSprite()->getPosition().y, newExpectedPosition.y);
+
+}
+TEST_F(DynamicObjectTest, dynamicObjectMovementTestThirtyFramesAsecond) {
+    
+    
+    m_elapsed = 1.0f / 30.0f;
+    m_dynamic.updatePosition(m_elapsed);
+    sf::Vector2f newExpectedPosition = m_positionToSet + ((m_directionToSet * m_speedValue) * m_expectedSpeedModifer) * m_elapsed;
+
+    EXPECT_EQ(m_dynamic.getPosition().x, newExpectedPosition.x);
+    EXPECT_EQ(m_dynamic.getPosition().y, newExpectedPosition.y);
+
+    EXPECT_EQ(m_dynamic.getBaseSprite()->getPosition().x, newExpectedPosition.x);
+    EXPECT_EQ(m_dynamic.getBaseSprite()->getPosition().y, newExpectedPosition.y);
+   
+
+
+
+}
+
+TEST_F(DynamicObjectTest, VaryingFrameRateMovementTest) {
+
+    m_elapsed = 1.0f / 60.0f;
+    m_dynamic.updatePosition(m_elapsed);
+    sf::Vector2f sixtyFPSExpectedPosition = m_positionToSet + ((m_directionToSet * m_speedValue) * m_expectedSpeedModifer) * m_elapsed;
+    EXPECT_EQ(m_dynamic.getPosition().x, sixtyFPSExpectedPosition.x);
+    EXPECT_EQ(m_dynamic.getPosition().y, sixtyFPSExpectedPosition.y);
+    m_dynamic.setPosition(m_positionToSet);
+    m_elapsed = 1.0f / 30.0f;
+    m_dynamic.updatePosition(m_elapsed);
+    sf::Vector2f thirtyFPSExpectedPosition = m_positionToSet + ((m_directionToSet * m_speedValue) * m_expectedSpeedModifer) * m_elapsed;
+    EXPECT_EQ(m_dynamic.getPosition().x, thirtyFPSExpectedPosition.x);
+    EXPECT_EQ(m_dynamic.getPosition().y, thirtyFPSExpectedPosition.y);
+
+    // ensuring that positions for dynamic objects remain relative to eachother 
+    // despite varying delta time(while removing any floating point precision)
+    EXPECT_EQ(floor(thirtyFPSExpectedPosition.x), floor(sixtyFPSExpectedPosition.x));
+    EXPECT_EQ(floor(thirtyFPSExpectedPosition.y), floor(sixtyFPSExpectedPosition.y));
+
 
 
 }
 
 
-// texture manager unit test
 
+// texture manager unit test
 class TextureManagerTest : public::testing::Test {
 public:
 
     TextureManagerTest() {
 
         m_textureManager = TextureManager();
-
+        
     }
-
-    
     void SetUp() {
-
-        m_pathToLoad = "../Assets/Textures/GrassBackground0.png";
-            
+        m_pathToLoad = "../Assets/Textures/GrassBackground0.png";       
     }
 protected:
     std::string m_pathToLoad;
+    std::string m_pathToAnimations = "../Assets/Animations/PathsToAnimations.txt";
+    std::string m_knownAnimationPath = "../Assets/Animations/goblinRunAnim.png";
     TextureManager m_textureManager;
  
 
-
-
-
 };
+
+TEST_F(TextureManagerTest, LoadingAnimationsTest) {
+
+    m_textureManager.loadAnims(m_pathToAnimations); 
+    std::map<std::string, std::vector<sf::IntRect>> expectedAnimationFrameData = m_textureManager.getAnimationFrameDataMap();
+
+    ASSERT_NE(expectedAnimationFrameData.size(), 0); 
+    // asserting that the map used to link animation frame data to a particualr animation 
+    // file path does not throw an exception when we attempt to key into a known animation 
+    // that should have been loaded using the file path for the animation
+    std::map<std::string, std::vector<sf::IntRect>>::iterator it; 
+    // testing the stl find algorithm whihc will search through the  tree associated with a map and 
+    // return the itterator associated with a particualr item 
+    // this test is to ensure that data for a known animation 
+    // that should have been inserted when we loaded animations 
+    // in the texture manager is present within the map that stores 
+    // animations linked to their asset path(the key value in the map)
+    it = expectedAnimationFrameData.find(m_knownAnimationPath);
+    ASSERT_NE(it, expectedAnimationFrameData.end());
+
+}
 
 
 // load from file and accessing map of texture in texture manager test
+// ensuring that the texture returned was properly created when we key 
+// into the map that stores all the textures 
 TEST_F(TextureManagerTest, loadFileTest) {
 
     m_textureManager.loadTexture(m_pathToLoad); 
     EXPECT_NE(m_textureManager.getTexture(m_pathToLoad), nullptr);
-
 }
 
 
@@ -444,7 +553,7 @@ protected:
     std::string m_pathToTextures = "../Assets/Textures/PathsToTextures.txt";
     std::string m_animationPathToTest = "../Assets/Animations/KnightIdleBlue.png";
     std::string m_pathToAnimations = "../Assets/Animations/PathsToAnimations.txt";
-    std::string m_singleSpritePath = "../Assets/Textures/flagIndicator.png";;
+    std::string m_singleSpritePath = "../Assets/Textures/flagIndicator.png";
     size_t m_testAnimationFrameSize = 6;
     sf::Vector2f m_singleSpriteTestDim;
     float m_testAnimationMiliDelay = 70.0f;
@@ -484,19 +593,18 @@ TEST_F(SpriteGeneratorTest, AnimationObjectGenerationTest) {
     EXPECT_EQ(animationObject.getframes()->size(), m_testAnimationFrameSize); 
     EXPECT_FALSE(animationObject.animAtEnd());
 
-   
-   
-
 }
-
+// testing an animation object which encapsulates a singlar animation
 class AnimationObjectTests:public::testing::Test {
 
 public:
     AnimationObjectTests() {
+        // setting up sprite and texture data for the animation(these were previously tested above)
         m_textureManager = std::make_unique<TextureManager>(TextureManager());
         m_textureManager->loadAnims(m_pathToAnimations);
         m_baseSpriteRef = std::make_shared<sf::Sprite>(sf::Sprite());
         m_spriteGenerator = std::make_unique<SpriteGenerator>(SpriteGenerator(m_textureManager.get()));
+        // set up the animation object by generating it using the sprite generator
         m_animationMiliDelayTest = 70.0f;
         m_animationObjectTest = std::make_unique<AnimationObject>(m_spriteGenerator->generateAnimationObject(m_animationPathToTest, m_baseSpriteRef, m_animationMiliDelayTest));
    
@@ -527,11 +635,7 @@ TEST_F(AnimationObjectTests, animationplayTest) {
     ASSERT_EQ(lastFrameIndex, m_testAnimationFrameSize-1);
 
     while (!m_animationObjectTest->animAtEnd()) {
-
-
         m_animationObjectTest->play();
-
-
     }
 
     sf::IntRect lastFrameSize = m_animationObjectTest->getframes()->at(lastFrameIndex).getTextureRect(); 
@@ -546,7 +650,39 @@ TEST_F(AnimationObjectTests, animationplayTest) {
     
 
     
-}
+} 
+
+
+class PlayerTest:public::testing::Test {
+
+public:
+    
+    PlayerTest() {
+
+        m_textureManager = std::make_unique<TextureManager>(TextureManager()); 
+        m_textureManager->loadTextures(m_pathToTextures);
+        m_textureManager->loadAnims(m_animationsPath);
+   
+        m_spriteGenerator = std::make_unique<SpriteGenerator>(SpriteGenerator(m_textureManager.get())); 
+        m_positionToSet = sf::Vector2f(400.0f, 300.0f);
+        m_player = std::make_unique<Player>(Player(m_positionToSet, m_spriteGenerator.get()));
+        m_elapsed = 1 / 60.0f;
+    }
+protected:
+    std::unique_ptr<Player> m_player;
+    std::unique_ptr<TextureManager> m_textureManager;
+    std::unique_ptr<SpriteGenerator> m_spriteGenerator;
+    sf::Vector2f m_positionToSet; 
+    std::string m_animationsPath = "../Assets/Animations/PathsToAnimations.txt";
+    std::string m_pathToTextures = "../Assets/Textures/PathsToTextures.txt";
+    float m_elapsed;
+
+
+};
+
+
+
+
 
 
  /**

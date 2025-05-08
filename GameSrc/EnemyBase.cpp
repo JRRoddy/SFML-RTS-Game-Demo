@@ -37,7 +37,6 @@ void EnemyBase::reset()
 	m_active = false; 
  	m_currentStats.health = m_currentStats.baseHealth; 
 	m_characterTarget = nullptr;
-	m_taunted = false;
 	m_requestedPath.clear();
 
 }
@@ -47,9 +46,7 @@ void EnemyBase::draw(sf::RenderWindow* window)
 	window->draw(*m_baseSpriteRef.get());
 	window->draw(m_debugCircle); 
 
-	/*for (int i = 0; i < m_requestedPath.size(); i++) {
-		m_requestedPath[i]->draw(window);
-	}*/
+	
 }
 
 void EnemyBase::update(float dt)
@@ -60,6 +57,7 @@ void EnemyBase::update(float dt)
 	m_animationController.get()->update();
 	updatePosition(dt);
 	m_statusEffectManager.get()->update();
+	updateHitEffect();
 	m_debugCircle.setPosition(m_position);
 }
 

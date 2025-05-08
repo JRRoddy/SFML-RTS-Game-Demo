@@ -63,7 +63,11 @@ LevelAreaContainer::LevelAreaContainer(SpriteGenerator* spriteGenerator, std::ve
 	
 }
 
-LevelAreaContainer::LevelAreaContainer(){}
+LevelAreaContainer::LevelAreaContainer(){
+
+  
+
+}
 
 LevelAreaContainer::LevelAreaContainer(SpriteGenerator* spriteGenerator)
 {
@@ -103,6 +107,18 @@ void LevelAreaContainer::getSprites(SpriteGenerator* m_spriteGenerator)
 void LevelAreaContainer::setMaxAllySpawnCap(int spawnCap)
 {
 	m_maxAllyCap = spawnCap;
+}
+
+void LevelAreaContainer::setAllyFaction(AllyFactionIds factionId)
+{
+
+	m_allyFactionInArea = factionId;
+}
+
+void LevelAreaContainer::setEnemyFaction(EnemyFactionIds factionId)
+{
+	m_enemyFactionInArea = factionId;
+
 }
 
 void LevelAreaContainer::setBackgroundTexturePaths(std::vector<std::string>& paths)
@@ -244,6 +260,7 @@ Tile * LevelAreaContainer::initTileFromSelectedMap(sf::Vector2i imageMapTexcoord
 		imageMapColour mappedColour = imageMapColour(mapColour.r, mapColour.g, mapColour.b, mapColour.a);
 		// construct an imageMapColour from the colour values of the read pixel 
 		std::string tileNameId;
+		
 		try { // try catch as .at will throw an out of range expection if the key does not exsist in the map
 			
 			tileNameId = m_tileInfocoloursMap.at(mappedColour); 
@@ -281,6 +298,15 @@ std::vector<EnemyInitialiser>& LevelAreaContainer::getEnemyIntialisers()
 std::vector<AllyInitialiser>& LevelAreaContainer::getAllyIntialisers()
 {
 	return m_allies;
+}
+
+EnemyFactionIds LevelAreaContainer::getAssociatedEnemyFaction()
+{
+	return m_enemyFactionInArea;
+}
+AllyFactionIds LevelAreaContainer::getAssociatedAllyFaction()
+{
+	return m_allyFactionInArea;
 }
 
 void LevelAreaContainer::initCollisionTree(int maxCollisionTreeDepth)
@@ -353,7 +379,7 @@ void LevelAreaContainer::init(SpriteGenerator* spriteGenerator)
 {
 	initTiles(spriteGenerator);
 	initLevelMaps();
-
+	
 }
 
 void LevelAreaContainer::setDimensionsForArea(sf::Vector2i &gridDimensions, sf::Vector2f &tileSize)

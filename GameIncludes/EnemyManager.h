@@ -1,6 +1,7 @@
 #pragma once
 
 #include "AreaTypes.h"
+#include "FactionIds.h"
 #include "EnemyBase.h" 
 #include "EnemyInitialsier.h"
 #include "EnemyPool.h"
@@ -15,10 +16,10 @@ public:
 	
 	EnemyManager(Player * player,Astar * astar, LevelGrid * levelGrid);
 	~EnemyManager();
-	void initEnemyPool(AreaTypes areaType,std::vector<EnemyInitialiser>& enemies, SpriteGenerator * spriteGenerator);
+	void initEnemyPool(EnemyFactionIds areaType,std::vector<EnemyInitialiser>& enemies, SpriteGenerator * spriteGenerator);
 	void update(float dt); 
 	void drawEnemies(sf::RenderWindow * window);
-	void setCurrentEnemyPool(AreaTypes areaType);
+	void setCurrentEnemyPool(EnemyFactionIds areaType);
 	bool checkEnemyRemoval(int index);
 	void getNewSpawnDelay(); 
 	std::vector<EnemyBase*>& getActiveEnemyBuffer();
@@ -29,7 +30,7 @@ public:
 	void setLevelGrid(LevelGrid* levelGrid);
 private:
 	
-	std::map<AreaTypes, EnemyObjectPool> m_AreaPools;
+	std::map<EnemyFactionIds, EnemyObjectPool> m_AreaPools;
 	std::vector<EnemyBase*> m_activeEnemyBuffer;
 	std::shared_ptr<CollisonHandler<EnemyBase>>  m_enemyCollisonHandler;
 	EnemyObjectPool* m_currentEnemyPool = nullptr;

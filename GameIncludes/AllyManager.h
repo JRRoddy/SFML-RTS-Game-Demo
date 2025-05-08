@@ -16,7 +16,7 @@ public:
 	~AllyManager();
 	void spawnAllies(); 
 	void update(float dt);
-	void initAllyPools(AreaTypes areaType, std::vector<AllyInitialiser>& m_alliesToInit, SpriteGenerator * spriteGenerator);
+	void initAllyPools(AllyFactionIds allyFactionId, std::vector<AllyInitialiser>& m_alliesToInit, SpriteGenerator * spriteGenerator);
 	void setCurrentArea(LevelAreaContainer * levelArea);
 	bool checkAllyRemoval(int index);
 	void resetSpawnDelay();
@@ -29,7 +29,7 @@ private:
 	Player* m_playerRef = nullptr;
 	std::shared_ptr<CollisonHandler<AllyBase>> m_AllyCollisionHandler;
 	LevelAreaContainer* m_currentArea = nullptr;
-	std::map<AreaTypes, AllyObjectPool> m_areaPools;
+	std::map<AllyFactionIds, AllyObjectPool> m_areaPools;
 	std::vector<AllyBase*> m_activeBuffer;
 	int m_maxCollisionTreeDepth = 1; 
 	int m_staticAlliesCount = 0;

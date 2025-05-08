@@ -1,12 +1,7 @@
 #include "Player.h"
 
 
-Player::Player(){
-	m_speed = m_baseSpeed;
 
-	
-
-}
 
 Player::Player(sf::Vector2f position, SpriteGenerator *spriteGenerator,InputManager * input):Character(position)
 { 
@@ -55,7 +50,22 @@ Player::Player(sf::Vector2f position, SpriteGenerator* spriteGenerator, InputMan
 
 
 }
+Player::Player() {
+	m_speed = m_baseSpeed;
 
+
+
+}
+Player::Player(sf::Vector2f position, SpriteGenerator* spriteGenerator) :Character(position) {
+
+	m_active = true;
+	m_speed = m_baseSpeed;
+	m_startPosition = position;
+	m_currentStats = characterStats(100.0f, 18.0f, 0);
+	m_commandFlag = std::make_unique<StaticObject>(StaticObject(position));
+
+	getSprites(spriteGenerator); // get sprites for player from sprite generator 
+};
 void Player::updateCamera(){
 
 	if (m_camera != nullptr) {
@@ -65,7 +75,10 @@ void Player::updateCamera(){
 
 void Player::update(float dt)
 {
-
+	// the input manager allows certain direction values to be assigned
+	//to certain keys which can be accessed through the name of the directional 
+	//mapping here we are querying the input manager to get the direction 
+	// the player is currently inputting 
 	float dirX = m_input->getDirectionFromKey(m_horiInputMapName); 
 	float dirY = m_input->getDirectionFromKey(m_vertInputMapName);
 	m_direction = normalize(sf::Vector2f(dirX, dirY)); 
@@ -77,6 +90,7 @@ void Player::update(float dt)
 	updateCamera();
 	updateAllyMovementOrder();
 	updateCommandFlag();
+	updateHitEffect();
 	m_debugCircle.setPosition(m_position);
 	checkReset();
 	
@@ -124,7 +138,7 @@ void Player::draw(sf::RenderWindow* window)
 	// draw the player sprite 
 	window->draw(*m_baseSpriteRef.get());
 	window->draw(m_debugCircle);
-	window->draw(*m_commandFlag->getBaseSprite());
+	m_commandFlag->draw(window);
 
 }
 void Player::updateCommandFlag()

@@ -76,9 +76,7 @@ void AllyManager::update(float dt)
 }
 
 
-
-
-void AllyManager::initAllyPools(AreaTypes areaType, std::vector<AllyInitialiser> & alliesToInit, SpriteGenerator *spriteGenerator)
+void AllyManager::initAllyPools(AllyFactionIds allyFactionId, std::vector<AllyInitialiser> & alliesToInit, SpriteGenerator *spriteGenerator)
 {
 
 	// initialse all of the objects in each of the ally initialisers 
@@ -91,7 +89,7 @@ void AllyManager::initAllyPools(AreaTypes areaType, std::vector<AllyInitialiser>
 	}
 	// generate object pool from the ally initialisers that hold the base 
     // objects to be copied from according to the current area type
-	m_areaPools.emplace(areaType, alliesToInit);
+	m_areaPools.emplace(allyFactionId, alliesToInit);
 	
 }
 
@@ -102,7 +100,7 @@ void AllyManager::setCurrentArea(LevelAreaContainer* levelArea)
 	m_refereshTime = sf::seconds(m_currentArea->getAllyRefreshCoolDown());
 	
 	// set the current ally pool based on area type
-	m_currentPool = &m_areaPools[m_currentArea->getAreaType()];
+	m_currentPool = &m_areaPools[m_currentArea->getAssociatedAllyFaction()];
 	// reset the area being used by the collision handler to current area 
 	m_AllyCollisionHandler.get()->resizeTree(sf::FloatRect(m_currentArea->getTopLeft(), m_currentArea->getWorldDimensions()));
 

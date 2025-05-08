@@ -44,7 +44,7 @@ void GameObject::updateBaseSprite()
 		m_baseSpriteRef.get()->setPosition(m_position);
 		m_baseSpriteRef.get()->setRotation(m_rotation);
 		m_baseSpriteRef.get()->setScale(m_scale);
-	
+	    
 	}		
 	
 }
@@ -52,20 +52,17 @@ void GameObject::updateBaseSprite()
 void GameObject::setPosition(sf::Vector2f position)
 {
 	m_position = position; 
-	updateBaseSprite(); 
-
+	updateBaseSprite();
 }
 
 void GameObject::setRotation(float rotation)
 {
 	m_rotation = rotation; 
-	updateBaseSprite();
 }
 
 void GameObject::setScale(sf::Vector2f scale)
 {
 	m_scale = scale;
-	updateBaseSprite();
 }
 
 int GameObject::getSpawnCap()
@@ -87,7 +84,6 @@ bool GameObject::getIsActive()
 void GameObject::setBaseSprite(std::shared_ptr<sf::Sprite>& spriteRef)
 {
 	m_baseSpriteRef = spriteRef;
-	updateBaseSprite();
 }
 
 sf::Vector2f GameObject::getScale()
@@ -125,8 +121,9 @@ void GameObject::flipSpriteX(float direction)
 	float dir = direction < 0.0f ? -1.0f : 1.0f;
 
 	sf::Sprite* sprite = m_baseSpriteRef.get();
-	sf::Vector2f newScale = sf::Vector2f(abs(sprite->getScale().x) *dir, sprite->getScale().y);
-	m_baseSpriteRef.get()->setScale(newScale);
+	// update current scale of game object based on current direction scalar
+	m_scale = sf::Vector2f(abs(sprite->getScale().x) *dir, sprite->getScale().y);
+	m_baseSpriteRef.get()->setScale(m_scale);
 
 
 }
@@ -136,6 +133,7 @@ void GameObject::update(float dt){}
 
 void GameObject::draw(sf::RenderWindow * window)
 {
+	updateBaseSprite();
 	window->draw(*m_baseSpriteRef.get());
 	window->draw(m_debugCircle);
 }
@@ -146,14 +144,12 @@ void GameObject::draw(sf::RenderWindow * window)
 void GameObject::getSprites(SpriteGenerator* spriteGenerator)
 { 
 	m_baseSpriteRef = spriteGenerator->GenerateSprite(m_texturePath);
-	updateBaseSprite();
 }
 // overload for get sprites 
 void GameObject::getSprites(SpriteGenerator* spriteGenerator, std::string spriteTexturePath)
 {
 	m_texturePath = spriteTexturePath;
 	m_baseSpriteRef = spriteGenerator->GenerateSprite(m_texturePath);
-	updateBaseSprite();
 }
 
 

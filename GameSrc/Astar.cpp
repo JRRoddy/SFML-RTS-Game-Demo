@@ -12,6 +12,10 @@ Astar::Astar(LevelGrid* levelGrid)
 		m_nodeGrid[i] = { &localGridTiles[i] };// initial node used tiles
 		//from the global level grid
 	}
+	std::make_heap(m_nodeGrid.begin(), m_nodeGrid.end());
+
+	
+
 }
 
 std::vector<node*> Astar::getPath(sf::Vector2f& startPos, sf::Vector2f& endPos)
@@ -90,7 +94,7 @@ std::vector<node*> Astar::getPath(sf::Vector2f& startPos, sf::Vector2f& endPos)
 				// set world pos of node in the grid
 				potentialNode->worldPosition = m_levelGrid->getWorldPositionAtIndex(neighbourTile->fullIndex);
 				potentialNode->setDebugPointPos(potentialNode->worldPosition);
-				
+				potentialNode->getFcost();
 				// final check to ensure that there is no
 				//duplicate nodes in the openset
 				if (!wasContained) {

@@ -41,7 +41,7 @@ void Camera::setPosition(sf::Vector2f& centrePos)
 	 return sf::Vector2f(m_window->mapCoordsToPixel(position));
  }
 
-void Camera::resSize(sf::FloatRect& newView)
+void Camera::resize(sf::FloatRect& newView)
 {
 	
 	m_cameraView = m_window->getView();  /// get view

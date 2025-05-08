@@ -156,10 +156,12 @@ void Npc::copyStats(characterStats& stats)
 
 void Npc::attackCharacter(Character* target)
 {
-	if (target->getDamage() == 0.0f) {
+	
 		std::cout << " attacking character type: " << typeid(*target).name() << std::endl;
-	}
-	target->takeDamage(m_currentStats.damage);
+		std::cout << "target type is " << typeid(*this).name() << std::endl;
+		std::cout << "new target health is " << target->getHealth();
+	
+	    target->takeDamage(m_currentStats.damage);
 	
 }
 

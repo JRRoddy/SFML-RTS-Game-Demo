@@ -122,6 +122,11 @@ sf::Texture * TextureManager::getTexture(std::string &associatedPath)
 	return &m_storedTextures[associatedPath];
 }
 
+std::map<std::string, std::vector<sf::IntRect>>& TextureManager::getAnimationFrameDataMap()
+{
+	return m_animationFrameData;
+}
+
 std::vector<sf::IntRect> TextureManager::getAnimationFrameData(std::string &animPath)
 {
 	return m_animationFrameData[animPath];

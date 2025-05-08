@@ -23,6 +23,9 @@ public:
 	void setSpeedModfier(float speedModifer);
 	void setCanMoveToNextTile(bool canMoveToNextTile);
 	float getSpeedModifier()const;
+	void setDirection(sf::Vector2f &direction ); 
+	sf::Vector2f getDirection();
+
 protected:
 	sf::Vector2f m_nextPos;
 	bool m_canMoveToNextTile = true;

@@ -10,15 +10,17 @@ LevelGenerator::LevelGenerator(SpriteGenerator * spriteGenerator,sf::Vector2f st
 	m_gridDimensions = gridDim;
 	m_playerRef = playerRef;
 	m_maxLevelAreaColTreeDepth = 8;
-
+	m_levelAreaManufacturer = std::make_shared<LevelAreaManufacturer>(LevelAreaManufacturer());
+	m_levelAreaBuilder = std::make_shared<LevelAreaBuilder>(LevelAreaBuilder(m_spriteGenerator));
+	
 	m_levelGrid = std::make_unique<LevelGrid>(LevelGrid((gridDim.x * chunkDimensions.x) / tileDimensions.x, (gridDim.y * chunkDimensions.y) / tileDimensions.y,tileDimensions));
 	
-	m_randomMappedTiles = 
+	m_randomMappedTiles =
 	{
 	{GRASSLANDS,{TileInitialiser(new ForestTile()),TileInitialiser(new RockTile())}}
 
 	};
-	m_imageMappedTiles = 
+	m_imageMappedTiles =
 	{
 	{GRASSLANDS,{{"Path",TileInitialiser(new PathTile())}}}
 	};
@@ -34,16 +36,18 @@ LevelGenerator::LevelGenerator(SpriteGenerator * spriteGenerator,sf::Vector2f st
 // obtaining a deep copy of the object assigned to it so all the data is initialised in the first instance of the area intialiser object 
 // passed into the map and a deep copy of that object can simply be made to create a new area of that type meaning all the heavy data intialisation for 
 // areas such as loading tile image maps and intialising tiles happens once 
-	m_areas =  
-	{ 
-    {GRASSLANDS,AreaInitialiser( new GrassLandsArea(m_spriteGenerator,m_randomMappedTiles[GRASSLANDS],m_imageMappedTiles[GRASSLANDS]
-		                        ,m_areaBackgroundTextures[GRASSLANDS],m_tileMapImages[GRASSLANDS]),m_spriteGenerator)}
-     
+	
+	m_areas = {
+		{GRASSLANDS, AreaInitialiser(new GrassLandsArea(),m_spriteGenerator)}
+
 	};
 	
 	parseLevelMaps();
 	
-	generateNewAreaGrid(m_startArea, startAreaOffsetPosition); 
+	// intiate the initial level area with the enemies we want the alies we want 
+	// the type of area we want and its starting position along with a refernce to 
+	// the current builder object we are using to generate the level area 
+	generateFullNewArea(m_levelAreaBuilder.get(), m_startArea, startAreaOffsetPosition,GOBLINS,KNIGHTS); 
 	// initialse level grid and current area
 	m_currentArea = m_areaContainersPool.back();
 	m_levelGrid.get()->setNewWorldArea(m_currentArea);
@@ -66,10 +70,24 @@ LevelGenerator::LevelGenerator(SpriteGenerator * spriteGenerator,sf::Vector2f st
 	
 }
 
-void LevelGenerator::generateNewAreaGrid(AreaTypes areaType, sf::Vector2f offsetPosition)
+void LevelGenerator::generateFullNewArea(LevelAreaBuilder * areaBuilder,AreaTypes areaType, sf::Vector2f offsetPosition,EnemyFactionIds enemyFactionInArea, AllyFactionIds allyFactionInArea)
 {
-	LevelAreaContainer* newArea = m_areas[areaType].getNewAreaCopy(offsetPosition,m_gridDimensions,m_ChunkSize);
-	m_areaContainersPool.push_back(newArea);
+	// get new level area to build of specifc type 
+	// assign new level area to be constructed to the level area manufacturer
+	m_levelAreaManufacturer->setLevelBuilder(areaBuilder);
+	m_levelAreaManufacturer->assignNewLevelAreaObject(m_areas[areaType].getDefaultCopy());
+	// pass in initial data needed to construct a level area(that can be drawn to the screen) 
+	// to the manufacturer which has a reference to the current builder being used 
+	m_levelAreaManufacturer->createLevelArea(areaBuilder, areaType,m_areaBackgroundTextures[areaType]);
+	// add tiles that area randomly generated to the level area that will be included in its construction by the builder
+	m_levelAreaManufacturer->addRandomlyGeneratedTileToArea(m_randomMappedTiles[areaType]);
+	// add tile map data  to the level area that will be included in its construction by the builder
+	m_levelAreaManufacturer->addTileMapsToArea(m_tileMapImages[areaType], m_imageMappedTiles[areaType], m_tileImageMapInformation[areaType]);
+	// add npcs based on the passed in faction ids to the area 
+	m_levelAreaManufacturer->addLevelAreaNpcs(allyFactionInArea, m_allyFactions[allyFactionInArea], enemyFactionInArea, m_enemyFactions[enemyFactionInArea]);
+	// get the final constructed area from the manufacturer object based on all the properties
+	// passed to the builder from the level manufacturer 
+	m_areaContainersPool.push_back(m_levelAreaManufacturer->manufactureLevelArea(offsetPosition, m_gridDimensions, m_ChunkSize));
 
 }
 
@@ -108,14 +126,18 @@ void LevelGenerator::parseLevelMaps()
 
 	// loop through all key value pairs that map an area type to a particualr file that holds information/data 
 	// about the current level map being parsed
-	for each (std::pair<AreaTypes, std::string> areaImageMapDescriptorPair in m_imageMapInfoFilePaths) {  
+	for each (std::pair<AreaTypes, std::string> areaImageMapDescriptorPair in m_imageMapInfoFilePaths) {
 
 		std::map<imageMapColour, std::string> parsedData = imageMapInfoParser.parseImageMapInfoFile(areaImageMapDescriptorPair.second);
 		// set the map for the current area type that maps all the colours 
-		// found in the image map info file to a particualr tile id 
-		m_areas[areaImageMapDescriptorPair.first].getHeldObject()->setTileInfoColoursMap(parsedData);
-	    
+	   // found in the image map info file to a particualr tile id 
+		m_tileImageMapInformation.insert({ areaImageMapDescriptorPair.first, parsedData });
+
+
 	}
+		
+		
+	
 
 }
 
@@ -163,11 +185,17 @@ void LevelGenerator::updatePlayerTileState(float dt)
 void LevelGenerator::initManagerPools()
 {
 	// loop through all areas in the m_areas std::map and create 
-	// object pools based on their stored initialisers and type 
-	for  (std::map<AreaTypes,AreaInitialiser>::iterator it = m_areas.begin( );it != m_areas.end(); it++)
+	// object pools based on their stored initialisers and the faction type of
+	// the npc's being stored 
+	for  (std::map<EnemyFactionIds,std::vector<EnemyInitialiser>>::iterator it = m_enemyFactions.begin( );it != m_enemyFactions.end(); it++)
 	{
-		m_enemyManager.get()->initEnemyPool(it->first, it->second.getHeldObject()->getEnemyIntialisers(),m_spriteGenerator);
-		m_allyManager.get()->initAllyPools(it->first, it->second.getHeldObject()->getAllyIntialisers(),m_spriteGenerator);
+		m_enemyManager.get()->initEnemyPool(it->first, it->second, m_spriteGenerator);
+
+	}
+	for (std::map<AllyFactionIds, std::vector<AllyInitialiser>>::iterator it = m_allyFactions.begin(); it != m_allyFactions.end(); it++)
+	{
+		m_allyManager.get()->initAllyPools(it->first, it->second, m_spriteGenerator);
+
 	}
 	m_allyManager.get()->setCurrentArea(m_currentArea);
 	m_enemyManager.get()->setCurrentArea(m_currentArea);
@@ -189,8 +217,6 @@ void LevelGenerator::playerNextTileCheck(float dt)
 
 	
 }
-
-
 
 LevelGenerator::~LevelGenerator()
 {

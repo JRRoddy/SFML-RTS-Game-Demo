@@ -7,9 +7,7 @@ class TauntStatusEffect:public StatusEffect {
 
 public:
     TauntStatusEffect();
-    ~TauntStatusEffect() {
-        std::cout << "taunt status effect destructor called" << std::endl;
-    }; 
+    ~TauntStatusEffect() {}; 
     bool finished();
     bool canApply();
     void effect(characterStats* character);

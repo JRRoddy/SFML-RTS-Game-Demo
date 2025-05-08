@@ -4,13 +4,11 @@
 
 StatusEffectManager::StatusEffectManager(std::map<StatusEffectIds, std::shared_ptr<StatusEffect>>& statusEffectsToManage, characterStats* characterStatsRef)
 {
-	std::cout << "initialising status effect manager" << std::endl;
 	// takes in  a reference to the stats of the character it is managing based on 
 	// and applying status effects to along with a map of status effect id's 
 	// that key into known status effects that can be applied to the character 
 	m_statusEffects = statusEffectsToManage;
 	m_characterStatsRef = characterStatsRef;  
-	std::cout <<"character stats base health"<< m_characterStatsRef->baseHealth << std::endl;
 	
 }
 

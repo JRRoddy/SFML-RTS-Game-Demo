@@ -162,6 +162,7 @@ void AllyBase::update(float dt)
 	setAnimStates();
 	m_animationController.get()->update();
 	updatePosition(dt);
+	updateHitEffect();
 	m_debugCircle.setPosition(m_position);
 
 }

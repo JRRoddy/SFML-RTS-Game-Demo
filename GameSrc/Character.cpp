@@ -8,7 +8,6 @@ Character::Character(sf::Vector2f position):DynamicObject(position)
 // getters and setters for stats shared across all beings in the world
 void Character::setDamage(float& damage)
 { 
-	
 	m_currentStats.damage = damage;
 }
 
@@ -21,7 +20,9 @@ void Character::setHealth(float& health)
 void Character::takeDamage(float& damage)
 {
 	if (!isDead()) {
-		m_currentStats.health -= damage;
+		m_currentStats.health -= damage; 
+		applyHitEffect();
+		std::cout << "damage done is " << damage << std::endl;
 	}
 	
 
@@ -49,7 +50,31 @@ void Character::resetStatusEffectManager()
 bool Character::applyStatusEffect(StatusEffectIds id, characterStats* initiaterStatsRef) {
 	
 	return m_statusEffectManager->activateStatusEffect(id, initiaterStatsRef);
-};
+}
+void Character::applyHitEffect()
+{
+	if (!m_wasHit) {
+		m_wasHit = true;
+		m_hitEffectTimer.restart();
+		
+	}
+
+
+
+}
+
+void Character::updateHitEffect()
+{
+	if (m_wasHit && m_hitEffectTimer.getElapsedTime().asSeconds() <= m_hitEffectTime.asSeconds()) {
+		// blend sprites colour while we have not hit the hit effect timer
+		// used to modulate the sprites colour to indicate a hit
+		m_baseSpriteRef.get()->setColor(m_hitEffectColour);
+		return;
+	}
+	m_wasHit = false;
+	m_baseSpriteRef->setColor(m_defaultColour);
+}
+
 
 StatusEffectManager* Character::getStatusEffectManager()
 {
@@ -98,15 +123,8 @@ bool Character::isDead() const
 	return m_currentStats.health <= 0.0f;
 }
 
-bool Character::isTaunted() const
-{
-	return m_taunted;
-}
 
-void Character::setTaunted(bool taunted)
-{
-	m_taunted = taunted;
-}
+
 
 
 

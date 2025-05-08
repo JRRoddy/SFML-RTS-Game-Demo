@@ -13,7 +13,7 @@ Pawn::Pawn()
     m_deathAnimPath = "../Assets/Animations/EnemyDeathAnim.png";
     m_runAnimDelay = 70.0f;
     m_idleAnimDelay = 70.0f;
-    m_attackAnimDelay = 85.0f;
+    m_attackAnimDelay = 95.0f;
     m_deathAnimDelay = 85.0f;
     m_spawnCap = 1;      
     m_debugCircle.setFillColor(sf::Color::Magenta);
@@ -28,20 +28,20 @@ AllyBase* Pawn::clone()
 	AllyBase::clone(copy);
 	return copy;
 }
-
+// overriden attack character method from npc class allowing the pawn to 
+// apply the taunt status effect to a character on hit 
 void Pawn::attackCharacter(Character* character)
 {
     // pawns can force another character to attack them 
-    // making the character focus them when attacking by first checking
+    // making the character focus them when attacking(until the pawn is dead which is handled by the status effct) 
+    
     // if the character already has the taunt status effect 
     // then setting the character to target them if not 
     if (character->applyStatusEffect(TAUNT,&m_currentStats)) {
-        std::cout << "pawn taunting character" << std::endl;
         character->setCharacterTarget(this);
         
     }
     character->takeDamage(m_currentStats.damage);
-    std::cout << "pawn attacking target for " << m_currentStats.damage << "target  health " << character->getHealth() << std::endl;
 
 
 

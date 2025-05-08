@@ -31,10 +31,7 @@ public:
 	
 	virtual void setTargetPlayer();
 
-	// since allies and enemies could be moving towards the player but be attacking other npcs
-	// we need to have a seperate direction for them to face when they are attacking 
-	// and running 
-	sf::Vector2f m_facingDirection;
+
 
 	virtual void setAnimStates();
 
@@ -52,7 +49,12 @@ public:
 protected:
 	
 	Character* m_playerCharacterRef = nullptr;
+	// since allies and enemies could be moving towards the player but be attacking other npcs
+    // we need to have a seperate direction for them to face when they are attacking and running
+	sf::Vector2f m_facingDirection;
+	// current position for npc to move to 
 	sf::Vector2f m_currentTargetPos;
+	// path of astar nodes for npc to follow
 	std::vector<node*> m_requestedPath;
 	std::unique_ptr<AnimationController> m_animationController;
 	std::map<std::string, AnimationObject> m_animStates ={};

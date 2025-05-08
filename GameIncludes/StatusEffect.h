@@ -12,9 +12,7 @@ class StatusEffect {
 
 public:
 	StatusEffect() {};
-	virtual ~StatusEffect() {
-		std::cout << "status effect destructor called" << std::endl;
-	};
+	virtual ~StatusEffect() {};
 	void clone(StatusEffect* copy); 
 	virtual bool canApply() = 0;
 	virtual void effect(characterStats* characterStats) = 0;

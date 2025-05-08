@@ -45,8 +45,6 @@ void SceneManager::update(float dt,sf::Event & event)
 {
 	
     m_inputManager->pollEvents(event);
-	
-	
 	m_levelGenerator->update(dt);
 	m_inputManager->endFrame();
 

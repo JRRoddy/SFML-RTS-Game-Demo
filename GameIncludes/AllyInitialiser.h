@@ -13,8 +13,6 @@ public:
 		basePtr = AllyBase;
 
 	}
-
-
 	AllyInitialiser(const AllyInitialiser& other) {
 
 		basePtr = other.basePtr->clone();
@@ -23,7 +21,6 @@ public:
 	AllyInitialiser operator = (const AllyInitialiser& other) {
 
 		basePtr = other.basePtr->clone();
-
 		return *this;
 	}
 

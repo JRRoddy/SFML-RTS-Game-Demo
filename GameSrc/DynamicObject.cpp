@@ -125,3 +125,13 @@ float DynamicObject::getSpeedModifier() const
 {
 	return m_speedModifier;
 }
+
+void DynamicObject::setDirection(sf::Vector2f& direction)
+{
+	m_direction = direction;
+}
+
+sf::Vector2f DynamicObject::getDirection()
+{
+	return m_direction;
+}

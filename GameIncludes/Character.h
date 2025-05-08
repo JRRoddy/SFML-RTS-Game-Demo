@@ -10,7 +10,6 @@
 // this can therefore be inherited by player and npcs to 
 // reduce code duplication between them 
 // see fix for multiple inherits in the inherited classes
-
 class Character : public StaticObject, public DynamicObject {
 
 public:
@@ -30,29 +29,29 @@ public:
 	int getCurrentGold();
 	bool getAttackFinished()const;
 	bool isDead() const;
-	bool isTaunted() const;
-	void setTaunted(bool taunted);
+	
 	void setCharacterTarget(Character* character);
 	bool hasApplicableStatusEffects();
 	void resetStatusEffectManager();
 	bool applyStatusEffect(StatusEffectIds id, characterStats* initiaterStatsRef);
+	void applyHitEffect();
+	void updateHitEffect();
 	StatusEffectManager* getStatusEffectManager(); 
-
 	Character* getCharacterTarget();
 	
 protected:
 
 	// stats for character
 	characterStats m_currentStats;
-
-
-	
 	// character may have another character they are targetting 
 	Character* m_characterTarget = nullptr;
-
-	// if the character is attacking another character but cant switch target
-	bool m_taunted = false;
-	// default health
+	// used for displaying and applying a hit effect for a character
+	bool m_wasHit = false;
+	sf::Clock m_hitEffectTimer;
+	// defining default values for hit effects
+	sf::Time m_hitEffectTime = sf::seconds(0.3f);
+	sf::Color m_hitEffectColour = sf::Color::Color(185,185,185,255);
+	sf::Color m_defaultColour = sf::Color::White;
 	int m_cellWidth = 1;
 	gridTile* m_currentTile = nullptr;
 	bool m_canAttack = false;

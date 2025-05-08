@@ -24,7 +24,6 @@ bool AnimationObject::animAtEnd()
 }
 
 
-
 const sf::Texture* AnimationObject::getAnimTexture()
 {
 	if (m_frames->size()) {

@@ -14,7 +14,7 @@ class TextureManager {
 	void loadTexture(std::string &pathToTexture); 
 	void loadAnims(std::string &pathToAnims);
 	sf::Texture * getTexture(std::string &associatedPath);
-	
+	std::map<std::string, std::vector<sf::IntRect>>& getAnimationFrameDataMap();
 	std::vector<sf::IntRect> getAnimationFrameData(std::string& animPath);
 
  private:

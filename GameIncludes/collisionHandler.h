@@ -42,17 +42,19 @@ public:
 	void setTreeMaxDepth(int& maxDepth) {
 		m_CollisionTree.get()->setMaxDepth(maxDepth);
 	}
-	void insertItem(sf::FloatRect &objectBounds, objectType* object) {
+	void insertItem(sf::FloatRect &objectBounds, objectType* object) { 
+		/// insert an object into the tree along with the bounds for the object
 		m_CollisionTree.get()->insert(objectBounds, object);
 	}
 
 	void queryCollisionTree(sf::FloatRect & objectBounds, std::vector<quadTreeItem<objectType>>& insert) {
-
+		// query the quad collision tree with a particualr objects bounds 
 		m_CollisionTree.get()->query(objectBounds, insert);
 
 	}
 
 	void queryCollisionTree(sf::Vector2f& position, std::vector<quadTreeItem<objectType>>& insert) {
+		// query the bounding boxes within the colllision tree using a position
 		m_CollisionTree.get()->query(position, insert);
 	}
 
