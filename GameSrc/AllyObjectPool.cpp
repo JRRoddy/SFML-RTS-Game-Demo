@@ -10,7 +10,7 @@ AllyObjectPool::AllyObjectPool(std::vector<AllyInitialiser>& alliesToPool)
 
 	}
 	m_maxObjects = spawnCount;
-	m_pool.resize(m_maxObjects);
+	m_pool.reserve(m_maxObjects);
 	int allyInitPointer = 0;
 	AllyInitialiser* allyInit = &alliesToPool[allyInitPointer];
 	std::cout << "initialising ally pool" << std::endl;
@@ -20,7 +20,7 @@ AllyObjectPool::AllyObjectPool(std::vector<AllyInitialiser>& alliesToPool)
 			allyInit = &alliesToPool[allyInitPointer];
 		}
 		AllyBase* ally = allyInit->getHeldObjectCopy();
-		m_pool[i] = ally;
+		m_pool.push_back( ally);
 
 
 	}

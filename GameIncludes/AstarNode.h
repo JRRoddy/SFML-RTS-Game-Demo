@@ -52,15 +52,17 @@ struct node
 
 	}
 
+	
 	bool operator<(const node & other)const {
 		
 		int fcost = getFcost();
 		int otherFcost = other.getFcost();
 
-		return (fcost > otherFcost) || (hcost>other.hcost && otherFcost == fcost);
+		return (fcost > otherFcost) || (hcost > other.hcost && otherFcost == fcost);
 
 	}
 
+	
 	bool operator()(const node&  nodeA, const node&  nodeB) const {
 		
 		return nodeA < nodeB;

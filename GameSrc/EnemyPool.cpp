@@ -11,7 +11,7 @@ EnemyObjectPool::EnemyObjectPool(std::vector<EnemyInitialiser>& enemiesToPool)
 		
 	} 
 	m_maxObjects = spawnCount; // max enemies held in pool
-	m_pool.resize(m_maxObjects);
+	m_pool.reserve(m_maxObjects);
 	int EnemyInitPointer = 0; // current index into enemy initialiser vector 
 	// current enemy initialiser being used to generate the pool
 	EnemyInitialiser* enemyInit = &enemiesToPool[EnemyInitPointer];
@@ -27,7 +27,7 @@ EnemyObjectPool::EnemyObjectPool(std::vector<EnemyInitialiser>& enemiesToPool)
 			enemyInit = &enemiesToPool[EnemyInitPointer];
 		}
 		EnemyBase* enemy = enemyInit->getHeldObjectCopy();
-		m_pool[i] = enemy;
+		m_pool.push_back(enemy);
 		
 
 	}
