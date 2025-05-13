@@ -20,7 +20,7 @@ Goblin::Goblin()
     m_attackAnimDelay = 90.0f; 
     m_deathAnimDelay = 85.0f;
     // spawn cap(number that can be present and on screen at once)
-    m_spawnCap = 6;
+    m_spawnCap = 1;
 
     // all known status effects that can be applied to this enemy
     m_appliableStatusEffectsMap = {

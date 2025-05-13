@@ -6,12 +6,14 @@
 #include "LevelGenerator.h"
 #include "InputManager.h"
 #include "Camera.h"
+#include "MenuManager.h"
+#include "MenuHeaders.h"
 // simple scene manager class that will hold the current game state and all the main components of the game ensuring 
 // that the game is encapsulated into one class
 class SceneManager {
 
 public:
-	SceneManager(sf::RenderWindow* _window, unsigned int _windowWidth, unsigned int _windowHeight);
+	SceneManager(sf::RenderWindow* _window, unsigned int _windowWidth, unsigned int _windowHeight, bool editMode = false);
 	~SceneManager();
 
 	void draw();
@@ -21,9 +23,12 @@ private:
 
 	sf::RenderWindow * m_window;
 	unsigned int m_windowWidth;
-	unsigned int m_windowHeight;
-	std::unique_ptr<InputManager> m_inputManager;
+	unsigned int m_windowHeight; 
 
+	bool m_editMode;
+	std::unique_ptr<InputManager> m_inputManager;
+	std::unique_ptr<MenuManager> m_menuManager;
+	std::vector<std::shared_ptr<Menu>>m_menusPresentInScene;
 	LevelGenerator *  m_levelGenerator;
 	std::unique_ptr<TextureManager> m_textureManager;
 	std::unique_ptr<SpriteGenerator> m_spriteGenerator;

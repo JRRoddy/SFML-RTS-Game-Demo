@@ -57,7 +57,7 @@ bool InputManager::isBound(sf::Keyboard::Key key)
 
 }
 
-bool InputManager::keyEventStateDown(sf::Keyboard::Key key)
+bool InputManager::keyReleased(sf::Keyboard::Key key)
 {
 	if (m_keyStates[key].eventState) { /// check if a key is being pressed wihtin the key states array
 		m_EventKeysCalled.insert(key); // if it is then we insert it into the event keys called map to be updated 
@@ -99,6 +99,7 @@ void InputManager::endFrame()
 	m_EventKeysCalled.clear(); // clear event keys that have been registered as pressed
 
 }
+
 
 sf::Vector2f InputManager::getMousePos()
 {

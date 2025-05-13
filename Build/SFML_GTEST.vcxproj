@@ -282,6 +282,7 @@
     <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\AnimationController.cpp" />
     <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\AnimationObject.cpp" />
     <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\Astar.cpp" />
+    <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\Button.cpp" />
     <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\Camera.cpp" />
     <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\Character.cpp" />
     <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\Collider.cpp" />
@@ -300,6 +301,10 @@
     <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\LevelGenerator.cpp" />
     <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\LevelGrid.cpp" />
     <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\LevelManufacturer.cpp" />
+    <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\MainMenu.cpp" />
+    <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\Menu.cpp" />
+    <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\MenuEditor.cpp" />
+    <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\MenuManager.cpp" />
     <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\Npc.cpp" />
     <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\ObjectPool.cpp" />
     <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\PathTile.cpp" />
@@ -308,6 +313,7 @@
     <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\QuadTree.cpp" />
     <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\RockTile.cpp" />
     <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\SceneManager.cpp" />
+    <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\ScoreMenu.cpp" />
     <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\SpriteGenerator.cpp" />
     <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\StaticObject.cpp" />
     <ClCompile Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameSrc\StatusEffect.cpp" />
@@ -326,6 +332,7 @@
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\AreaTypes.h" />
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\Astar.h" />
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\AstarNode.h" />
+    <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\Button.h" />
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\Camera.h" />
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\Character.h" />
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\CharacterStats.h" />
@@ -349,6 +356,11 @@
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\LevelAreaManufacturer.h" />
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\LevelGenerator.h" />
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\LevelGrid.h" />
+    <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\MainMenu.h" />
+    <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\Menu.h" />
+    <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\MenuEditor.h" />
+    <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\MenuHeaders.h" />
+    <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\MenuManager.h" />
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\Npc.h" />
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\ObjectPool.h" />
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\PathTile.h" />
@@ -357,6 +369,7 @@
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\QuadTree.h" />
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\RockTile.h" />
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\SceneManager.h" />
+    <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\ScoreMenu.h" />
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\SpriteGenerator.h" />
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\StaticObject.h" />
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\StatusEffect.h" />
@@ -367,6 +380,7 @@
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\TextureManager.h" />
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\Tile.h" />
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\TileDeepCopyUtil.h" />
+    <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\UIActionBinder.h" />
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\areaHeaders.h" />
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\collisionHandler.h" />
     <ClInclude Include="C:\Users\richa\OneDrive\Desktop\ProductionC++Assignment\assignmentgamr2451-JamesRoddy\GameIncludes\gridTile.h" />

@@ -26,11 +26,12 @@ public:
 	void pollEvents(sf::Event& event); // takes in the sf event being used in conjunction with the window to poll input
 	void resetEventState(sf::Keyboard::Key keyToReset); 
 	bool isBound(sf::Keyboard::Key key);
-	bool keyEventStateDown(sf::Keyboard::Key key);
+	bool keyReleased(sf::Keyboard::Key key);
 	bool mouseReleased(sf::Mouse::Button button);
 	bool isMouseDown(sf::Mouse::Button button);
 	bool keyEventStateUp(sf::Keyboard::Key key);
 	void endFrame();
+	bool isDragging(sf::Mouse::Button button);
 	sf::Vector2f getMousePos();
 	void addDirectionalMapping(std::string& name, std::map<sf::Keyboard::Key,float>& keyToDirectionMap);
 	float getDirectionFromKey(std::string&directionalMapName);
@@ -38,6 +39,7 @@ public:
 
 private:
 	bool m_mousePress = false;
+
 	sf::Vector2f m_mousePosition;
 	sf::Window* m_windowHandle;
 	sf::Event* m_events;
