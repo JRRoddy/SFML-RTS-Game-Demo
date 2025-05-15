@@ -807,6 +807,9 @@ protected:
 // should result in a direct overlap collision between the two game objects
 TEST_F(DynamicObjectCollisionTests, DefaultCollisionValuesTest) {
 
+    EXPECT_EQ(m_gameObject->getBounds().getSize().x, m_defaultColliderWidth);
+    EXPECT_EQ(m_gameObject->getBounds().getSize().y, m_defaultColliderHeight);
+
     EXPECT_TRUE(m_gameObject->getBounds().intersects(m_gameObjectOther->getBounds()));
 
 }
