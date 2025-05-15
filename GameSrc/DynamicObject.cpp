@@ -27,7 +27,15 @@ DynamicObject::DynamicObject(float speed, sf::Vector2f position):GameObject(posi
 
 }
 
+DynamicObject::DynamicObject(sf::Sprite* sprite)
+{
+	sprite->setOrigin(sf::Vector2f(sprite->getTextureRect().getSize() / 2));
+	m_position = sprite->getPosition();
 
+	m_baseSpriteRef.reset(sprite);
+
+
+}
 
 
 //setters and getters for current speed of the object
@@ -62,19 +70,22 @@ void DynamicObject::updatePosition(float dt, sf::FloatRect boundsToContainObject
 	
 	sf::Vector2f potentialPosition = m_position + ((m_direction * m_speed) * m_speedModifier) * dt;
 	 // update position
-	
+
 	// check if the position would be within the bounds 
 	float currentX = potentialPosition.x + ((m_baseSpriteRef->getGlobalBounds().getSize().x / 2) * m_direction.x);
 	float currentY = potentialPosition.y + ((m_baseSpriteRef->getGlobalBounds().getSize().y / 2) * m_direction.y);
 
-	bool containedX = currentX>boundsToContainObject.left && currentX<(boundsToContainObject.left+boundsToContainObject.width);
+	bool containedX = currentX > boundsToContainObject.left && currentX<(boundsToContainObject.left+boundsToContainObject.width);
 	bool containedY = currentY > boundsToContainObject.top && currentY < (boundsToContainObject.top + boundsToContainObject.height);  
 	if (containedX && containedY && m_canMoveToNextTile) { // update pos if its in the bounds
 		m_position += ((m_direction * m_speed) * m_speedModifier) * dt;
 		m_baseSpriteRef.get()->move((m_position - m_baseSpriteRef.get()->getPosition())); // move by offset from new pos
+		std::cout << "updating position of object " << std::endl;
+	} 
+	else {
+		std::cout << "not updating position object was not contained within bounds when checking next position" << std::endl;
 
 	}
-	
 	
 
 }

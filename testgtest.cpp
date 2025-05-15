@@ -104,6 +104,9 @@ TEST_F(tileDeepCopytest, deepCopyingTilesTest) {
     
     m_tileCopyDestination.reset(  m_newDeepCopyObject.getHeldObjectCopy()); // assingin the other ptr to a supossed copy of the one held in the deep copy object
     bool isEqual = m_tileCopyDestination.get() == m_newDeepCopyObject.getHeldObject();
+    EXPECT_EQ(m_tileCopyDestination->getPosition().x, m_newDeepCopyObject.getHeldObject()->getPosition().x);
+    EXPECT_EQ(m_tileCopyDestination->getPosition().y, m_newDeepCopyObject.getHeldObject()->getPosition().y);
+
     std::cout <<"POINTER for the copy :"<< m_tileCopyDestination.get() << " pointer for the object held wihtin the deep copy object " << m_newDeepCopyObject.getHeldObject() << std::endl;
     ASSERT_FALSE(isEqual);  // checking if the deep copy we made is not equal in address( if it fails non of the other test will be valid so we break out of this test)
     m_tileCopyDestination.get()->setPosition(sf::Vector2f(20.0f, 0.0f)); 
@@ -373,9 +376,6 @@ public:
         
     }
 
-   
-
-
 protected:
     float m_elapsed;
     sf::Vector2f m_positionToSet;
@@ -407,8 +407,6 @@ TEST_F(DynamicObjectTest, SpeedModifierTest) {
 }
 TEST_F(DynamicObjectTest, setDirectionTest) {
 
-
- 
     EXPECT_EQ(m_dynamic.getDirection().x, m_directionToSet.x);
     EXPECT_EQ(m_dynamic.getDirection().y, m_directionToSet.y);
 
@@ -680,8 +678,214 @@ protected:
 
 };
 
+// main test fixture for testing collision s between dyanmic objects and performing out of bounds tests on 
+// dynamic objects this class sets up various data such as positions for colliding game objects and various 
+// positions for out of bound testing to ensure that all cases and directions are convered when a dynamic 
+// object attempts to leave its defined bounding box that contains it 
+class DynamicObjectCollisionTests:public::testing::Test {
+
+public:
+
+    DynamicObjectCollisionTests() {
+        
+        m_defaultColliderWidth = 20;
+        m_defaultColliderHeight = 30; 
+        m_gameObjectOtherPosition = sf::Vector2f(200.0f, 300.0f);
+        m_gameObjectPosition = sf::Vector2f(200.0f, 300.0f);
+        m_gameObjectOtherRect = sf::IntRect(0, 0, 20, 30);
+        m_gameObjectRect = sf::IntRect(0, 0, 20, 30);
+        
 
 
+        m_gameObject = std::make_unique<DynamicObject>(DynamicObject(new sf::Sprite(sf::Texture(), m_gameObjectOtherRect)));
+        m_gameObjectOther = std::make_unique<DynamicObject>(DynamicObject(new sf::Sprite(sf::Texture(), m_gameObjectRect)));
+        
+        
+    };
+    ~DynamicObjectCollisionTests() {
+      
+       
+    };
+
+    void setBoundsToContainDynamicObject(sf::FloatRect bounds) {
+
+        m_boundsToContainDynamicObject = bounds;
+    }
+
+    void setGameObjectOtherBounds(int width, int height) {
+        m_gameObjectOtherRect = sf::IntRect(m_gameObjectOtherRect.left, m_gameObjectOtherRect.top, width, height);
+        m_gameObjectOther->setCollisionBounds(m_gameObjectOtherRect);
+        
+    }
+
+    void setGameObjectBounds(int width, int height) {
+        m_gameObjectRect = sf::IntRect(m_gameObjectOtherRect.left, m_gameObjectOtherRect.top, width, height);
+        m_gameObject->setCollisionBounds(m_gameObjectRect);
+    }
+
+    void setNoCollision() {
+      
+        m_gameObject->setPosition(sf::Vector2f(0.0f, 0.0f));
+    }
+
+    void setDefaultBoundsTestData() {
+        m_defaultContainerWidth = 800.0f;
+        m_defaultContainerHeight = 600.0f;
+        m_elapsed = 1.0f / 60.0f;
+        m_boundsToContainDynamicObject = sf::FloatRect(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(m_defaultContainerWidth, m_defaultContainerHeight));
+
+        setPositionsForBoundaryChecks(m_gameObject->getBounds().width,m_gameObject->getBounds().height);
+
+        
+
+    }
+    bool checkForDynamicObjectOutOfBounds(DynamicObject * dynamicObject) {
+
+        bool checkTop = dynamicObject->getPosition().x < m_boundsToContainDynamicObject.left || dynamicObject->getPosition().y < m_boundsToContainDynamicObject.top;
+        bool checkBottom =  dynamicObject->getPosition().x > m_boundsToContainDynamicObject.left + m_boundsToContainDynamicObject.width
+                            || dynamicObject->getPosition().y > m_boundsToContainDynamicObject.top + m_boundsToContainDynamicObject.height;
+        return checkTop || checkBottom;
+    }
+    void setPositionsForBoundaryChecks(float colliderWidth, float colliderHeight) {
+
+        
+        
+        m_positionsToTestAgainstBounds = 
+        {
+            
+            sf::Vector2f(m_boundsToContainDynamicObject.left + colliderWidth/2.0f, m_boundsToContainDynamicObject.top + colliderHeight/2.0f),
+            sf::Vector2f(m_boundsToContainDynamicObject.left + colliderWidth/2.0f, (m_boundsToContainDynamicObject.top + m_boundsToContainDynamicObject.height) - colliderHeight/2.0f),
+            sf::Vector2f((m_boundsToContainDynamicObject.left + m_boundsToContainDynamicObject.width) - colliderWidth/2.0f, m_boundsToContainDynamicObject.top + colliderHeight/2.0f),
+            sf::Vector2f((m_boundsToContainDynamicObject.left + m_boundsToContainDynamicObject.width) - colliderWidth/2.0f, (m_boundsToContainDynamicObject.top + m_boundsToContainDynamicObject.height) - colliderHeight/2.0f),
+
+
+        };
+
+
+
+
+
+
+
+    }
+    void SetUp() {
+        m_gameObjectOther->setPosition(m_gameObjectOtherPosition);
+        m_gameObject->setPosition(m_gameObjectPosition);
+        m_gameObject->setCollisionBounds(m_gameObjectRect);
+        m_gameObjectOther->setCollisionBounds(m_gameObjectRect);
+
+    }
+    void TearDown() {
+        
+    }
+
+protected:
+    std::unique_ptr<DynamicObject> m_gameObject; 
+    std::unique_ptr<DynamicObject> m_gameObjectOther;
+    std::shared_ptr<sf::Sprite> m_gameObjectSprite; 
+    std::shared_ptr<sf::Sprite> m_gameObjectOtherSprite;
+    sf::FloatRect m_boundsToContainDynamicObject;
+    sf::IntRect m_gameObjectOtherRect;
+    sf::IntRect m_gameObjectRect;
+    sf::Vector2f m_gameObjectPosition; 
+    sf::Vector2f m_gameObjectOtherPosition;
+    std::vector<sf::Vector2f> m_positionsToTestAgainstBounds;
+    std::vector<sf::Vector2f> m_directionsToPush;
+    int m_defaultColliderWidth = 0;
+    int m_defaultColliderHeight = 0;
+    float m_defaultContainerWidth = 0.0f;
+    float m_defaultContainerHeight = 0.0f;
+    float m_elapsed = 0.0f;
+
+
+};
+
+
+// testing the collision between two dynamic game objects based on their bounds 
+// set by the default values wihtin the GameObjectCollisionTests test fixture 
+// which based on those default values in the fixture
+// should result in a direct overlap collision between the two game objects
+TEST_F(DynamicObjectCollisionTests, DefaultCollisionValuesTest) {
+
+    EXPECT_TRUE(m_gameObject->getBounds().intersects(m_gameObjectOther->getBounds()));
+
+}
+// testing that that the bounds used by the dynamic game object for collsion are shifted correctly 
+// by testing that there is no collision in a scenario where one game object was moved away from
+// the other by a distance that should not result in collision
+TEST_F(DynamicObjectCollisionTests, NoCollisionTest) {
+
+    setNoCollision();
+    EXPECT_FALSE(m_gameObject->getBounds().intersects(m_gameObjectOther->getBounds()));
+
+
+}
+
+// test that the collsion box of a dynamic game object camn be resized corretly with a new 
+// widht and height and then test that the two dynamic game objects being tested still collide 
+// based on the new resized collision box of one of the dynamic game objects
+TEST_F(DynamicObjectCollisionTests, ModifyBoundsTest) {
+
+    int newBoundsWidth = 40;
+    int newBoundsHeight = 45;
+    setGameObjectBounds(newBoundsWidth, newBoundsHeight);
+
+    EXPECT_EQ(m_gameObject->getBounds().getSize().x, float(newBoundsWidth));
+    EXPECT_EQ(m_gameObject->getBounds().getSize().y, float(newBoundsHeight));
+
+    EXPECT_TRUE(m_gameObject->getBounds().intersects(m_gameObjectOther->getBounds()));
+
+
+}
+// this test is a stress test for constraining dyanmic objects to a particualr conatiner
+// meaning that their position cant go beyond the bounds defined 
+// we place the dynamic object in various preset positions defined in the test fixture 
+// which places the dynamic object in the very corners of the bounding box that the dynamic object is restricted to 
+// and pushes against those bounds diagonally testing many different directions based on the current corner the
+// of the bounding box that the dynamic object is contained in 
+TEST_F(DynamicObjectCollisionTests, BoundsContainmentTest) {
+
+    setDefaultBoundsTestData();
+    // set the direction to be fully diagonal 
+    sf::Vector2f directionToPush = sf::Vector2f(1.0f, 1.0f);
+    // get the centre of the current bounding box that will restrict the movement of the dynamic object 
+    sf::Vector2f boundsCentrePos = sf::Vector2f(m_boundsToContainDynamicObject.left + m_defaultContainerWidth / 2.0f, m_boundsToContainDynamicObject.top + m_defaultContainerHeight / 2.0f);
+    // itterate through the defined data set of positions by the test fixture 
+    for (std::vector<sf::Vector2f>::iterator it = m_positionsToTestAgainstBounds.begin(); it != m_positionsToTestAgainstBounds.end(); it++) {
+        m_gameObject->setPosition(*it);
+        // reset direction per itteration 
+        directionToPush = sf::Vector2f(abs(directionToPush.x), abs(directionToPush.y));
+        
+        // set the direction based on current corner position of the dynamic object 
+        if (it->x < boundsCentrePos.x) {
+
+            directionToPush = sf::Vector2f(abs(directionToPush.x) * -1.0f, directionToPush.y); 
+            std::cout << "bounds centre pos x " << boundsCentrePos.x << std::endl;
+        }
+        if (it->y < boundsCentrePos.y ) {
+
+            directionToPush = sf::Vector2f(directionToPush.x ,abs( directionToPush.y) * -1.0f);
+            std::cout << "bounds centre pos y  " << boundsCentrePos.y << std::endl;
+
+        }
+        std::cout << "direction for object " << directionToPush.x << ":" << directionToPush.y << std::endl; 
+        std::cout << "position set for object " << it->x << ":" << it->y << std::endl;
+
+        // set the direction for the dynamic object to move 
+        m_gameObject->setDirection(directionToPush);
+        // update the position passing in the bounds that the dynamic object should be restricted to 
+        m_gameObject->updatePosition(m_elapsed, m_boundsToContainDynamicObject);
+
+        // this function will check for if the dynamic object's position slips out of bounds 
+        // which should be false as the movement function of the dynamic object should be restricted to the defined 
+        // bounding box 
+        ASSERT_FALSE(checkForDynamicObjectOutOfBounds(m_gameObject.get()));
+
+
+    }
+
+
+}
 
 
 

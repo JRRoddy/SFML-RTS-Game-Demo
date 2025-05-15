@@ -11,7 +11,9 @@ public:
 	DynamicObject(sf::Vector2f position); 
 
 	DynamicObject(float speed); 
-	DynamicObject(float speed, sf::Vector2f position); 
+	DynamicObject(float speed, sf::Vector2f position);
+	DynamicObject(sf::Sprite* sprite);
+
 	virtual ~DynamicObject() {};
 	float getSpeed();
 	void setSpeed(float speed);

@@ -20,6 +20,7 @@ public:
 	void setPosition(sf::Vector2f position);
 	void setRotation(float rotation); 
 	void setScale(sf::Vector2f scale);
+	void setCollisionBounds(sf::IntRect& newBounds);
 	int getSpawnCap(); 
 	void setIsActive(bool isActive);
 	virtual bool getIsActive();

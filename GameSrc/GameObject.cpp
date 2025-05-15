@@ -22,7 +22,9 @@ GameObject::GameObject(sf::Vector2f position, float rotation, sf::Vector2f scale
 
 GameObject::GameObject(sf::Sprite *sprite)
 {
+	sprite->setOrigin(sf::Vector2f(sprite->getTextureRect().getSize() / 2));
 	m_position = sprite->getPosition();
+	
 	m_baseSpriteRef.reset(sprite);
 
 
@@ -63,6 +65,11 @@ void GameObject::setRotation(float rotation)
 void GameObject::setScale(sf::Vector2f scale)
 {
 	m_scale = scale;
+}
+
+void GameObject::setCollisionBounds(sf::IntRect& newBounds)
+{
+	m_baseSpriteRef->setTextureRect(newBounds);
 }
 
 int GameObject::getSpawnCap()
