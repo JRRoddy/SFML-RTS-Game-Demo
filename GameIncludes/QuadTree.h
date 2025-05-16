@@ -155,7 +155,49 @@ public:
 		}
 		m_hasDivided = true;
 	}
+	void queryExlusive(sf::FloatRect& boundingBox, std::vector<quadTreeItem<objectType>>& result, objectType * objectBeingUsed) {
+		// querying the quad tree is a case of recursing down the tree and checking the items 
+		// in each section that would overlap with the objects bounds
+		//std::cout << "querying quad tree" << std::endl;
+		for (quadTreeItem<objectType>& item : m_objectItems)
+		{
+			if (item.bounds.intersects(boundingBox) && item.gameObject != objectBeingUsed) {
+				std::cout << "item found " << item.gameObject << std::endl; 
+				std::cout << objectBeingUsed << std::endl;
+				//std::cout << "quad tree item intersected with game object bounds" << std::endl;
+				result.push_back(item);
+			}
 
+		}
+		// check subsections
+		if (m_hasDivided) {
+			//std::cout << "section was divided searching into sub sections" << std::endl;
+			for (std::shared_ptr<QuadTree<objectType>>& subSection : m_subSections) {
+				// if the sub section could  fully fit inside our objects bounds then 
+				// we can add all the items from its children and that subsection 
+				// without needing anymore queries
+				if (rectContains(boundingBox, subSection.get()->m_bounds)) {
+					//std::cout << "section being searched could be fully contained in object bounds adding all items " << std::endl;
+
+					subSection.get()->getAllItemsEx(result,objectBeingUsed);
+
+				}
+				// other wise if the sub section intersects but cant be fully contained within the bounds 
+				// then we need to query the items(game objects) in each sub section and check for intersection 
+				else if (subSection.get()->m_bounds.intersects(boundingBox)) {
+					/*std::cout << "section being searched could contain object" << std::endl;
+					std::cout << "section query bounds left:" << subSection.get()->m_bounds.left << " top:" << subSection.get()->m_bounds.top << " width:" << subSection.get()->m_bounds.width << " height:" << subSection.get()->m_bounds.height << std::endl;
+					std::cout << "gameobject query bounds left:" << boundingBox.left << " top:" << boundingBox.top << " width:" << boundingBox.width << " height:" << boundingBox.height << std::endl;*/
+					subSection.get()->queryExlusive(boundingBox, result, objectBeingUsed);
+				}
+
+			}
+		}
+
+
+
+
+	}
 	void query(sf::FloatRect &boundingBox, std::vector<quadTreeItem<objectType>> & result) {
 		// querying the quad tree is a case of recursing down the tree and checking the items 
 		// in each section that would overlap with the objects bounds
@@ -270,6 +312,28 @@ public:
 
 			for (int i = 0; i < m_subSections.size(); i++) {
 				m_subSections[i].get()->draw(window);
+			}
+
+		}
+
+
+	}
+	void getAllItemsEx(std::vector<quadTreeItem<objectType>>& insertInTo,objectType * objectBeingUsed) {
+
+		for (int i = 0; i < m_objectItems.size(); i++) {
+
+			if (m_objectItems[i].gameObject != objectBeingUsed) {
+				insertInTo.push_back(m_objectItems[i]);
+				std::cout << "item found " << std::endl;
+			}
+
+	    }
+		//std::cout << "inserting all items from sub section in tree size was  " << m_objectItems.size() << std::endl;
+		if (m_hasDivided) {
+
+			for (std::shared_ptr<QuadTree<objectType>>& subSection : m_subSections) {
+				
+				subSection.get()->getAllItemsEx(insertInTo,objectBeingUsed);
 			}
 
 		}

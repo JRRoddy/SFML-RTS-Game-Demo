@@ -18,6 +18,7 @@
 #include "PawnAlly.h"
 #include "Camera.h"
 #include "Goblin.h"
+#include "QuadTree.h"
 // GameObject class unit tests:
 class GameObjectTests: public::testing::Test {
 
@@ -349,6 +350,10 @@ TEST_F(CharacterStatsTest, characterStatsTest) {
 
 
 // dynamic object unit tests
+// side note since the dynamic object encapsulates movement for all dynamic objects player,enemy, and ally 
+// the movement tests are carried out on this parent class only as all the movement code is provided to 
+// child dynamic objects by this class therefore there is no need to test movement across all dynamic objects 
+// just the dynamic object class itself 
 class DynamicObjectTest: public::testing::Test {
 public:
 
@@ -645,9 +650,7 @@ TEST_F(AnimationObjectTests, animationplayTest) {
 
   
    
-    
-
-    
+   
 } 
 
 
@@ -886,6 +889,230 @@ TEST_F(DynamicObjectCollisionTests, BoundsContainmentTest) {
 
 
     }
+
+
+}
+
+
+// this calss is desgined to test the quad tree data structure which is used as part of the collision detection throughout 
+// the game as it is running this data structure acts as a method of braod phase collision that stores gameObjects along side their bounding box 
+// using that bounding box to then divdie up the space that the game object is considered to be in until that space roughly matches its bounding box 
+// this means that when we query the quad tree we only check for the objects that could potentially intersect the bounding box 
+// we are using to query it by traversing down the tree in directions that are based on whether or not the game object is conatined whtin 
+// a particualr space defined by the quad tree and the other objects bound volumes contained within the tree 
+class CollisionQuadTreeTesting:public::testing::Test {
+
+public:
+
+    CollisionQuadTreeTesting() {
+
+        m_collisionTreeBounds = sf::FloatRect(0, 0, 800, 600);
+        // the quad tree is a tempate class meaning that it can be used to store objects of any type 
+        // therefore we define two trees of different types using the enemy base class and the ally base class 
+        // ensuring the behaviour of the quad tree template class remains the same no matter the type passed in 
+        m_enemyCollisionTree = std::make_shared<QuadTree<EnemyBase>>(QuadTree<EnemyBase>(m_collisionTreeBounds, 8));
+        m_allyCollisionTree = std::make_shared<QuadTree<AllyBase>>(QuadTree<AllyBase>(m_collisionTreeBounds, 8));
+
+    }
+    void addAllyToCollisionTree(AllyBase * ally,sf::FloatRect bounds ){
+       
+        m_allyCollisionTree->insert(bounds, ally);
+    
+    }
+    void addEnemyToCollisionTree(EnemyBase* enemy,sf::FloatRect bounds) {
+
+        m_enemyCollisionTree->insert(bounds, enemy);
+
+    }
+
+
+    void setBoudningboxToUseForQuery(sf::FloatRect boundingBox) {
+        m_boundingBoxUsedForQuery = boundingBox;
+    }
+    //clear all items for trees at the end of each test
+    void TearDown() {
+
+        m_allyCollisionTree->clearItems();
+        m_enemyCollisionTree->clearItems();
+    }
+
+protected:
+
+    std::shared_ptr<QuadTree<EnemyBase>> m_enemyCollisionTree;
+    std::shared_ptr<QuadTree<AllyBase>> m_allyCollisionTree;
+    sf::FloatRect m_boundingBoxUsedForQuery;
+    sf::FloatRect m_collisionTreeBounds;
+
+};
+
+
+
+
+// testing the insertsion and querying of the quad tree data structure this query should 
+// return all the objects that were inserted into the tree as the bounding box used for the tree is the same size as 
+// the area the tree is managing 
+TEST_F (CollisionQuadTreeTesting, allQueryTestForAllyBaseType) {
+
+
+    std::vector<std::shared_ptr<AllyBase>> allies;
+    
+    int amountOfAlliesToAddToTree = 5;
+
+    sf::FloatRect boundingBox = sf::FloatRect(m_collisionTreeBounds.getSize() / 2.0f, sf::Vector2f(40.0f,40.0f));
+    // create shared pointers to ally objects of a particualr number 
+   for (int i = 0; i < amountOfAlliesToAddToTree; i++) {
+        
+        allies.emplace_back();
+        allies.back().reset(new AllyBase());
+        m_allyCollisionTree->insert(boundingBox, allies.back().get());
+
+
+   }
+   // set up the vetcor that will have the results pushed to it from the query
+    std::vector<quadTreeItem<AllyBase>> allyCollisionTreeQueryResult;  
+    // set the bounding box that will be used to query the tree with a particualr space 
+    setBoudningboxToUseForQuery(m_collisionTreeBounds);
+    /// query the tree containing alll the ally base object references 
+    m_allyCollisionTree->query(m_boundingBoxUsedForQuery,allyCollisionTreeQueryResult);
+
+    // expect that we get the same amount of allies from the collsion tree query reuslt as we inserted 
+    // as we used a bounding box that covered the entire area the tree was managing 
+    EXPECT_EQ(amountOfAlliesToAddToTree, allyCollisionTreeQueryResult.size());
+    // clear vector for next query 
+    allyCollisionTreeQueryResult.clear();
+    // this time we query the tree with the defined bounding box that was defined for each ally object 
+
+    m_allyCollisionTree->query(boundingBox, allyCollisionTreeQueryResult);
+    // we should also get all the ally objects back in this case as all the bounding boxes were set to the same 
+    // size and position when inserted into the quad tree 
+    EXPECT_EQ(amountOfAlliesToAddToTree, allyCollisionTreeQueryResult.size());
+
+
+
+
+
+
+
+
+}
+
+
+
+// here we conduct the same unit test for the collision tree as above however this time it is using the quad tree template
+//class with a template argument of enemy base instead of ally base this test ensures that the quad tree class does not 
+// exhibit any undefined behaviour when making use of different types(that it may store) for its template argument 
+// demonstraing its ability to handle multiple types under the same conditions
+TEST_F(CollisionQuadTreeTesting, enemyQueryTestForAllyBaseType) {
+
+
+    std::vector<std::shared_ptr<EnemyBase>> enemies;
+
+    int amountOfEnemiesToAddToTree = 5;
+
+    sf::FloatRect boundingBox = sf::FloatRect(m_collisionTreeBounds.getSize() / 2.0f, sf::Vector2f(40.0f, 40.0f));
+    // create shared pointers to enemy objects of a particualr number 
+    for (int i = 0; i < amountOfEnemiesToAddToTree; i++) {
+
+        enemies.emplace_back();
+        enemies.back().reset(new EnemyBase());
+        m_enemyCollisionTree->insert(boundingBox, enemies.back().get());
+
+
+    }
+    // set up the vetcor that will have the results pushed to it from the query
+    std::vector<quadTreeItem<EnemyBase>> enemyCollisionTreeQueryResult;
+    // set the bounding box that will be used to query the tree with a particualr space 
+    setBoudningboxToUseForQuery(m_collisionTreeBounds);
+    /// query the tree containing alll the enemy base object references 
+    m_enemyCollisionTree->query(m_boundingBoxUsedForQuery, enemyCollisionTreeQueryResult);
+
+    // expect that we get the same amount of enemies from the collsion tree query reuslt as we inserted 
+   // as we used a bounding box that covered the entire area the tree was managing 
+    EXPECT_EQ(amountOfEnemiesToAddToTree, enemyCollisionTreeQueryResult.size());
+
+    // clear vector for next query 
+    enemyCollisionTreeQueryResult.clear();
+    // this time we query the tree with the defined bounding box that was defined for each enemy object 
+
+    m_enemyCollisionTree->query(boundingBox, enemyCollisionTreeQueryResult);
+    // we should also get all the enemy objects back in this case as all the bounding boxes were set to the same 
+    // size and position when inserted into the quad tree 
+    EXPECT_EQ(amountOfEnemiesToAddToTree, enemyCollisionTreeQueryResult.size());
+
+
+
+
+
+}
+
+// this test ensures that the collsion tree does not return any unexpected results when there are two ally objects that 
+// should not share the same space, ensuring that there are no ally objects that are returned in results when there shouldnt be 
+TEST_F(CollisionQuadTreeTesting, emptyQueryAlliesTest) {
+
+    std::shared_ptr<AllyBase> ally;
+    std::shared_ptr<AllyBase> allyOther; 
+    // defining the bounding boxes of the two ally obejcts 
+    sf::FloatRect allyBoundingBox = sf::FloatRect(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(10.0f, 10.0f)); 
+    sf::FloatRect allyOtherBoundingBox = sf::FloatRect(400.0f,400.0f,10.0f,10.0f);
+
+
+    ally.reset(new AllyBase());
+    allyOther.reset(new AllyBase());
+
+    // inserting the ally objects and their bounding boxes into the quad tree 
+    m_allyCollisionTree->insert(allyBoundingBox, ally.get());
+    m_allyCollisionTree->insert(allyOtherBoundingBox, allyOther.get());
+
+
+    std::vector<quadTreeItem<AllyBase>> allies; 
+    // getting the results back from the quad tree by querying it with one of the ally object bounding boxes 
+    m_allyCollisionTree->queryExlusive(allyBoundingBox, allies, ally.get()); 
+
+    // here we expect there to be no results returned by the collision tree 
+    // as the two ally objects inserted should not share the same space within the collision tree 
+    EXPECT_EQ(allies.size(), 0);
+
+
+
+
+
+
+
+
+}
+// this test ensures that the collsion tree does not return any unexpected results when there are two enemy objects that 
+// should not share the same space, ensuring that there are no enemy objects that are returned in results when there shouldnt be 
+TEST_F(CollisionQuadTreeTesting, emptyQueryEnemiesTest) {
+
+    std::shared_ptr<EnemyBase> enemy;
+    std::shared_ptr<EnemyBase> enemyOther;
+    // defining the bounding boxes of the two enemy obejcts 
+    sf::FloatRect enemyBoundingBox = sf::FloatRect(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(10.0f, 10.0f));
+    sf::FloatRect enemyOtherBoundingBox = sf::FloatRect(400.0f, 400.0f, 10.0f, 10.0f);
+
+
+    enemy.reset(new EnemyBase());
+    enemyOther.reset(new EnemyBase());
+
+    // inserting the enemy objects and their bounding boxes into the quad tree 
+    m_enemyCollisionTree->insert(enemyBoundingBox, enemy.get());
+    m_enemyCollisionTree->insert(enemyOtherBoundingBox, enemyOther.get());
+
+
+    std::vector<quadTreeItem<EnemyBase>> enemies;
+    // getting the results back from the quad tree by querying it with one of the enemy object bounding boxes 
+    m_enemyCollisionTree->queryExlusive(enemyBoundingBox, enemies, enemy.get());
+
+    // here we expect there to be no results returned by the collision tree 
+    // as the two enemy objects inserted should not share the same space within the collision tree 
+
+    EXPECT_EQ(enemies.size(), 0);
+
+
+
+
+
+
 
 
 }

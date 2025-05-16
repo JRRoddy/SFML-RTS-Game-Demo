@@ -80,12 +80,8 @@ void DynamicObject::updatePosition(float dt, sf::FloatRect boundsToContainObject
 	if (containedX && containedY && m_canMoveToNextTile) { // update pos if its in the bounds
 		m_position += ((m_direction * m_speed) * m_speedModifier) * dt;
 		m_baseSpriteRef.get()->move((m_position - m_baseSpriteRef.get()->getPosition())); // move by offset from new pos
-		std::cout << "updating position of object " << std::endl;
 	} 
-	else {
-		std::cout << "not updating position object was not contained within bounds when checking next position" << std::endl;
 
-	}
 	
 
 }
