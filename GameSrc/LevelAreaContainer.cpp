@@ -403,6 +403,16 @@ void LevelAreaContainer::setGridAreaSize(sf::Vector2f& dim)
 	m_gridSectionSize = dim;
 }
 
+sf::Vector2i LevelAreaContainer::getGridDim()
+{
+	return m_gridDimensions;
+}
+
+sf::Vector2f LevelAreaContainer::getTileDim()
+{
+	return m_gridSectionSize;
+}
+
 void LevelAreaContainer::initTiles(SpriteGenerator * spriteGenerator)
 {
 
@@ -431,7 +441,6 @@ void LevelAreaContainer::initLevelMaps()
 		};
 
 	}
-	
 	setNewTileMapImage();
 }
 
@@ -474,8 +483,11 @@ void LevelAreaContainer::setTileMapPaths(std::vector <std::string>& tileMapPaths
 void LevelAreaContainer::setNewTileMapImage()
 { 
 	/// set a random level map image to be used for the area in order to generate its initial objects
-	m_currentTileMapImage = &(m_loadedTileMaps[rand() % m_loadedTileMaps.size()]); 
-	
+	if (m_loadedTileMaps.size()) {
+		m_currentTileMapImage = &(m_loadedTileMaps[rand() % m_loadedTileMaps.size()]);
+
+	}
+		
 }
 std::vector<sf::Image>& LevelAreaContainer::getTileMapImages()
 {

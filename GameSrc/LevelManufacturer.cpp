@@ -21,6 +21,12 @@ void LevelAreaManufacturer::createLevelArea(LevelAreaBuilder* areaBuilder, AreaT
 	// define all data for the basic properties and looks of the level area 
 	// including background images and the area id
 	m_levelAreaBuilder = areaBuilder;
+
+	if (m_levelAreaBuilder->levelAreaRef() == nullptr) {
+		std::cout << "level area builder had no level area assigned to be constrcuted creating new level area for builder" << std::endl;
+		m_levelAreaBuilder->initNewArea();
+	}
+
 	m_levelAreaBuilder->assignBackgroundTexturePaths(backgroundPaths); 
 	m_levelAreaBuilder->assignAreaType(areaType);
 

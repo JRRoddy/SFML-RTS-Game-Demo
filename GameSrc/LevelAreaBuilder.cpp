@@ -24,6 +24,10 @@ LevelAreaContainer* LevelAreaBuilder::getLevelArea()
 	// the level area builder
 	return m_levelArea;
 }
+LevelAreaContainer* LevelAreaBuilder::levelAreaRef()
+{
+	return m_levelArea;
+}
 // used to assign a level area object to be constructed and edited 
 void LevelAreaBuilder::assignNewArea(LevelAreaContainer* levelArea)
 {

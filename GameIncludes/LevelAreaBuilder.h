@@ -12,7 +12,7 @@ public:
 	
 	virtual ~LevelAreaBuilder() {};
 	LevelAreaContainer* getLevelArea();
-
+	LevelAreaContainer* levelAreaRef();
 	void assignNewArea(LevelAreaContainer * levelArea);
 	void initNewArea();
 	void assignEnemyFaction(EnemyFactionIds enemyFaction);

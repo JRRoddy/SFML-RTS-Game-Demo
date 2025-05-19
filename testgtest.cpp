@@ -19,6 +19,9 @@
 #include "Camera.h"
 #include "Goblin.h"
 #include "QuadTree.h"
+#include "LevelAreaBuilder.h"
+#include "LevelAreaManufacturer.h"
+#include "LevelGrid.h"
 // GameObject class unit tests:
 class GameObjectTests: public::testing::Test {
 
@@ -1109,13 +1112,471 @@ TEST_F(CollisionQuadTreeTesting, emptyQueryEnemiesTest) {
     EXPECT_EQ(enemies.size(), 0);
 
 
+}
 
+
+// this particualr test fixure is desginig to test the level builders ability to configure all the properties of a level 
+// area and ensure that all the properies configured were set correctly according to the desired values both when 
+// set indivually and when combined ensuring that there is no issues when performing initialisation of certain 
+// properties for the level areas through the level builder both on there own and combined with other properties
+class LevelAreaBuilderTests:public::testing::Test{
+
+public:
+   
+    LevelAreaBuilderTests() {
+
+        m_textureManager = std::make_unique<TextureManager>(TextureManager());
+        m_textureManager->loadTextures(m_pathToTextures);
+        m_spriteGenerator = std::make_unique<SpriteGenerator>(SpriteGenerator(m_textureManager.get())); 
+
+        m_levelAreaBuilder = std::make_unique<LevelAreaBuilder>(LevelAreaBuilder(m_spriteGenerator.get()));
+        m_allyNpcsForAreaTobeConstructed = { AllyInitialiser(new AllyBase()) };
+        m_enemyNpcsForAreaTobeConstructed = { EnemyInitialiser(new EnemyBase()) };  
+        
+        m_backGroundPathsForLevelArea = {
+            "../Assets/Textures/GrassBackground0.png"
+
+        };
+
+        m_randomlyGeneratedTilesToBeUsedInConstruction = {
+
+            TileInitialiser(new RockTile()),
+            TileInitialiser(new ForestTile()),
+
+
+
+        };
+        m_imageMappedTilesToBeUsedInConstruction = {
+
+            {"Path",TileInitialiser(new PathTile())}
+
+
+
+         };
+
+
+
+
+    }
+
+    LevelAreaContainer* getCurrentAreaBeingConstructedInBuilder() {
+       
+        return m_levelAreaBuilder->levelAreaRef();
+    };
+
+    void SetUp() {
+    
+        m_positionForAreaToBeConstructed = sf::Vector2f(0.0f, 0.0f); 
+        m_gridDimForAreaToBeConstructed = sf::Vector2i(2, 2);
+        m_tileSizeForAreaToBeConstructed = sf::Vector2f(64.0f, 64.0f);  
+        m_allyfactionToAssign = KNIGHTS; 
+        m_enemyfactionToAssign = GOBLINS; 
+        m_areaTypeForAreaToBeConstructed = GRASSLANDS;
+        
+    };
+
+
+    
+
+
+
+protected:
+
+    std::unique_ptr<LevelAreaBuilder> m_levelAreaBuilder;
+    std::unique_ptr<SpriteGenerator> m_spriteGenerator;
+    std::unique_ptr<TextureManager> m_textureManager;
+    std::string m_pathToTextures = "../Assets/Textures/PathsToTextures.txt";
+    sf::Vector2f m_positionForAreaToBeConstructed;
+    sf::Vector2f m_tileSizeForAreaToBeConstructed;
+    sf::Vector2i m_gridDimForAreaToBeConstructed;
+    std::vector<AllyInitialiser> m_allyNpcsForAreaTobeConstructed;
+    std::vector<EnemyInitialiser> m_enemyNpcsForAreaTobeConstructed;
+    AreaTypes m_areaTypeForAreaToBeConstructed = AreaTypes();
+    AllyFactionIds m_allyfactionToAssign = AllyFactionIds();
+    EnemyFactionIds m_enemyfactionToAssign = EnemyFactionIds();
+    std::vector<std::string> m_backGroundPathsForLevelArea;
+    std::vector<TileInitialiser> m_randomlyGeneratedTilesToBeUsedInConstruction;
+    std::map<std::string,TileInitialiser> m_imageMappedTilesToBeUsedInConstruction;
+
+};
+
+
+// testing the level builder as part of the builder design pattern 
+// this test ensures that the builder is able to assign the basic properties required for a level area to be drawn to the 
+// screen that being the background textures that the level area will use along with the position, tile dimensions, and grid dimensions 
+// for the area 
+TEST_F(LevelAreaBuilderTests, ConstructDefaultLevelArea) {
+
+
+    // tell the level builder to construct a default level area 
+    m_levelAreaBuilder->initNewArea(); 
+    
+    // refernce to the current level area being constructed by the level area builder 
+    LevelAreaContainer* areaBeingConstructedRef = getCurrentAreaBeingConstructedInBuilder();
+    ASSERT_NE(areaBeingConstructedRef, nullptr); // assert that the constrcuted default level area is not nullPtr 
+    // to ensure that it was properly created and to break out of the test if not as it will cause the prorgam 
+    // to crash if it is null and execution of the test goes further
+    
+    // assign background texture paths to the level area being constrcuted through the level area builder 
+    // telling it what texture background paths to use for the  construction of the level area
+    m_levelAreaBuilder->assignBackgroundTexturePaths(m_backGroundPathsForLevelArea);  
+    // ensure that the vector of background image paths assigned to the level area
+    // being constructed through the level area builder is of the size expected 
+    ASSERT_EQ(areaBeingConstructedRef->getBackgroundTexturePaths().size(), m_backGroundPathsForLevelArea.size());
+    // ensure that the contents of the vector of background images assigned to the level area being constructed 
+    // are correct by checking the equality of the asset paths within the desired vector and that which was 
+    // assigned to the level area through the level builder(in this case we check the first element of the vector)
+    EXPECT_STREQ(areaBeingConstructedRef->getBackgroundTexturePaths()[0].c_str(), m_backGroundPathsForLevelArea[0].c_str());
+
+    // assign the position of the area to be constrcuted through the level area builder 
+    m_levelAreaBuilder->assignPositionForArea(m_positionForAreaToBeConstructed); 
+    // test that those values are properly set by the level area builder 
+    EXPECT_EQ(areaBeingConstructedRef->getPosition().x, m_positionForAreaToBeConstructed.x);
+    EXPECT_EQ(areaBeingConstructedRef->getPosition().y ,m_positionForAreaToBeConstructed.y);
+
+    // assign dimensions for the grid section sizes of the area and the tile size fo the area
+    m_levelAreaBuilder->assignDimensionsForArea(m_gridDimForAreaToBeConstructed,m_tileSizeForAreaToBeConstructed);
+
+    // expect the desired dimensions of the grid to be equal to those used by the level area builder 
+   // that were set for the current level area being built by the level area builder 
+    EXPECT_EQ(areaBeingConstructedRef->getTileDim().x, m_tileSizeForAreaToBeConstructed.x);
+
+    EXPECT_EQ(areaBeingConstructedRef->getTileDim().y, m_tileSizeForAreaToBeConstructed.y);
+
+
+    EXPECT_EQ(areaBeingConstructedRef->getGridDim().x, m_gridDimForAreaToBeConstructed.x);
+
+    EXPECT_EQ(areaBeingConstructedRef->getGridDim().y, m_gridDimForAreaToBeConstructed.y);
+
+
+
+}
+
+// testing the creation of a level area with npc factions assigned to it along 
+/// with a position and dimensions for the grid these faction id's are used to 
+// select specifc enemy and ally pooling objects used to spawn allies and enemies 
+//associated with that area therefore by assigning a faction id to the level area 
+// it will be assignined specifc npc's for spanwing, and through the builder desgin 
+// pattern the assignment of npc factions to an area is optional allowing for 
+// more mixing and matching for what a level area does and doesnt have 
+TEST_F(LevelAreaBuilderTests, ConstructLevelAreaWithNPCs ) {
+
+    // creat a new area in the builder 
+    m_levelAreaBuilder->initNewArea();
+    // get a refernce to that area within the builder for ease of testing 
+    LevelAreaContainer* areaBeingConstructedRef = getCurrentAreaBeingConstructedInBuilder();
+    ASSERT_NE(areaBeingConstructedRef, nullptr); // ensure the level area was created properly before continuing 
+    
+    // assigning an areaType id to an area which is used to access certain associative maps 
+    // that contain data relating to a particualr areaType  such as data for tilemaps along with 
+    // background textures for a specifc area type id 
+    m_levelAreaBuilder->assignAreaType(m_areaTypeForAreaToBeConstructed);
+    // check that the areaType id was assigned correctly to the level area being constructed by the level area builder 
+    EXPECT_EQ(m_areaTypeForAreaToBeConstructed, areaBeingConstructedRef->getAreaType());
+    // assign position and dim for area 
+    m_levelAreaBuilder->assignDimensionsForArea(m_gridDimForAreaToBeConstructed, m_tileSizeForAreaToBeConstructed);
+    m_levelAreaBuilder->assignPositionForArea(m_positionForAreaToBeConstructed);
+
+    // assign an ally faction id for the area meaning it will now have specifc allies related to 
+    // that faction spawn within the area 
+    m_levelAreaBuilder->assignAllyFaction(m_allyfactionToAssign);
+    // ensure that the level area being constructed by the builder has the correct ally faction id 
+    EXPECT_EQ(areaBeingConstructedRef->getAssociatedAllyFaction(), m_allyfactionToAssign);
+
+    // assign an enemy faction id for the area meaning it will now have specifc enemies related to 
+    // that faction spawn within the area 
+    m_levelAreaBuilder->assignEnemyFaction(m_enemyfactionToAssign);
+    // ensure that the level area being constructed by the builder has the correct enemy faction id 
+    EXPECT_EQ(areaBeingConstructedRef->getAssociatedEnemyFaction(), m_enemyfactionToAssign);
+
+
+
+
+}
+
+TEST_F(LevelAreaBuilderTests, ConstructLevelAreaWithDataForGeneratedTiles) {
+
+    m_levelAreaBuilder->initNewArea(); 
+    // get a refernce to that area within the builder for ease of testing 
+    LevelAreaContainer* areaBeingConstructedRef = getCurrentAreaBeingConstructedInBuilder();
+
+    // some level areas may have tiles to be randomly generated within the area therefore through the 
+    // level builder that property of the level area container can be configured and set if needed 
+    // allowing  for areas that have randomly generated tiles and those that do not 
+    m_levelAreaBuilder->assignRandomlyGeneratedTiles(m_randomlyGeneratedTilesToBeUsedInConstruction);
+
+    // ensure that the size of the STL sequence container(vector in this case) is equal to the desired container 
+    // of randomly generated tiles set by the level area builder 
+    ASSERT_EQ(m_randomlyGeneratedTilesToBeUsedInConstruction.size(), areaBeingConstructedRef->getRandomlyGeneratedTiles().size());
+    
+    // some level areas may have tiles that area going to the initilaised based on a particualr tile image map 
+    // therefore this property can also be configured via the level area builder meaning some level areas 
+    // could have image maps for tiles and other may not 
+    m_levelAreaBuilder->assignImageParsedTiles(m_imageMappedTilesToBeUsedInConstruction);
+    // ensure that the two assocative container maps are of equal size before continuing testing 
+    
+    // ensure that the size of the associative conatiner used to store image mapped tile initilaiser object and a particualr id 
+    // is as expected before ittertaing through the data to ensure it matches what was set in the level area by the 
+    // level builder 
+    ASSERT_EQ(areaBeingConstructedRef->getImageParsedTiles().size(), m_imageMappedTilesToBeUsedInConstruction.size()); 
+    
+    std::map<std::string, TileInitialiser>::iterator levelAreaTileImageMapData = areaBeingConstructedRef->getImageParsedTiles().begin();
+    for  (std::map<std::string,TileInitialiser>::iterator it = m_imageMappedTilesToBeUsedInConstruction.begin(); it != m_imageMappedTilesToBeUsedInConstruction.end();it++)
+    {
+        
+        // ensure that all the tile id's for the image mapped tiles that were set for the level area being constructed  
+        // macth the desired data as the tile ids are used for further data processing when reading the image map 
+        //  that signifies fixed tile placements within the area
+        EXPECT_STREQ(it->first.c_str(), (levelAreaTileImageMapData)->first.c_str());
+        levelAreaTileImageMapData++;
+    
+
+    }
+    
+}
+
+
+class LevelManufacturerTests :public::testing::Test {
+
+public:
+
+    LevelManufacturerTests() {
+    
+        m_textureManager = std::make_unique<TextureManager>(TextureManager());
+        m_textureManager->loadTextures(m_pathToTextures);
+        m_spriteGenerator = std::make_unique<SpriteGenerator>(SpriteGenerator(m_textureManager.get()));
+
+        m_levelAreaBuilder = std::make_unique<LevelAreaBuilder>(LevelAreaBuilder(m_spriteGenerator.get()));
+        m_levelAreaManufacturer = std::make_unique<LevelAreaManufacturer>(LevelAreaManufacturer());
+        
+        m_backGroundPathsForLevelArea = {
+         "../Assets/Textures/GrassBackground0.png"
+
+        };
+        m_allyNpcsForAreaTobeConstructed = { AllyInitialiser(new Pawn()) };
+        m_enemyNpcsForAreaTobeConstructed = { EnemyInitialiser(new Goblin()) };
+
+        m_randomlyGeneratedTilesToBeUsedInConstruction = {
+
+          TileInitialiser(new RockTile()),
+          TileInitialiser(new ForestTile()),
+
+
+
+        };
+        m_imageMappedTilesToBeUsedInConstruction = {
+
+            {"Path",TileInitialiser(new PathTile())}
+
+
+
+        };
+        std::vector<std::string> m_tileMapImagesToBeUsedInConstruction ={
+            "../Assets/TileMapImages/GrassLands/GrassLandsMap.png"
+        };
+
+        m_tileImageMapInformation = {
+
+            {imageMapColour(0,0,0,255),"path"}
+
+        };
+    
+    };
+    ~LevelManufacturerTests() {};
+
+
+    void SetUp() {
+
+        m_positionForAreaToBeConstructed = sf::Vector2f(0.0f, 0.0f);
+        m_gridDimForAreaToBeConstructed = sf::Vector2i(2, 2);
+        m_tileSizeForAreaToBeConstructed = sf::Vector2f(64.0f, 64.0f);
+        m_allyfactionToAssign = KNIGHTS;
+        m_enemyfactionToAssign = GOBLINS;
+        m_areaTypeForAreaToBeConstructed = GRASSLANDS;
+
+    };
+
+
+
+
+
+
+protected:
+
+    std::unique_ptr<LevelAreaBuilder> m_levelAreaBuilder;
+    std::unique_ptr<SpriteGenerator> m_spriteGenerator;
+    std::unique_ptr<TextureManager> m_textureManager;
+    std::unique_ptr<LevelAreaManufacturer> m_levelAreaManufacturer;
+    std::string m_pathToTextures = "../Assets/Textures/PathsToTextures.txt";
+    std::vector<std::string> m_tileMapImagesToBeUsedInConstruction;
+    std::vector<std::string> m_backGroundPathsForLevelArea;
+
+    sf::Vector2f m_positionForAreaToBeConstructed;
+    sf::Vector2f m_tileSizeForAreaToBeConstructed;
+    sf::Vector2i m_gridDimForAreaToBeConstructed;
+    AreaTypes m_areaTypeForAreaToBeConstructed = AreaTypes();
+    AllyFactionIds m_allyfactionToAssign = AllyFactionIds();
+    EnemyFactionIds m_enemyfactionToAssign = EnemyFactionIds();
+    std::vector<AllyInitialiser> m_allyNpcsForAreaTobeConstructed;
+    std::vector<EnemyInitialiser> m_enemyNpcsForAreaTobeConstructed;
+    std::vector<TileInitialiser> m_randomlyGeneratedTilesToBeUsedInConstruction;
+    std::map<std::string, TileInitialiser> m_imageMappedTilesToBeUsedInConstruction;
+    std::map<imageMapColour, std::string> m_tileImageMapInformation;
+};
+
+
+// this specifc test for the level manufeactueerer test the conrtsctuion of  a level area with 
+// the minmal amount of properties required for it to be drawn to the screen essentially the 
+// conrtction and manufacturing of a default level area via the level manufacurer that also makes 
+// use of the assigned level area builder through out the manufacturing process of the level area 
+// istelf 
+TEST_F(LevelManufacturerTests, manufactureDefaultArea) {
+
+
+    m_levelAreaManufacturer->createLevelArea(m_levelAreaBuilder.get(), m_areaTypeForAreaToBeConstructed, m_backGroundPathsForLevelArea); 
+    
+    std::shared_ptr<LevelAreaContainer> constructedArea  = std::make_shared<LevelAreaContainer>();
+    // here we define the final properties for the area and complete its construction 
+    // configuring things likes tile size for the area and its position allowing those 
+    // properties to be easily changed per level area generated through the manufactuerer and its 
+    // provided level area builder 
+    LevelAreaContainer* manufactueredLevelArea = m_levelAreaManufacturer->manufactureLevelArea(m_positionForAreaToBeConstructed, m_gridDimForAreaToBeConstructed, m_tileSizeForAreaToBeConstructed);
+    //// manufactuerer the final area and hand it allocated memory to a smart pointer to be managed 
+    //// and deallocated when it goes out of scope
+    constructedArea.reset(m_levelAreaManufacturer->manufactureLevelArea(m_positionForAreaToBeConstructed, m_gridDimForAreaToBeConstructed, m_tileSizeForAreaToBeConstructed));
+    
+    EXPECT_EQ(constructedArea->getBackgroundTexturePaths().size(), m_backGroundPathsForLevelArea.size());
+
+    // test that the area type for the level area was set correctly via the default construction performed 
+    // by the manuafcturer and current level builder it is using to produce the level area 
+    EXPECT_EQ(constructedArea->getAreaType(), m_areaTypeForAreaToBeConstructed);
+
+
+    // test that the grid dirmension for the area are correct according to those defined for the manufactruer 
+    // and past into the current builder it is using 
+    EXPECT_EQ(constructedArea->getGridDim().x, m_gridDimForAreaToBeConstructed.x);
+    EXPECT_EQ(constructedArea->getGridDim().y, m_gridDimForAreaToBeConstructed.y);
+
+    // test that the grid tile dimensions for the area are correct according to those defined for the manufactruer 
+// and past into the current builder it is using 
+    EXPECT_EQ(constructedArea->getTileDim().x, m_tileSizeForAreaToBeConstructed.x);
+    EXPECT_EQ(constructedArea->getTileDim().y, m_tileSizeForAreaToBeConstructed.y);
+
+    // test that the position for the area are correct according to what was defined for the manufactruer 
+    // and assigned to the current level area builder being used by the manufacturer
+    EXPECT_EQ(constructedArea->getPosition().x, m_positionForAreaToBeConstructed.x);
+    EXPECT_EQ(constructedArea->getPosition().y, m_positionForAreaToBeConstructed.y);
+
+
+
+}
+
+// this test is ensuring that the level manufactuerer is able to correctly pass through the data required for a level area 
+// to contain npcs to the level builder testing that the resulting containers for various infomration reuqired for npc's to be spawned 
+// within a particualr level area is correct along with ensuring that idenfifiers such as the faction id 
+// for the particualr enemies and allies being assigned to the area are also assigned correctly by the manufacturer 
+// and correctly accounted for during the constrcution performed by the level builder.
+TEST_F(LevelManufacturerTests, manufactureLevelAreaWithNpcs) {
+
+
+    // create the default level area 
+    m_levelAreaManufacturer->createLevelArea(m_levelAreaBuilder.get(), m_areaTypeForAreaToBeConstructed, m_backGroundPathsForLevelArea);
+
+    // add ally npcs to the construction process of the level area allowing for certain level areas 
+    // to have ally npc's while others do not allowing for more flexibility in configuing what level areas  do and do not have 
+    // through the builder design pattern used for level areas
+    m_levelAreaManufacturer->addAlliesToArea(m_allyfactionToAssign, m_allyNpcsForAreaTobeConstructed);
+    
+    // in this case we are adding enemy npc's to the constrction process of the level area again allowing 
+    // for enemies for the level area to be configured and for some level areas to have enemies and others to not 
+    m_levelAreaManufacturer->addEnemiesToArea(m_enemyfactionToAssign, m_enemyNpcsForAreaTobeConstructed);
+
+    //// manufactuerer the final area and hand it allocated memory to a smart pointer to be managed 
+    //// and deallocated when it goes out of scope
+    std::shared_ptr<LevelAreaContainer> constructedArea = std::make_shared<LevelAreaContainer>();
+    constructedArea.reset(m_levelAreaManufacturer->manufactureLevelArea(m_positionForAreaToBeConstructed, m_gridDimForAreaToBeConstructed, m_tileSizeForAreaToBeConstructed));
+
+    // test all the properties that were set based on what is needed for a level area to have npc's spawn within it 
+    // that being a vector containing initiliasiers for the npc's along with a particualr faction id to 
+    // single what particualr enemy or ally pooling objects should be used to spawn the npc's associated
+    // with the level area that was constrcuted and manfactured
+    EXPECT_EQ(constructedArea->getAssociatedAllyFaction(), m_allyfactionToAssign);
+    EXPECT_EQ(constructedArea->getAllyIntialisers().size(), m_allyNpcsForAreaTobeConstructed.size());
+   
+    EXPECT_EQ(constructedArea->getAssociatedEnemyFaction(), m_enemyfactionToAssign);
+    EXPECT_EQ(constructedArea->getEnemyIntialisers().size(), m_enemyNpcsForAreaTobeConstructed.size());
+    
+
+
+}
+
+// this particualr tests ensures that alll the data for assinging tiles that can be randomly egenerated and also tiles that
+// can be generated based on an image map is correctly passed through the level manufacturer to the level builder 
+// ensuring that all the data is correct and accurate according to what has been defined in the test fixture
+TEST_F(LevelManufacturerTests, manufactureLevelAreaWithGeneratedTiles) {
+
+    // create the default level area 
+    m_levelAreaManufacturer->createLevelArea(m_levelAreaBuilder.get(), m_areaTypeForAreaToBeConstructed, m_backGroundPathsForLevelArea);
+
+    // here wer define that we want the area to have ranodmly generated tiles adding that to the conrtsution process within the elevel builder 
+    // through the level area manufacturer further splitting up the initialisation process of a level area 
+    // into more configurable and optinal steps rather than having to manage multiple large constrctors for level areas 
+    // that may need a lot of data 
+    m_levelAreaManufacturer->addRandomlyGeneratedTileToArea(m_randomlyGeneratedTilesToBeUsedInConstruction); 
+    // here we define that we want tile maps for the level area to be considered within the construction process defined 
+    // for the level area builder assigning various pieces of data through the level manufacturer to be used in that process. 
+    // Such as the path to the particualr image map the tiles to be generated through the image map and various 
+    // information that describes the image map. Such as what colours within the image map, map to a particualr tile id within the 
+    // map of tile initialisers passed in. Again segementing  the initialistion process of a level area 
+    // via the builder desgin pattern into more managable and optional steps
+    m_levelAreaManufacturer->addTileMapsToArea(m_tileMapImagesToBeUsedInConstruction, m_imageMappedTilesToBeUsedInConstruction, m_tileImageMapInformation);
+
+    // manufactuerer the final area and hand it allocated memory to a smart pointer to be managed 
+    // and deallocated when it goes out of scope
+    std::shared_ptr<LevelAreaContainer> constructedArea = std::make_shared<LevelAreaContainer>();
+    constructedArea.reset(m_levelAreaManufacturer->manufactureLevelArea(m_positionForAreaToBeConstructed, m_gridDimForAreaToBeConstructed, m_tileSizeForAreaToBeConstructed));
+
+    // testing that the data container for randomly generated tiles ste for the manufactured level area  is of correct size  
+    // and that the data within the vector container is accurate 
+    ASSERT_EQ(constructedArea->getRandomlyGeneratedTiles().size(), m_randomlyGeneratedTilesToBeUsedInConstruction.size());
+    EXPECT_EQ(constructedArea->getRandomlyGeneratedTiles()[0].getHeldObject()->getRowCap(), m_randomlyGeneratedTilesToBeUsedInConstruction[0].getHeldObject()->getRowCap());
+    
+
+    
+    // testing that the data container for randomly generated tiles ste for the manufactured level area  is of correct size
+    // and that the data within the vector container is accurate 
+    ASSERT_EQ(constructedArea->getImageParsedTiles().size(), m_imageMappedTilesToBeUsedInConstruction.size());
+   
+    std::map<std::string, TileInitialiser>::iterator levelAreaTileImageMapData = constructedArea->getImageParsedTiles().begin();
+    for (std::map<std::string, TileInitialiser>::iterator it = m_imageMappedTilesToBeUsedInConstruction.begin(); it != m_imageMappedTilesToBeUsedInConstruction.end(); it++)
+    {
+
+        // ensure that the key values are equal in the map that stores a string identifier and 
+        // a tile initialiser related to that string id 
+        ASSERT_STREQ (it->first.c_str(), (levelAreaTileImageMapData)->first.c_str());
+
+        // check that the speed modifier property returns the same result for the 
+        // desired tile initialisers stored in the map in the test fixture and 
+        // that the manufactured level area has the same tile initilaisers by also 
+        // checking the speed modifier property of each tile object held within those 
+        // tile initialisers
+        float desiredTileSpeedMod = m_imageMappedTilesToBeUsedInConstruction[it->first].getHeldObject()->getSpeedModifier(); 
+        float manufacturedLevelAreaSpeedMod = constructedArea->getImageParsedTiles()[it->first].getHeldObject()->getSpeedModifier();
+        EXPECT_EQ(desiredTileSpeedMod, manufacturedLevelAreaSpeedMod);
+        // continue to itterate through the map of tile initialisers and string id's 
+        // contained within the manufactured level area 
+        levelAreaTileImageMapData++;
+
+
+    }
 
 
 
 
 
 }
+
+
 
 
 

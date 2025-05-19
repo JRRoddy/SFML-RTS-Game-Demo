@@ -77,6 +77,8 @@ public:
 	//setters for dimensions of area 
 	void setGridDimensions(sf::Vector2i &dim);
 	void setGridAreaSize(sf::Vector2f &dim); 
+	sf::Vector2i getGridDim();
+	sf::Vector2f getTileDim();
 
 	void initTiles(SpriteGenerator * spriteGenerator);
 	void initLevelMaps();
