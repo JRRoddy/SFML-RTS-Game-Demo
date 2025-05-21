@@ -13,6 +13,7 @@ public:
 	void initialiseButtons();
 	void initUiBindings();
 	void updateUiBindings();
+	void initialiseLoneText() {};
 private:
 	void playButtonAction();
 	std::unique_ptr<UiActionBinder<MainMenu>>m_uiActionBinder;

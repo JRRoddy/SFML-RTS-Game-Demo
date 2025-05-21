@@ -10,14 +10,22 @@ ScoreMenu::ScoreMenu(sf::RenderWindow* window, InputManager* inputManager):Menu(
 	m_buttonWidth = 200.0f;
 	m_buttonTextColour = sf::Color::White;
 	m_buttonBackgroundColour = sf::Color::Color(128, 128, 128, 255);
+	m_textObjectSpacing = sf::Vector2f(0.0f,20.0f);
 	m_buttonSpacing = sf::Vector2f(20.0f, 20.0f);
 	m_buttonHeight = 100.0f;
 	m_menuUiDataPath = "../Assets/UiData/ScoreMenu.txt";
-	m_buttonFontPath = "../Assets/Fonts/Roboto.ttf";
+	m_textFontPath = "../Assets/Fonts/Roboto.ttf"; 
+
 	m_buttonSize = sf::Vector2f(m_buttonWidth, m_buttonHeight);
 	m_shouldDraw = true;
+	m_scoreHeaderCharSize = 40;
+	m_scoreHeaderTextColour = sf::Color::White;
+	m_scoreHeaderTextFontPath = "../Assets/Fonts/Roboto.ttf";
+	m_scoreMenuHeadertext = "Scores:";
+	m_scoresCharSize = 40; 
+
 	m_uiActionBinder = std::shared_ptr<UiActionBinder<ScoreMenu>>(new UiActionBinder<ScoreMenu>());
-	
+
 	
 }
 
@@ -26,6 +34,7 @@ void ScoreMenu::initialise()
 	initUiBindings();
 	initialiseButtons();
 	parseUIdata();
+	initialiseLoneText();
 
 }
 
@@ -37,7 +46,7 @@ void ScoreMenu::initialiseButtons()
 	m_buttons[m_buttonIds[0]].setPosition(buttonPos);
 	m_buttons[m_buttonIds[0]].setTextColour(m_buttonTextColour);
 	m_buttons[m_buttonIds[0]].setBackgroundColour(m_buttonBackgroundColour);
-	m_buttons[m_buttonIds[0]].setFont(m_buttonFontPath);
+	m_buttons[m_buttonIds[0]].setFont(m_textFontPath);
 	m_buttons[m_buttonIds[0]].setButtonId(m_buttonIds[0]);
 
 
@@ -58,6 +67,73 @@ void ScoreMenu::updateUiBindings()
 
 	}
 }
+
+void ScoreMenu::initialiseLoneText()
+{
+	std::ifstream readScores; 
+	readScores.open(m_savedScoresFilePath);
+	std::vector<std::string> scoresSorted;
+
+
+	
+	if (readScores.is_open()) {
+		std::string line;
+		int playSessionCount = 1;
+		while (std::getline(readScores, line)) {
+
+			scoresSorted.emplace_back("Run/session:" + std::to_string(playSessionCount) + " Score:" + line);
+			playSessionCount++;
+		}
+		// sort the scores read in from the file using a functor as the predicate 
+		// which defines the boolean operation used to determine which element  will be placed further 
+		// to the back and which element will be placed closer to the beggining of the final sorted vector
+		// i.e. sorting them in decending order in this case based on the score embeded in the string
+		scoreSort sortScores{};
+		std::sort(scoresSorted.begin(), scoresSorted.end(),sortScores);
+
+	}
+	// create header text for the score menu
+	m_scoreHeaderTextFont.loadFromFile(m_scoreHeaderTextFontPath);
+	m_scoreHeaderText.setFillColor(m_scoreHeaderTextColour);
+	m_scoreHeaderText.setCharacterSize(m_scoreHeaderCharSize);
+	m_scoreHeaderText.setFont(m_scoreHeaderTextFont);
+	m_scoreHeaderText.setString(m_scoreMenuHeadertext);
+	std::cout << "score header text size " << m_scoreHeaderCharSize << std::endl;
+	sf::Vector2f scoreHeaderTextPos = sf::Vector2f(m_window->getSize().x / 2.0f, float(0+m_scoreHeaderCharSize));
+	m_scoreHeaderText.setOrigin(m_scoreHeaderText.getGlobalBounds().getSize()/2.0f);
+	m_scoreHeaderText.setPosition(scoreHeaderTextPos);
+
+	m_textFont.loadFromFile(m_textFontPath);
+	for (int i = 0; i < scoresSorted.size();i++) {
+
+		m_textObjects.emplace_back();
+		sf::Text& textObjectBack = m_textObjects.back();
+		textObjectBack.setFont(m_textFont);
+		textObjectBack.setCharacterSize(m_scoresCharSize);
+		textObjectBack.setColor(m_scoreHeaderTextColour);
+		textObjectBack.setString(scoresSorted[i]);
+		textObjectBack.setOrigin(textObjectBack.getGlobalBounds().getSize()/2.0f);
+		sf::Vector2f textObjectPos = sf::Vector2f(scoreHeaderTextPos.x, scoreHeaderTextPos.y + (i + 1) * m_scoreHeaderCharSize);
+		m_textObjects.back().setPosition(textObjectPos+m_textObjectSpacing*float(i+1));
+
+	}
+
+
+
+
+}
+
+void ScoreMenu::draw(sf::RenderWindow* window)
+{
+	if (m_hasActiveSubMenu) {
+		m_activeSubmenu->draw(window);
+		return;
+	}
+	drawButtons(window);
+	drawTextObjects(window);
+	window->draw(m_scoreHeaderText);
+}
+
 
 void ScoreMenu::backButtonAction()
 {

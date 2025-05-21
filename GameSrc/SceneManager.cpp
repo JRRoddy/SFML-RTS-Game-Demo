@@ -41,6 +41,7 @@ void SceneManager::draw()
 		m_menuManager->draw(m_window);
 	}
 	else {
+		
 		m_levelGenerator->drawObjects(m_window);
 		m_player.get()->draw(m_window);
 	}
@@ -55,10 +56,12 @@ void SceneManager::update(float dt,sf::Event & event)
 	
     m_inputManager->pollEvents(event);
 	if (m_menuManager->isDrawingOutOfGameMenus()) {
+		
 		m_menuManager->update(dt);
 	
 	}
 	else {
+		m_levelGenerator->setPlayerIsInLevel(true);
 		m_levelGenerator->update(dt);
 	}
 	m_inputManager->endFrame();

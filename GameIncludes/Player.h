@@ -18,6 +18,7 @@ class Player: public Character {
 	void updateCommandFlag();
 	void updateCamera(); 
 	void update(float dt);
+	int getCurrentScore() const;
 	void collision(GameObject* other);
 	void getSprites(SpriteGenerator * spriteGenerator);
 	void setCurrentLevelAreaBounds(sf::FloatRect& levelAreaBounds);
@@ -28,7 +29,7 @@ class Player: public Character {
 	void reset();
 	void checkReset();
 	sf::Vector2f getMovementOrderPos();
-	
+	void incrementCurrentScore();
 
 	
 
@@ -36,6 +37,7 @@ class Player: public Character {
 	 
 	 float m_baseSpeed = 300.0f;
 	 bool m_recallAllies = true;
+	 int m_currentScore = 0;
 	 
 	 sf::Vector2f m_startPosition;
 	 sf::Vector2f m_movmentOrderPos;

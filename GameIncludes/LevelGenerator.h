@@ -36,12 +36,15 @@ public:
 	void updatePlayerTileState(float dt);
 	void initManagerPools();
 	void playerNextTileCheck(float dt);
+	void savePlayerScoreOnLevel();
+	void setPlayerIsInLevel(bool playerIsInLevel);
 	~LevelGenerator();
-
+	
 private:
 	LevelAreaContainer* m_currentArea;
 	Player* m_playerRef;
 	Tile* m_currentPlayerTile;
+	
 	SpriteGenerator* m_spriteGenerator;
 	std::unique_ptr<LevelGrid> m_levelGrid;
 	std::unique_ptr<AllyManager> m_allyManager;
@@ -54,8 +57,10 @@ private:
 	std::vector<LevelAreaContainer*> m_areaContainersPool;
 	std::map<AreaTypes, std::vector<EnemyBase*>>m_areaEnemyPools;
 	std::vector<sf::CircleShape> m_debugQuadTreePositions;
-	
+	std::string m_saveScorePath ="../Assets/PlayerData/scores.txt";
+	std::string m_saveRunCountPath = "../Assets/PlayerData/runData.txt";
 	int m_maxLevelAreaColTreeDepth;
+	bool m_playerHasEnteredLevel = false;
 	AreaTypes m_startArea = GRASSLANDS;
 	// a level generator has a lvel area builder and a level area manufacturer
 	std::shared_ptr<LevelAreaBuilder> m_levelAreaBuilder; 

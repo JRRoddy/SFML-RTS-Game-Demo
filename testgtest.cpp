@@ -357,11 +357,11 @@ TEST_F(CharacterStatsTest, characterStatsTest) {
 // the movement tests are carried out on this parent class only as all the movement code is provided to 
 // child dynamic objects by this class therefore there is no need to test movement across all dynamic objects 
 // just the dynamic object class itself 
-class DynamicObjectTest: public::testing::Test {
+class DynamicObjectMovementTest: public::testing::Test {
 public:
 
     
-    DynamicObjectTest() {
+    DynamicObjectMovementTest() {
         m_dynamic = DynamicObject();
         m_sprite = std::make_shared<sf::Sprite>(sf::Sprite());
         m_dynamic.setBaseSprite(m_sprite);
@@ -384,6 +384,16 @@ public:
         
     }
 
+    void setMoveDirNegative() {
+        m_directionToSet = sf::Vector2f(-1.0f, -1.0f);
+        m_dynamic.setDirection(m_directionToSet);
+
+    }
+
+    void setMoveDirPositive() {
+        m_directionToSet = sf::Vector2f(1.0f, 1.0f);
+        m_dynamic.setDirection(m_directionToSet);
+    }
 protected:
     float m_elapsed;
     sf::Vector2f m_positionToSet;
@@ -399,28 +409,28 @@ protected:
 
 
 // testing setting speed value of dynamic objects
-TEST_F(DynamicObjectTest, dynamicObjectSpeedSetTest) {
+TEST_F(DynamicObjectMovementTest, dynamicObjectSpeedSetTest) {
 
      
     EXPECT_EQ(m_dynamic.getSpeed(), m_speedValue);
 
 
 }
-TEST_F(DynamicObjectTest, SpeedModifierTest) {
+TEST_F(DynamicObjectMovementTest, SpeedModifierTest) {
 
 
    
     EXPECT_EQ(m_dynamic.getSpeedModifier(), m_expectedSpeedModifer);
 
 }
-TEST_F(DynamicObjectTest, setDirectionTest) {
+TEST_F(DynamicObjectMovementTest, setDirectionTest) {
 
     EXPECT_EQ(m_dynamic.getDirection().x, m_directionToSet.x);
     EXPECT_EQ(m_dynamic.getDirection().y, m_directionToSet.y);
 
 }
 
-TEST_F(DynamicObjectTest,dynamicObjectMovementTestSixtyFramesAsecond) {
+TEST_F(DynamicObjectMovementTest,dynamicObjectMovementTestSixtyFramesAsecond) {
 
     m_elapsed = 1.0f / 60.0f;
     m_dynamic.updatePosition(m_elapsed); 
@@ -434,7 +444,7 @@ TEST_F(DynamicObjectTest,dynamicObjectMovementTestSixtyFramesAsecond) {
     EXPECT_EQ(m_dynamic.getBaseSprite()->getPosition().y, newExpectedPosition.y);
 
 }
-TEST_F(DynamicObjectTest, dynamicObjectMovementTestThirtyFramesAsecond) {
+TEST_F(DynamicObjectMovementTest, dynamicObjectMovementTestThirtyFramesAsecond) {
     
     
     m_elapsed = 1.0f / 30.0f;
@@ -452,7 +462,7 @@ TEST_F(DynamicObjectTest, dynamicObjectMovementTestThirtyFramesAsecond) {
 
 }
 
-TEST_F(DynamicObjectTest, VaryingFrameRateMovementTest) {
+TEST_F(DynamicObjectMovementTest, VaryingFrameRateMovementTest) {
 
     m_elapsed = 1.0f / 60.0f;
     m_dynamic.updatePosition(m_elapsed);
@@ -475,7 +485,33 @@ TEST_F(DynamicObjectTest, VaryingFrameRateMovementTest) {
 
 }
 
+// this test checks that the dynamic object moves according to the set direction 
+// by checking if it has moved further than the set position or behind it depending on if the direction 
+// set for the movement of the dynamic object is positive or negative
+TEST_F(DynamicObjectMovementTest, TestingDirectionalMovementForDynamicObjects) {
 
+    m_elapsed = 1 / 60.0f; 
+    setMoveDirNegative(); 
+    m_dynamic.updatePosition(m_elapsed);
+    EXPECT_LT(m_dynamic.getPosition().x, m_positionToSet.x);
+    EXPECT_LT(m_dynamic.getPosition().x, m_positionToSet.x);
+
+   
+    m_dynamic.setPosition(m_positionToSet);
+    setMoveDirPositive();
+    m_dynamic.updatePosition(m_elapsed);
+    EXPECT_GT(m_dynamic.getPosition().x, m_positionToSet.x);
+    EXPECT_GT(m_dynamic.getPosition().x, m_positionToSet.x);
+
+
+
+
+
+
+
+
+
+}
 
 // texture manager unit test
 class TextureManagerTest : public::testing::Test {

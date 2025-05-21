@@ -13,7 +13,7 @@ MainMenu::MainMenu(sf::RenderWindow* window,InputManager * inputManager):Menu(wi
 	m_buttonSpacing = sf::Vector2f(0.0f, 20.0f);
 	m_buttonHeight = 100.0f;
 	m_menuUiDataPath = "../Assets/UiData/MainMenu.txt";
-	m_buttonFontPath = "../Assets/Fonts/Roboto.ttf";
+	m_textFontPath = "../Assets/Fonts/Roboto.ttf";
 	m_buttonSize = sf::Vector2f(m_buttonWidth, m_buttonHeight);
 	m_shouldDraw = true;
 	m_uiActionBinder = std::make_unique<UiActionBinder<MainMenu>>(UiActionBinder<MainMenu>());
@@ -45,7 +45,7 @@ void MainMenu::initialiseButtons()
 		m_buttons[m_buttonIds[i]].setPosition(buttonPos);
 		m_buttons[m_buttonIds[i]].setTextColour(m_buttonTextColour);
 		m_buttons[m_buttonIds[i]].setBackgroundColour(m_buttonBackgroundColour);
-		m_buttons[m_buttonIds[i]].setFont(m_buttonFontPath);
+		m_buttons[m_buttonIds[i]].setFont(m_textFontPath);
 		m_buttons[m_buttonIds[i]].setButtonId(m_buttonIds[i]);
 	}
 

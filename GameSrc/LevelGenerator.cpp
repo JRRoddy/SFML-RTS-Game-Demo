@@ -218,8 +218,29 @@ void LevelGenerator::playerNextTileCheck(float dt)
 	
 }
 
+void LevelGenerator::savePlayerScoreOnLevel()
+{
+	
+	std::cout << "saving player score" << std::endl;
+	std::ofstream savePlayerScoreData(m_saveScorePath, std::ios::app);
+	savePlayerScoreData << std::to_string(m_playerRef->getCurrentScore()) + "\n";
+	savePlayerScoreData.close();
+
+	
+}
+
+void LevelGenerator::setPlayerIsInLevel(bool playerIsInLevel)
+{
+	m_playerHasEnteredLevel = playerIsInLevel;
+}
+
 LevelGenerator::~LevelGenerator()
 {
+	if (m_playerHasEnteredLevel) {
+		savePlayerScoreOnLevel();
+	}
+	
+	
 	for (int i = 0; i < m_areaContainersPool.size(); i++) {
 
 		delete m_areaContainersPool[i];

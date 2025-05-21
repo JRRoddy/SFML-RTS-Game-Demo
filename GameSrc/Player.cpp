@@ -100,6 +100,12 @@ void Player::update(float dt)
 
 }
 
+int Player::getCurrentScore() const
+{
+	std::cout << "player current score is " << m_currentScore << std::endl;
+	return m_currentScore;
+}
+
 void Player::collision(GameObject* other)
 {
 	
@@ -114,6 +120,14 @@ void Player::collision(GameObject* other)
 		if (m_animationController->stateIsActive("attack")
 			&& m_animationController->currentAnimAtEnd() && attackConfirm>=0.0f ){
 			enemy->takeDamage(m_currentStats.damage);
+
+			if (enemy->isDead()) {
+				std::cout << "increasing player score " << std::endl;
+				incrementCurrentScore();
+
+				std::cout << "new score for player " << m_currentScore << std::endl;
+			}
+
 			std::cout << "player dealt damage to enemy " << m_currentStats.damage << std::endl;
 		}
     
@@ -201,6 +215,13 @@ void Player::setCurrentLevelAreaBounds(sf::FloatRect& levelAreaBounds)
 sf::Vector2f Player::getMovementOrderPos()
 {
 	return m_movmentOrderPos;
+}
+
+void Player::incrementCurrentScore()
+{
+	m_currentScore++;
+
+
 }
 
 bool Player::recallingAllies() const
