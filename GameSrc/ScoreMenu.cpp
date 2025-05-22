@@ -1,5 +1,32 @@
 #include "ScoreMenu.h"
 
+ScoreMenu::ScoreMenu()
+{
+	m_buttonIds = { "back" };
+
+	m_buttonCharSize = 50;
+	m_buttonWidth = 200.0f;
+	m_buttonTextColour = sf::Color::White;
+	m_buttonBackgroundColour = sf::Color::Color(128, 128, 128, 255);
+	m_textObjectSpacing = sf::Vector2f(0.0f, 20.0f);
+	m_buttonSpacing = sf::Vector2f(20.0f, 20.0f);
+	m_buttonHeight = 100.0f;
+	m_menuUiDataPath = "../Assets/UiData/ScoreMenu.txt";
+	m_textFontPath = "../Assets/Fonts/Roboto.ttf";
+
+	m_buttonSize = sf::Vector2f(m_buttonWidth, m_buttonHeight);
+	m_shouldDraw = true;
+	m_scoreHeaderCharSize = 40;
+	m_scoreHeaderTextColour = sf::Color::White;
+	m_scoreHeaderTextFontPath = "../Assets/Fonts/Roboto.ttf";
+	m_scoreMenuHeadertext = "Scores:";
+	m_scoresCharSize = 40;
+
+	m_uiActionBinder = std::shared_ptr<UiActionBinder<ScoreMenu>>(new UiActionBinder<ScoreMenu>());
+
+
+}
+
 ScoreMenu::ScoreMenu(sf::RenderWindow* window, InputManager* inputManager):Menu(window,inputManager)
 {
 	std::cout << "initialsing main menu " << std::endl;
@@ -70,28 +97,9 @@ void ScoreMenu::updateUiBindings()
 
 void ScoreMenu::initialiseLoneText()
 {
-	std::ifstream readScores; 
-	readScores.open(m_savedScoresFilePath);
-	std::vector<std::string> scoresSorted;
 
-
+	std::vector<std::string> scoresSorted = readScoreValues();
 	
-	if (readScores.is_open()) {
-		std::string line;
-		int playSessionCount = 1;
-		while (std::getline(readScores, line)) {
-
-			scoresSorted.emplace_back("Run/session:" + std::to_string(playSessionCount) + " Score:" + line);
-			playSessionCount++;
-		}
-		// sort the scores read in from the file using a functor as the predicate 
-		// which defines the boolean operation used to determine which element  will be placed further 
-		// to the back and which element will be placed closer to the beggining of the final sorted vector
-		// i.e. sorting them in decending order in this case based on the score embeded in the string
-		scoreSort sortScores{};
-		std::sort(scoresSorted.begin(), scoresSorted.end(),sortScores);
-
-	}
 	// create header text for the score menu
 	m_scoreHeaderTextFont.loadFromFile(m_scoreHeaderTextFontPath);
 	m_scoreHeaderText.setFillColor(m_scoreHeaderTextColour);
@@ -132,6 +140,54 @@ void ScoreMenu::draw(sf::RenderWindow* window)
 	drawButtons(window);
 	drawTextObjects(window);
 	window->draw(m_scoreHeaderText);
+}
+
+std::vector<std::string> ScoreMenu::readScoreValues() const
+{
+	std::ifstream readScores;
+	readScores.open(m_savedScoresFilePath);
+	std::vector<std::string> scoresSorted;
+	if (readScores.is_open()) {
+		std::string line;
+		int playSessionCount = 1;
+		while (std::getline(readScores, line)) {
+
+			scoresSorted.emplace_back("Run/session:" + std::to_string(playSessionCount) + " Score:" + line);
+			playSessionCount++;
+		}
+		// sort the scores read in from the file using a functor as the predicate 
+		// which defines the boolean operation used to determine which element  will be placed further 
+		// to the back and which element will be placed closer to the beggining of the final sorted vector
+		// i.e. sorting them in decending order in this case based on the score embeded in the string
+		scoreSort sortScores{};
+		std::sort(scoresSorted.begin(), scoresSorted.end(), sortScores);
+
+	}
+	return scoresSorted;
+}
+
+std::vector<std::string> ScoreMenu::readScoreValues(std::string &filePath) const
+{
+	std::ifstream readScores;
+	readScores.open(filePath);
+	std::vector<std::string> scoresSorted;
+	if (readScores.is_open()) {
+		std::string line;
+		int playSessionCount = 1;
+		while (std::getline(readScores, line)) {
+
+			scoresSorted.emplace_back("Run/session:" + std::to_string(playSessionCount) + " Score:" + line);
+			playSessionCount++;
+		}
+		// sort the scores read in from the file using a functor as the predicate 
+		// which defines the boolean operation used to determine which element  will be placed further 
+		// to the back and which element will be placed closer to the beggining of the final sorted vector
+		// i.e. sorting them in decending order in this case based on the score embeded in the string
+		scoreSort sortScores{};
+		std::sort(scoresSorted.begin(), scoresSorted.end(), sortScores);
+
+	}
+	return scoresSorted;
 }
 
 

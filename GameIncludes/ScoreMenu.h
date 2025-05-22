@@ -28,6 +28,7 @@ struct scoreSort{
 
 class ScoreMenu:public Menu {
 public:
+	ScoreMenu();
 	ScoreMenu(sf::RenderWindow* window, InputManager* inputManager);
 	~ScoreMenu() {
 		std::cout << "score menu destructor called" << std::endl;
@@ -38,7 +39,8 @@ public:
 	void updateUiBindings();
 	void initialiseLoneText();
 	void draw(sf::RenderWindow* window);
-
+	std::vector<std::string> readScoreValues() const;
+	std::vector<std::string> readScoreValues(std::string& filePath) const;
 private:
 	void backButtonAction();
 	std::shared_ptr<UiActionBinder<ScoreMenu>>m_uiActionBinder;

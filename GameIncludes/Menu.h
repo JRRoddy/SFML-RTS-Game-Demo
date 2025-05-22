@@ -16,7 +16,7 @@ class Menu {
 
 public:
 	Menu(sf::RenderWindow* window, InputManager* inputManager);
-	
+	Menu() {};
 
 	Menu* getActiveMenu();
 	
