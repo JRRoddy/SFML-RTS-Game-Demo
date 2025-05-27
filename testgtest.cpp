@@ -1728,6 +1728,7 @@ TEST_F(ScoreMenuTest, sortingScoresAlgorithmTest) {
 
     // get the sorted score strings that would be displayed within the score menu ui 
     // these strings should be sorted from decending order by the std::sort algorhtm using the previously tested functor as the predicate 
+   // sorting is based on the score value contained withn the strings 
     std::vector<std::string> sortedScoresResult = m_scoreMenuObject->readScoreValues(m_testDataFilePath);
     
     // get an itterator pointer to the beggining of the test data 

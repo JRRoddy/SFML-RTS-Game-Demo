@@ -87,6 +87,7 @@ void ScoreMenu::initUiBindings()
 
 void ScoreMenu::updateUiBindings()
 {
+	
 	if (m_clickedElementId != "" && m_uiActionBinder->getActionBinding(m_clickedElementId) != nullptr) {
 
 		((*this).*(m_uiActionBinder->getActionBinding(m_clickedElementId)))();
@@ -102,14 +103,14 @@ void ScoreMenu::initialiseLoneText()
 	
 	// create header text for the score menu
 	m_scoreHeaderTextFont.loadFromFile(m_scoreHeaderTextFontPath);
-	m_scoreHeaderText.setFillColor(m_scoreHeaderTextColour);
-	m_scoreHeaderText.setCharacterSize(m_scoreHeaderCharSize);
-	m_scoreHeaderText.setFont(m_scoreHeaderTextFont);
-	m_scoreHeaderText.setString(m_scoreMenuHeadertext);
+	m_menuHeaderText.setFillColor(m_scoreHeaderTextColour);
+	m_menuHeaderText.setCharacterSize(m_scoreHeaderCharSize);
+	m_menuHeaderText.setFont(m_scoreHeaderTextFont);
+	m_menuHeaderText.setString(m_scoreMenuHeadertext);
 	std::cout << "score header text size " << m_scoreHeaderCharSize << std::endl;
 	sf::Vector2f scoreHeaderTextPos = sf::Vector2f(m_window->getSize().x / 2.0f, float(0+m_scoreHeaderCharSize));
-	m_scoreHeaderText.setOrigin(m_scoreHeaderText.getGlobalBounds().getSize()/2.0f);
-	m_scoreHeaderText.setPosition(scoreHeaderTextPos);
+	m_menuHeaderText.setOrigin(m_menuHeaderText.getGlobalBounds().getSize()/2.0f);
+	m_menuHeaderText.setPosition(scoreHeaderTextPos);
 
 	m_textFont.loadFromFile(m_textFontPath);
 	for (int i = 0; i < scoresSorted.size();i++) {
@@ -139,7 +140,7 @@ void ScoreMenu::draw(sf::RenderWindow* window)
 	}
 	drawButtons(window);
 	drawTextObjects(window);
-	window->draw(m_scoreHeaderText);
+	window->draw(m_menuHeaderText);
 }
 
 std::vector<std::string> ScoreMenu::readScoreValues() const

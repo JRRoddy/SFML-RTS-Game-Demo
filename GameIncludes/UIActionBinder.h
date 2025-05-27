@@ -31,9 +31,12 @@ public:
 	// string id 
 	binding getActionBinding(std::string & id ){
 		try {
+			std::cout << " id called " << id << std::endl; 
+
 			return m_elementIdToAction.at(id);
 		}
 		catch (...) {
+			std::cout << "could not find ui action for id " << id << std::endl;
 			return nullptr;
 		}
 

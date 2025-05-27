@@ -31,8 +31,9 @@ public:
 	bool isMouseDown(sf::Mouse::Button button);
 	bool keyEventStateUp(sf::Keyboard::Key key);
 	void endFrame();
-	bool isDragging(sf::Mouse::Button button);
+	sf::Vector2i getMousPosPixel();
 	sf::Vector2f getMousePos();
+
 	void addDirectionalMapping(std::string& name, std::map<sf::Keyboard::Key,float>& keyToDirectionMap);
 	float getDirectionFromKey(std::string&directionalMapName);
 	bool getRealTime(sf::Keyboard::Key keyInput);

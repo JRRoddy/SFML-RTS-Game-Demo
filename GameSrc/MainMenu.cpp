@@ -4,7 +4,7 @@ MainMenu::MainMenu(sf::RenderWindow* window,InputManager * inputManager):Menu(wi
 {
 	std::cout << "initialsing main menu " << std::endl;
 
-	m_buttonIds = { "play","score","exit" }; 
+	m_buttonIds = { "play","score","options","exit"};
 	
 	m_buttonCharSize = 50; 
 	m_buttonWidth = 200.0f; 
@@ -18,7 +18,8 @@ MainMenu::MainMenu(sf::RenderWindow* window,InputManager * inputManager):Menu(wi
 	m_shouldDraw = true;
 	m_uiActionBinder = std::make_unique<UiActionBinder<MainMenu>>(UiActionBinder<MainMenu>());
 	m_subMenus = {
-      {"score",std::make_shared<ScoreMenu>(ScoreMenu(m_window,m_inputManager))}
+      {"score",std::make_shared<ScoreMenu>(ScoreMenu(m_window,m_inputManager))},
+	  {"options",std::make_shared<OptionsMenu>(OptionsMenu(m_window,m_inputManager))}
 	};
 	initialise();
 }
@@ -50,9 +51,7 @@ void MainMenu::initialiseButtons()
 	}
 
 	m_buttons["score"].setLinkedMenuId("score");
-	
-	
-
+	m_buttons["options"].setLinkedMenuId("options");
 }
 
 void MainMenu::initUiBindings()

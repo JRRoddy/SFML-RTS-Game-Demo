@@ -100,11 +100,20 @@ void InputManager::endFrame()
 
 }
 
+sf::Vector2i InputManager::getMousPosPixel()
+{
+	return sf::Mouse::getPosition();
+}
+
+
+
 
 sf::Vector2f InputManager::getMousePos()
 {
 	return sf::Vector2f(sf::Mouse::getPosition(*m_windowHandle));;
 }
+
+
 
 void InputManager::addDirectionalMapping(std::string & name, std::map<sf::Keyboard::Key, float>& keyToDirectionMap)
 {

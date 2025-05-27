@@ -2,6 +2,7 @@
 #include "Menu.h"
 #include "UIActionBinder.h"
 #include "ScoreMenu.h"
+#include "OptionsMenu.h"
 
 class MainMenu:public Menu{
 public: 
@@ -14,6 +15,7 @@ public:
 	void initUiBindings();
 	void updateUiBindings();
 	void initialiseLoneText() {};
+	void initialiseSliders() {};
 private:
 	void playButtonAction();
 	std::unique_ptr<UiActionBinder<MainMenu>>m_uiActionBinder;

@@ -5,6 +5,7 @@ Menu::Menu(sf::RenderWindow* window, InputManager* inputManager)
 {
 	m_window = window;
 	m_inputManager = inputManager;
+	m_draggingElementSelected = false;
 }
 
 
@@ -108,6 +109,11 @@ void Menu::saveUiData() {
 
 }
 
+void Menu::initSubMenus()
+{
+	
+}
+
 
 //  method that is used to edit properties of 
 // buttons within a particualr menu when the scene is in edit mode 
@@ -178,6 +184,8 @@ void Menu::draw(sf::RenderWindow* window)
 	// other wise we draw this menu 
 	drawButtons(window);
 	drawTextObjects(window);
+	drawSliders(window);
+	window->draw(m_menuHeaderText);
 }
 
 
@@ -204,13 +212,22 @@ void Menu::update()
 
 }
 
-
-// calls all methods to update particualr ui elements such as the updateButtons method 
-void Menu::updateUI() {
+void Menu::resetSelectedElementIds() {
+	// if mouse released any selected ui element that required drag is no longer selected
+	if (m_inputManager->mouseReleased(sf::Mouse::Left) && m_draggingElementSelected) {
+		m_draggingElementId = "";
+		m_draggingElementSelected = false;
+	}
 	// each time we update we set the clicked element id to "" ready to detect any other 
 	// ui elements being clicked next frame 
 	m_clickedElementId = "";
+}
+// calls all methods to update particualr ui elements such as the updateButtons method 
+void Menu::updateUI() {
+		
+	resetSelectedElementIds();
 	updateButtons();
+	updateSliders();
 
 
 }
@@ -232,13 +249,23 @@ void Menu::drawButtons(sf::RenderWindow* window)
 	}
 }
 
+void Menu::drawSliders(sf::RenderWindow* window)
+{
+	for (std::map<std::string,UiSlider>::iterator it = m_sliders.begin(); it != m_sliders.end(); it++) {
+
+		it->second.draw(window);
+	}
+
+
+}
+
 void Menu::updateButtons()
 {
 
 	// itterate through the std::map that contains all the buttons mapped to a particualr string id
 	for (std::map<std::string, Button>::iterator it = m_buttons.begin(); it != m_buttons.end(); it++) {
 		// if the mouse is contained within the button bounds and is clicked 
-		if (it->second.getShape().getGlobalBounds().contains(sf::Vector2f(sf::Mouse::getPosition(*m_window))) &&
+		if (it->second.getShape().getGlobalBounds().contains(sf::Vector2f(m_inputManager->getMousePos())) &&
 			m_inputManager->mouseReleased(sf::Mouse::Left))
 		{
 			try {
@@ -264,6 +291,42 @@ void Menu::updateButtons()
 
 	}
 }
+void Menu::updateSliders()
+{
+	for (std::map<std::string, UiSlider>::iterator it = m_sliders.begin(); it != m_sliders.end(); it++){
+		if (it->second.getIndicatorContainerBounds().contains(m_inputManager->getMousePos()) && 
+			m_inputManager->isMouseDown(sf::Mouse::Left) && !m_draggingElementSelected) {
+			std::cout << "setting id " << std::endl;
+			m_draggingElementId = it->second.getElementId();
+			m_draggingElementSelected = true;
+
+
+		}
+
+
+
+
+	}
+	updateSelectedSlider();
+}
+
+void Menu::updateSelectedSlider()
+{
+	if (m_draggingElementId != "") {
+		try {
+			UiSlider& selectedSlider = m_sliders.at(m_draggingElementId);
+			sf::Vector2f mouseToGlobal = m_window->mapPixelToCoords(m_inputManager->getMousPosPixel());
+			selectedSlider.interpolateIndicatorPosX(m_inputManager->getMousePos());
+		}
+		catch (...) {
+			std::cout << "dragging element " << m_draggingElementId << "not found " << std::endl;
+		
+		}
+	}
+}
+
+
+
 bool Menu::shouldDraw() const
 {
 	return m_shouldDraw;

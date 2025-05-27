@@ -38,6 +38,7 @@ public:
 	void initUiBindings();
 	void updateUiBindings();
 	void initialiseLoneText();
+	void initialiseSliders() {};
 	void draw(sf::RenderWindow* window);
 	std::vector<std::string> readScoreValues() const;
 	std::vector<std::string> readScoreValues(std::string& filePath) const;
@@ -45,7 +46,7 @@ private:
 	void backButtonAction();
 	std::shared_ptr<UiActionBinder<ScoreMenu>>m_uiActionBinder;
 
-	sf::Text m_scoreHeaderText;
+	
 	sf::Font m_scoreHeaderTextFont;
 	std::string m_scoreHeaderTextFontPath;
 	std::string m_scoreMenuHeadertext;
