@@ -18,6 +18,7 @@ public:
 	void initialiseSliders() {};
 private:
 	void playButtonAction();
+	void exitButtonAction();
 	std::unique_ptr<UiActionBinder<MainMenu>>m_uiActionBinder;
 
 };

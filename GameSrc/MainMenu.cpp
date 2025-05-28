@@ -58,7 +58,7 @@ void MainMenu::initUiBindings()
 {
 	std::cout << "adding binding to main menu ui " << std::endl;
 	m_uiActionBinder->addBinding("play", &MainMenu::playButtonAction);
-
+	m_uiActionBinder->addBinding("exit", &MainMenu::exitButtonAction);
 }
 
 void MainMenu::updateUiBindings()
@@ -77,4 +77,12 @@ void MainMenu::updateUiBindings()
 void MainMenu::playButtonAction()
 {
 	m_shouldDraw = false;
+}
+
+void MainMenu::exitButtonAction()
+{
+
+	m_window->close();
+
+
 }

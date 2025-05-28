@@ -31,7 +31,6 @@ public:
 	// string id 
 	binding getActionBinding(std::string & id ){
 		try {
-			std::cout << " id called " << id << std::endl; 
 
 			return m_elementIdToAction.at(id);
 		}

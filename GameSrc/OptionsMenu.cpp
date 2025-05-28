@@ -22,7 +22,7 @@ OptionsMenu::OptionsMenu(sf::RenderWindow* window, InputManager* inputManager):M
 	m_defaultSliderColour = sf::Color::Color(128,128,128,255);
 	m_defaultSliderIndicatorColour = sf::Color::Color(255,255,255,255);
 	m_defaultSliderIndicatorRadi = 10.0f;
-	m_defaultSliderPercentage = 0.5f;
+	m_defaultSliderPercentage = 0.85f;
 	m_sliderSpacing = sf::Vector2f(0.0f, 50.0f);
 
 }
@@ -40,7 +40,7 @@ void OptionsMenu::initUiBindings()
 {
 
 	m_uiActionBinder->addBinding("back", &OptionsMenu::backButtonAction);
-
+	m_uiActionBinder->addBinding("sound", &OptionsMenu::volumeSliderAction);
 }
 
 void OptionsMenu::updateUiBindings()
@@ -49,6 +49,11 @@ void OptionsMenu::updateUiBindings()
 
 		((*this).*(m_uiActionBinder->getActionBinding(m_clickedElementId)))();
 
+	}
+
+	if (m_draggingElementId != "" && m_uiActionBinder->getActionBinding(m_draggingElementId) != nullptr) {
+
+		((*this).*(m_uiActionBinder->getActionBinding(m_draggingElementId)))();
 	}
 
 
@@ -80,7 +85,12 @@ void OptionsMenu::initialiseButtons()
 void OptionsMenu::backButtonAction()
 {
 	m_shouldDraw = false;
-	std::cout << "options menu set to false " << m_shouldDraw << std::endl;
+
+}
+
+void OptionsMenu::volumeSliderAction()
+{
+	GameSettings::soundVolumeModifier = m_sliders["sound"].getInterpolater();
 
 }
 
@@ -91,7 +101,6 @@ void OptionsMenu::initialiseLoneText()
 	m_menuHeaderText.setCharacterSize(m_optionsHeaderCharSize);
 	m_menuHeaderText.setFont(m_optionsHeaderTextFont);
 	m_menuHeaderText.setString(m_optionsMenuHeadertext);
-	std::cout << "score header text size " << m_optionsHeaderCharSize << std::endl;
 	sf::Vector2f optionsHeaderTextPos = sf::Vector2f(m_window->getSize().x / 2.0f, float(0 + m_optionsHeaderCharSize));
 	m_menuHeaderText.setOrigin(m_menuHeaderText.getGlobalBounds().getSize() / 2.0f);
 	m_menuHeaderText.setPosition(optionsHeaderTextPos);

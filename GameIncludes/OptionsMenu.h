@@ -1,6 +1,7 @@
 #pragma once
 #include "Menu.h"
 #include "UIActionBinder.h"
+#include "GameSettings.h"
 class OptionsMenu:public Menu {
 	
 public:
@@ -12,6 +13,7 @@ public:
 	void draw(sf::RenderWindow* window);
 	void initialiseButtons() ;
 	void backButtonAction();
+	void volumeSliderAction();
 	void initialiseLoneText() ;
 	void initialiseSliders();
 

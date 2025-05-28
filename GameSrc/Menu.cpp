@@ -149,9 +149,7 @@ void Menu::editButtons() {
 				updateUiBindings();
 				try {
 					// attempt to access a sub menu assosiated with the button
-					std::cout << "clicked element id set to " << m_clickedElementId << std::endl;
 					m_activeSubmenu = m_subMenus.at(it->second.getLinkedMenuId()).get();
-					std::cout << "set sub menu to " << it->first << std::endl;
 					m_activeSubmenu->setShouldDraw(true);
 					m_hasActiveSubMenu = true;
 				}
@@ -296,7 +294,6 @@ void Menu::updateSliders()
 	for (std::map<std::string, UiSlider>::iterator it = m_sliders.begin(); it != m_sliders.end(); it++){
 		if (it->second.getIndicatorContainerBounds().contains(m_inputManager->getMousePos()) && 
 			m_inputManager->isMouseDown(sf::Mouse::Left) && !m_draggingElementSelected) {
-			std::cout << "setting id " << std::endl;
 			m_draggingElementId = it->second.getElementId();
 			m_draggingElementSelected = true;
 

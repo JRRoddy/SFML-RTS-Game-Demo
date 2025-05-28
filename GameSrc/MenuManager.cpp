@@ -2,6 +2,7 @@
 
 MenuManager::MenuManager(std::vector<std::shared_ptr<Menu>> &nonGameplayMenus,size_t startMenuIndex, bool editMode)
 {
+	std::cout << "initialising" << std::endl;
 	m_nonGameplayMenus = nonGameplayMenus;
 	m_activeOutOfGameMenu = m_nonGameplayMenus[startMenuIndex].get();
 	m_editMode = editMode;
