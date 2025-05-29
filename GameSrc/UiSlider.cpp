@@ -62,6 +62,11 @@ void UiSlider::setSliderValue()
 	
 }
 
+sf::RectangleShape UiSlider::getBounds(){
+
+	return m_sliderBackGround;
+
+}
 
 void UiSlider::interpolateSliderXPos()
 {
@@ -98,10 +103,22 @@ float UiSlider::getInterpolater() const
 	return m_interpolater;
 }
 
+sf::Vector2f UiSlider::getPosition()
+{
+	return m_position;
+}
+
 void UiSlider::setElementId(std::string& elementId)
 {
 	m_elementId = elementId;
 }
+
+sf::Vector2f UiSlider::getSliderIndicatorPos()
+{
+	return m_sliderIndicator.getPosition();
+}
+
+
 
 std::string UiSlider::getElementId()
 {

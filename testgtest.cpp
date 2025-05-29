@@ -466,22 +466,25 @@ TEST_F(DynamicObjectMovementTest, dynamicObjectMovementTestThirtyFramesAsecond) 
 TEST_F(DynamicObjectMovementTest, VaryingFrameRateMovementTest) {
 
     m_elapsed = 1.0f / 60.0f;
+    
     m_dynamic.updatePosition(m_elapsed);
+    sf::Vector2f sixtyFrameSecondPos = m_dynamic.getPosition();
     sf::Vector2f sixtyFPSExpectedPosition = m_positionToSet + ((m_directionToSet * m_speedValue) * m_expectedSpeedModifer) * m_elapsed;
     EXPECT_EQ(m_dynamic.getPosition().x, sixtyFPSExpectedPosition.x);
     EXPECT_EQ(m_dynamic.getPosition().y, sixtyFPSExpectedPosition.y);
-    m_dynamic.setPosition(m_positionToSet);
+    m_dynamic.setPosition(m_positionToSet); 
+
     m_elapsed = 1.0f / 30.0f;
-    m_dynamic.updatePosition(m_elapsed);
+    m_dynamic.updatePosition(m_elapsed); 
+    sf::Vector2f thiryFrameSecondPos = m_dynamic.getPosition();
     sf::Vector2f thirtyFPSExpectedPosition = m_positionToSet + ((m_directionToSet * m_speedValue) * m_expectedSpeedModifer) * m_elapsed;
     EXPECT_EQ(m_dynamic.getPosition().x, thirtyFPSExpectedPosition.x);
     EXPECT_EQ(m_dynamic.getPosition().y, thirtyFPSExpectedPosition.y);
 
     // ensuring that positions for dynamic objects remain relative to eachother 
     // despite varying delta time(while removing any floating point precision)
-    EXPECT_EQ(floor(thirtyFPSExpectedPosition.x), floor(sixtyFPSExpectedPosition.x));
-    EXPECT_EQ(floor(thirtyFPSExpectedPosition.y), floor(sixtyFPSExpectedPosition.y));
-
+    EXPECT_EQ(floor(sixtyFrameSecondPos.x), floor(thiryFrameSecondPos.x));
+    EXPECT_EQ(floor(sixtyFrameSecondPos.y), floor(thiryFrameSecondPos.y));
 
 
 }
@@ -609,7 +612,7 @@ TEST_F(SpriteGeneratorTest, TestSingleAnimationCreation) {
 
    std::shared_ptr<std::vector<sf::Sprite>> testAnimLoad =  m_spriteGenerator->GenerateAnim(m_animationPathToTest);
    // test that the number of frames in the animation provided by sprite generator  is equal to the expected amount
-  
+   ASSERT_NE(testAnimLoad.get(), nullptr);
    EXPECT_EQ(testAnimLoad.get()->size(), m_testAnimationFrameSize);
 
 }
@@ -693,33 +696,6 @@ TEST_F(AnimationObjectTests, animationplayTest) {
    
 } 
 
-
-class PlayerTest:public::testing::Test {
-
-public:
-    
-    PlayerTest() {
-
-        m_textureManager = std::make_unique<TextureManager>(TextureManager()); 
-        m_textureManager->loadTextures(m_pathToTextures);
-        m_textureManager->loadAnims(m_animationsPath);
-   
-        m_spriteGenerator = std::make_unique<SpriteGenerator>(SpriteGenerator(m_textureManager.get())); 
-        m_positionToSet = sf::Vector2f(400.0f, 300.0f);
-        m_player = std::make_unique<Player>(Player(m_positionToSet, m_spriteGenerator.get()));
-        m_elapsed = 1 / 60.0f;
-    }
-protected:
-    std::unique_ptr<Player> m_player;
-    std::unique_ptr<TextureManager> m_textureManager;
-    std::unique_ptr<SpriteGenerator> m_spriteGenerator;
-    sf::Vector2f m_positionToSet; 
-    std::string m_animationsPath = "../Assets/Animations/PathsToAnimations.txt";
-    std::string m_pathToTextures = "../Assets/Textures/PathsToTextures.txt";
-    float m_elapsed;
-
-
-};
 
 // main test fixture for testing collision s between dyanmic objects and performing out of bounds tests on 
 // dynamic objects this class sets up various data such as positions for colliding game objects and various 
@@ -1028,12 +1004,6 @@ TEST_F (CollisionQuadTreeTesting, allQueryTestForAllyBaseType) {
     EXPECT_EQ(amountOfAlliesToAddToTree, allyCollisionTreeQueryResult.size());
 
 
-
-
-
-
-
-
 }
 
 
@@ -1111,12 +1081,6 @@ TEST_F(CollisionQuadTreeTesting, emptyQueryAlliesTest) {
     // here we expect there to be no results returned by the collision tree 
     // as the two ally objects inserted should not share the same space within the collision tree 
     EXPECT_EQ(allies.size(), 0);
-
-
-
-
-
-
 
 
 }
@@ -1762,7 +1726,64 @@ TEST_F(ScoreMenuTest, sortingScoresAlgorithmTest) {
 
 }
 
+class UIsliderUnitTest :public::testing::Test {
 
+public:
+
+    UIsliderUnitTest() {}
+    ~UIsliderUnitTest() {};
+
+    void SetUp() {
+
+
+
+        m_startingValuePercent = 0.75f;
+        m_positionToSet = sf::Vector2f(200.0f, 200.0f);
+        m_sizeToSet = sf::Vector2f(200.0f, 60.0f);
+        m_backgroundColourToSet = sf::Color::White;
+        m_sliderIndciatorColourToSet = sf::Color::Black;
+        m_sliderIndicatorRadiToSet = 10.0f;
+        m_slider = std::make_unique<UiSlider>(UiSlider(m_startingValuePercent, m_sizeToSet, m_positionToSet, m_backgroundColourToSet, m_sliderIndicatorRadiToSet, m_sliderIndciatorColourToSet));
+    } 
+
+    float ExpectedSliderPositionValue() const {
+        float startX = m_positionToSet.x - m_sizeToSet.x / 2.0f;
+        float EndX = m_positionToSet.x + m_sizeToSet.x / 2.0f;
+
+        float expectedResultX = startX + (EndX - startX) * m_startingValuePercent;
+        return expectedResultX;
+    }
+
+protected:
+
+    std::unique_ptr<UiSlider> m_slider;
+    float m_startingValuePercent = 0.0f;
+    sf::Vector2f m_positionToSet;
+    sf::Vector2f m_sizeToSet;
+    sf::Color m_backgroundColourToSet;
+    sf::Color m_sliderIndciatorColourToSet;
+    float m_sliderIndicatorRadiToSet = 0.0f;
+
+
+
+
+};
+
+
+TEST_F(UIsliderUnitTest,TestingSliderStartPosition) {
+
+
+    
+    float expectedSliderIndicatorX = ExpectedSliderPositionValue(); 
+
+    EXPECT_EQ(expectedSliderIndicatorX, m_slider->getSliderIndicatorPos().x);
+    
+
+
+
+
+
+}
 
 
  /**

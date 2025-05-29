@@ -13,11 +13,15 @@ public:
 	void interpolateIndicatorPosX(float percentage);
 	void interpolateIndicatorPosX(sf::Vector2f position);
 	void setSliderValue();
+	sf::RectangleShape getBounds();
 	void interpolateSliderXPos();
 	void draw(sf::RenderWindow* window);
 	float getSliderEndX();
 	float getInterpolater() const;
+	sf::Vector2f getPosition();
 	void setElementId(std::string& elementId); 
+	sf::Vector2f getSliderIndicatorPos();
+	
 	std::string getElementId();
 
 private:
