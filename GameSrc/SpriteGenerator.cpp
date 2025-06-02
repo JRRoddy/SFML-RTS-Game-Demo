@@ -38,6 +38,28 @@ std::shared_ptr<std::vector<sf::Sprite>> &SpriteGenerator::GenerateSprite(std::s
 	return m_spriteSheets[spriteSheetPath] ;
 }
 
+std::shared_ptr<sf::Sprite> SpriteGenerator::GenerateSpriteCopy(std::string& spriteTexturePath)
+{
+    if (m_singleSprite.find(spriteTexturePath) == m_singleSprite.end()) {
+        sf::Texture* temp = m_textureManager->getTexture(spriteTexturePath);
+        m_singleSprite.insert(
+            {
+            spriteTexturePath,std::shared_ptr<sf::Sprite>
+            (new sf::Sprite(*temp,sf::IntRect(0,0,temp->getSize().x,temp->getSize().y)))
+
+            });
+        m_singleSprite[spriteTexturePath].get()->setOrigin(
+            sf::Vector2f(m_singleSprite[spriteTexturePath]->getTextureRect().getSize() / 2));
+
+
+    }
+
+    std::shared_ptr<sf::Sprite> copy = std::make_shared<sf::Sprite>(sf::Sprite(*m_singleSprite[spriteTexturePath]->getTexture(), m_singleSprite[spriteTexturePath]->getTextureRect()));
+    copy->setOrigin(sf::Vector2f(copy->getTextureRect().getSize()) / 2.0f);
+    
+    return copy;
+}
+
 
 // seperate method for single sprites using same methodology as above method 
 std::shared_ptr<sf::Sprite>& SpriteGenerator::GenerateSprite(std::string &spriteTexturePath)
@@ -58,7 +80,7 @@ std::shared_ptr<sf::Sprite>& SpriteGenerator::GenerateSprite(std::string &sprite
 
     m_singleSprite[spriteTexturePath].get()->setOrigin(
     sf::Vector2f(m_singleSprite[spriteTexturePath]->getTextureRect().getSize()/2));
-	return m_singleSprite[spriteTexturePath] ;
+	return m_singleSprite[spriteTexturePath];
 }
 
 AnimationObject SpriteGenerator::generateAnimationObject(std::string& animPath,std::shared_ptr<sf::Sprite>& baseSpirteRef,float &animDelay)

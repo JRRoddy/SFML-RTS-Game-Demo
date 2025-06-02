@@ -6,7 +6,7 @@
 
 class MainMenu:public Menu{
 public: 
-	MainMenu(sf::RenderWindow * window,InputManager * inputManager);
+	MainMenu(sf::RenderWindow * window,InputManager * inputManager, SpriteGenerator * spriteGenerator);
 	~MainMenu() {
 		std::cout << "main menu destructor called" << std::endl;
 	};

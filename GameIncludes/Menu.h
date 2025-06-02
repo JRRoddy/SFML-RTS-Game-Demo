@@ -5,6 +5,7 @@
 #include "fstream"
 #include "sstream"
 #include "UiSlider.h"
+#include "SpriteGenerator.h"
 
 // the menu class is the main abstarct class for all other menu objects 
 // providing an interface for various child menu objects to then define 
@@ -16,7 +17,7 @@
 class Menu {
 
 public:
-	Menu(sf::RenderWindow* window, InputManager* inputManager);
+	Menu(sf::RenderWindow* window, InputManager* inputManager,SpriteGenerator * spriteGenerator);
 	Menu() {};
 
 	Menu* getActiveMenu();
@@ -63,14 +64,18 @@ protected:
 	sf::RenderWindow* m_window = nullptr;
 	std::vector<std::string> m_buttonIds; 
 	std::vector<std::string> m_sliderIds; 
+	std::vector<std::string> m_sliderStringText;
 	std::map<std::string,Button> m_buttons;
 	std::map<std::string,UiSlider> m_sliders;
 	sf::Text m_menuHeaderText;
 	sf::Vector2f m_defaultSliderSize; 
 	sf::Color m_defaultSliderColour; 
-	sf::Color m_defaultSliderIndicatorColour; 
+	sf::Color m_defaultSliderIndicatorColour;  
+	float m_sliderTextPadding = 0.0f;
 	float m_defaultSliderIndicatorRadi = 0.0f; 
-	float m_defaultSliderPercentage = 0.0f;
+	float m_defaultSliderPercentage = 0.0f; 
+	sf::Color m_sliderTextColour; 
+	unsigned int m_sliderTextCharSize = 0; 
 	bool m_draggingElementSelected = false;
 	InputManager* m_inputManager = nullptr;
 	std::map<std::string, std::shared_ptr<Menu>> m_subMenus;
@@ -82,7 +87,8 @@ protected:
 	std::string m_menuUiDataPath;
 	std::string menuInfoFilePath;
 	sf::Vector2f m_buttonSpacing;
-	sf::Vector2f m_textObjectSpacing;
+	std::string m_uiButtonTexturePath;
+	sf::Vector2f m_textObjectSpacing; 
 	std::string m_clickedElementId;
 	std::string m_draggingElementId;
 	sf::Font m_textFont;
@@ -92,6 +98,7 @@ protected:
 	bool m_shouldDraw = false;
 	bool m_hasActiveSubMenu = false;
 	Menu * m_activeSubmenu = nullptr;
+	SpriteGenerator* m_spriteGenerator = nullptr;
 	
 
 

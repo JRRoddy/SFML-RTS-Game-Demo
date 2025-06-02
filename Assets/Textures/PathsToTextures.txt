@@ -3,3 +3,4 @@
 ../Assets/Textures/CobblePathTile.png
 ../Assets/Textures/flagIndicator.png
 ../Assets/Textures/RockTile.png
+../Assets/Textures/UiBlueButton.png

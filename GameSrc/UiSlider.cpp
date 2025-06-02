@@ -88,6 +88,7 @@ void UiSlider::draw(sf::RenderWindow* window)
 	// draw slider indicator and its background sf rect container 
 	window->draw(m_sliderBackGround);
 	window->draw(m_sliderIndicator);
+	window->draw(m_sliderText);
 
 }
 
@@ -116,6 +117,25 @@ void UiSlider::setElementId(std::string& elementId)
 sf::Vector2f UiSlider::getSliderIndicatorPos()
 {
 	return m_sliderIndicator.getPosition();
+}
+
+void UiSlider::addText(sf::Font& font, std::string& textString, sf::Color& textColour, unsigned int& charSize, float & textPadding)
+{
+	m_sliderText.setCharacterSize(charSize); 
+	m_sliderText.setFont(font); 
+	m_sliderText.setString(textString); 
+	m_sliderText.setColor(textColour);
+	m_sliderText.setOrigin(m_sliderText.getGlobalBounds().getSize()/2.0f + m_sliderText.getLocalBounds().getPosition());
+
+	sf::Vector2f leftPos = sf::Vector2f( (m_sliderBackGround.getPosition().x -m_sliderBackGround.getSize().x / 2.0f)-textPadding,m_sliderBackGround.getPosition().y );
+    
+	leftPos -= sf::Vector2f(m_sliderText.getGlobalBounds().getSize().x / 2.0f , 0.0f);
+
+	m_sliderText.setPosition(leftPos);
+	 
+
+
+
 }
 
 

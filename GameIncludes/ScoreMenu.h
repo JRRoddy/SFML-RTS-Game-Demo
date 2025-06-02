@@ -29,7 +29,7 @@ struct scoreSort{
 class ScoreMenu:public Menu {
 public:
 	ScoreMenu();
-	ScoreMenu(sf::RenderWindow* window, InputManager* inputManager);
+	ScoreMenu(sf::RenderWindow* window, InputManager* inputManager, SpriteGenerator* spriteGenerator);
 	~ScoreMenu() {
 		std::cout << "score menu destructor called" << std::endl;
 	};

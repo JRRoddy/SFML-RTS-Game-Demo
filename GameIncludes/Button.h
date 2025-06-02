@@ -25,21 +25,27 @@ public:
     void setPosition(sf::Vector2f& position)
     {
         m_buttonShape.setPosition(position);
-
+        if (m_spriteRef.get()) {
+            m_spriteRef->setPosition(position);
+        }
+        
         /*m_displayText.setPosition(static_cast<float>(m_buttonShape.getPosition().x -m_displayTextCharacterSize),
                                   static_cast<float>(m_buttonShape.getPosition().y - m_displayTextCharacterSize));*/
     }
+
+
     void draw(sf::RenderWindow* window)
     {
-        window->draw(m_buttonShape);
+        //window->draw(m_buttonShape);
+        if (m_spriteRef.get()) {
+            window->draw(*m_spriteRef);
+       }
+      
         window->draw(m_displayText);
 
     }
     
-    template<class menuActionType >
-    void addBinding(void (menuActionType::* m_action)()) {
-       
-    }
+  
     
     void setTextString(std::string& displayText)
     {
@@ -78,6 +84,12 @@ public:
     sf::RectangleShape& getShape() {
         return m_buttonShape;
     };
+
+    void setSpirte(std::shared_ptr<sf::Sprite> sprite) {
+        m_spriteRef = sprite;
+
+    }
+
     void setFont(std::string& fontFile)
     {
         m_fontPath = fontFile;
@@ -100,6 +112,7 @@ private:
     sf::Color m_backgroundColour;
     sf::RectangleShape m_buttonShape;
     sf::Vector2f m_buttonSize; 
+    std::shared_ptr<sf::Sprite> m_spriteRef;
     sf::Text m_displayText; 
     sf::Font m_displayFont; 
     std::string m_linkedMenuId;

@@ -5,7 +5,7 @@
 class OptionsMenu:public Menu {
 	
 public:
-	OptionsMenu(sf::RenderWindow* window, InputManager* inputManage);
+	OptionsMenu(sf::RenderWindow* window, InputManager* inputManage, SpriteGenerator * spriteGenerator);
 	~OptionsMenu() {};
 	void initialise();
 	void initUiBindings() ;

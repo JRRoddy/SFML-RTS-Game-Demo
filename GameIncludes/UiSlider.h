@@ -21,11 +21,11 @@ public:
 	sf::Vector2f getPosition();
 	void setElementId(std::string& elementId); 
 	sf::Vector2f getSliderIndicatorPos();
-	
+	void addText(sf::Font & font, std::string& textString, sf::Color & textColour, unsigned int &charSize, float & textPadding);
 	std::string getElementId();
 
 private:
-
+	sf::Text m_sliderText;
 	sf::RectangleShape m_sliderBackGround;
 	sf::CircleShape m_sliderIndicator;
 	sf::Vector2f m_position; 

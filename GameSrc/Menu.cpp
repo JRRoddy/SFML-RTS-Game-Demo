@@ -1,10 +1,11 @@
 #include "Menu.h"
 
 
-Menu::Menu(sf::RenderWindow* window, InputManager* inputManager)
+Menu::Menu(sf::RenderWindow* window, InputManager* inputManager, SpriteGenerator * spriteGenerator)
 {
 	m_window = window;
 	m_inputManager = inputManager;
+	m_spriteGenerator = spriteGenerator;
 	m_draggingElementSelected = false;
 }
 

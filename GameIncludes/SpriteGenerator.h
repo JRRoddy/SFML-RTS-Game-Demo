@@ -10,6 +10,7 @@ public:
 	SpriteGenerator(TextureManager * textureManager);
 	std::shared_ptr<std::vector<sf::Sprite>>& SpriteGenerator::GenerateAnim(std::string& animPath);	
 	std::shared_ptr<std::vector<sf::Sprite>>& SpriteGenerator::GenerateSprite(std::string& spriteSheetPath, int desiredWidth, int desiredHeight);
+	std::shared_ptr<sf::Sprite> GenerateSpriteCopy(std::string& spriteTexturePath);
 	std::shared_ptr<sf::Sprite> &GenerateSprite(std::string &spriteTexturePath);
 	AnimationObject generateAnimationObject(std::string& animPath,std::shared_ptr<sf::Sprite> &baseSpriteRef,float & miliDelay);
 	sf::Sprite * getAnimSection(int index,std::string & animPath);

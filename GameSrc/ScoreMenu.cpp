@@ -13,6 +13,7 @@ ScoreMenu::ScoreMenu()
 	m_buttonHeight = 100.0f;
 	m_menuUiDataPath = "../Assets/UiData/ScoreMenu.txt";
 	m_textFontPath = "../Assets/Fonts/Roboto.ttf";
+	m_uiButtonTexturePath = "../Assets/Textures/UiBlueButton.png";
 
 	m_buttonSize = sf::Vector2f(m_buttonWidth, m_buttonHeight);
 	m_shouldDraw = true;
@@ -27,7 +28,7 @@ ScoreMenu::ScoreMenu()
 
 }
 
-ScoreMenu::ScoreMenu(sf::RenderWindow* window, InputManager* inputManager):Menu(window,inputManager)
+ScoreMenu::ScoreMenu(sf::RenderWindow* window, InputManager* inputManager, SpriteGenerator * spriteGenerator):Menu(window,inputManager,spriteGenerator)
 {
 	std::cout << "initialsing main menu " << std::endl;
 
@@ -38,11 +39,11 @@ ScoreMenu::ScoreMenu(sf::RenderWindow* window, InputManager* inputManager):Menu(
 	m_buttonTextColour = sf::Color::White;
 	m_buttonBackgroundColour = sf::Color::Color(128, 128, 128, 255);
 	m_textObjectSpacing = sf::Vector2f(0.0f,20.0f);
-	m_buttonSpacing = sf::Vector2f(20.0f, 20.0f);
+	m_buttonSpacing = sf::Vector2f(10.0f, 10.0f);
 	m_buttonHeight = 100.0f;
 	m_menuUiDataPath = "../Assets/UiData/ScoreMenu.txt";
 	m_textFontPath = "../Assets/Fonts/Roboto.ttf"; 
-
+	m_uiButtonTexturePath = "../Assets/Textures/UiBlueButton.png";
 	m_buttonSize = sf::Vector2f(m_buttonWidth, m_buttonHeight);
 	m_shouldDraw = true;
 	m_scoreHeaderCharSize = 40;
@@ -68,8 +69,11 @@ void ScoreMenu::initialise()
 void ScoreMenu::initialiseButtons()
 {
 	std::cout << "score menu initialise buttons called" << std::endl;
-	m_buttons.insert({ m_buttonIds[0],Button(m_buttonSize,m_buttonIds[0],m_buttonCharSize) });
-	sf::Vector2f buttonPos = (sf::Vector2f(m_window->getSize()) - sf::Vector2f(m_buttonWidth,m_buttonHeight)/2.0f)-m_buttonSpacing;
+	std::shared_ptr<sf::Sprite> buttonSprite = m_spriteGenerator->GenerateSpriteCopy(m_uiButtonTexturePath);
+
+	m_buttons.insert({ m_buttonIds[0],Button(m_buttonSize,m_buttonIds[0],m_buttonCharSize) }); 
+	m_buttons[m_buttonIds[0]].setSpirte(buttonSprite);
+	sf::Vector2f buttonPos = (sf::Vector2f(m_window->getSize()) - sf::Vector2f(buttonSprite->getGlobalBounds().getSize()/2.0f)-m_buttonSpacing );
 	m_buttons[m_buttonIds[0]].setPosition(buttonPos);
 	m_buttons[m_buttonIds[0]].setTextColour(m_buttonTextColour);
 	m_buttons[m_buttonIds[0]].setBackgroundColour(m_buttonBackgroundColour);

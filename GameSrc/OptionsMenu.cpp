@@ -1,18 +1,20 @@
 #include "OptionsMenu.h"
 
-OptionsMenu::OptionsMenu(sf::RenderWindow* window, InputManager* inputManager):Menu(window,inputManager)
+OptionsMenu::OptionsMenu(sf::RenderWindow* window, InputManager* inputManager,SpriteGenerator * spriteGenerator):Menu(window,inputManager,spriteGenerator)
 {
 	m_buttonIds = { "back" };
-	m_sliderIds = { "sound" };
+	m_sliderIds = { "sound" }; 
+	m_sliderStringText = { "Sound:" };
 	m_buttonCharSize = 50;
 	m_buttonWidth = 200.0f;
 	m_buttonHeight = 50.0f;
 	m_buttonSize = sf::Vector2f(m_buttonWidth, m_buttonHeight);
-	m_buttonSpacing = sf::Vector2f(20.0f, 20.0f);
+	m_buttonSpacing = sf::Vector2f(10.0f, 10.0f);
 	m_buttonTextColour = sf::Color::White;
 	m_buttonBackgroundColour = sf::Color::Color(128, 128, 128, 255);
 	m_textFontPath = "../Assets/Fonts/Roboto.ttf";
 	m_menuUiDataPath = "../Assets/UiData/OptionsMenu.txt";
+	m_uiButtonTexturePath = "../Assets/Textures/UiBlueButton.png";
 	m_uiActionBinder = std::shared_ptr<UiActionBinder<OptionsMenu>>(new UiActionBinder<OptionsMenu>());
 	m_optionsHeaderCharSize = 40;
 	m_optionsHeaderTextColour = sf::Color::White;
@@ -24,6 +26,9 @@ OptionsMenu::OptionsMenu(sf::RenderWindow* window, InputManager* inputManager):M
 	m_defaultSliderIndicatorRadi = 10.0f;
 	m_defaultSliderPercentage = 0.85f;
 	m_sliderSpacing = sf::Vector2f(0.0f, 50.0f);
+	m_sliderTextCharSize = 40;
+	m_sliderTextColour = sf::Color::White; 
+	m_sliderTextPadding = 10.0f;
 
 }
 
@@ -31,7 +36,8 @@ void OptionsMenu::initialise()
 {
 	initialiseButtons();
 	initUiBindings();
-	parseUIdata();
+	parseUIdata(); 
+
 	initialiseLoneText();
 	initialiseSliders();
 }
@@ -72,8 +78,11 @@ void OptionsMenu::draw(sf::RenderWindow* window)
 void OptionsMenu::initialiseButtons()
 {
 
+	std::shared_ptr<sf::Sprite> buttonSprite = m_spriteGenerator->GenerateSpriteCopy(m_uiButtonTexturePath);
+
 	m_buttons.insert({ m_buttonIds[0],Button(m_buttonSize,m_buttonIds[0],m_buttonCharSize) });
-	sf::Vector2f buttonPos = (sf::Vector2f(m_window->getSize()) - sf::Vector2f(m_buttonWidth, m_buttonHeight) / 2.0f) - m_buttonSpacing;
+	m_buttons[m_buttonIds[0]].setSpirte(buttonSprite);
+	sf::Vector2f buttonPos = (sf::Vector2f(m_window->getSize()) - sf::Vector2f(buttonSprite->getGlobalBounds().getSize() / 2.0f) - m_buttonSpacing);
 	m_buttons[m_buttonIds[0]].setPosition(buttonPos);
 	m_buttons[m_buttonIds[0]].setTextColour(m_buttonTextColour);
 	m_buttons[m_buttonIds[0]].setBackgroundColour(m_buttonBackgroundColour);
@@ -96,6 +105,7 @@ void OptionsMenu::volumeSliderAction()
 
 void OptionsMenu::initialiseLoneText()
 {
+	m_textFont.loadFromFile(m_textFontPath);
 	m_optionsHeaderTextFont.loadFromFile(m_optionsHeaderTextFontPath);
 	m_menuHeaderText.setFillColor(m_optionsHeaderTextColour);
 	m_menuHeaderText.setCharacterSize(m_optionsHeaderCharSize);
@@ -123,6 +133,7 @@ void OptionsMenu::initialiseSliders()
 		});
 
 		m_sliders[m_sliderIds[i]].setElementId(m_sliderIds[i]);
+		m_sliders[m_sliderIds[i]].addText(m_textFont,m_sliderStringText[i],m_sliderTextColour,m_sliderTextCharSize,m_sliderTextPadding);
 	}
 
 }

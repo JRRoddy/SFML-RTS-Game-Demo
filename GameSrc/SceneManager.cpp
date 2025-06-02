@@ -87,7 +87,7 @@ void SceneManager::loadMenuSplashScreen(sf::RenderWindow * window)
 	m_menuCanLoad.lock();
 	std::cout << "menu can now load" << std::endl;
 	std::cout << "loading splash screen menu on seperate Thread" << std::endl;
-	m_menusPresentInScene = { std::make_shared<MainMenu>(window,m_inputManager.get()) };
+	m_menusPresentInScene = { std::make_shared<MainMenu>(window,m_inputManager.get(),m_spriteGenerator.get()) };
 	m_menuManager = std::make_unique<MenuManager>(MenuManager(m_menusPresentInScene, 0, m_editMode));
 	std::cout <<  "loading finished for splash screen on seperate thread momentarily sleeping" << std::endl;
 	
