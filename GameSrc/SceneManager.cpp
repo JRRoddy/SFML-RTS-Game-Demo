@@ -33,6 +33,8 @@ SceneManager::SceneManager(sf::RenderWindow* window, unsigned int windowWidth, u
 SceneManager::~SceneManager()
 { 
 	delete m_levelGenerator;
+	// join the threads to the main thread in the destructor of the scene manager meaning that the game has been closed 
+	// ensuring that there are no hanging threads left behind
     m_loadUserFileData.join();
 	m_loadingMenuSplashScreen.join();
 	
