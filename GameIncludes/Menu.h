@@ -6,6 +6,8 @@
 #include "sstream"
 #include "UiSlider.h"
 #include "SpriteGenerator.h"
+#include "AudioManager.h" 
+#include "GameSettings.h"
 
 // the menu class is the main abstarct class for all other menu objects 
 // providing an interface for various child menu objects to then define 
@@ -17,7 +19,7 @@
 class Menu {
 
 public:
-	Menu(sf::RenderWindow* window, InputManager* inputManager,SpriteGenerator * spriteGenerator);
+	Menu(sf::RenderWindow* window, InputManager* inputManager,SpriteGenerator * spriteGenerator, AudioManager * audioManager);
 	Menu() {};
 
 	Menu* getActiveMenu();
@@ -27,10 +29,10 @@ public:
 	virtual void editModeUpdate(float dt);
 	
 	void saveUiData();
-	void initSubMenus();
 	void editButtons();
 	virtual ~Menu() {
 		std::cout << "menu destructor called" << std::endl;
+		delete m_backgroundMusic;
 
 	}
 	virtual void draw(sf::RenderWindow* window);
@@ -38,9 +40,9 @@ public:
 	virtual void update();
 
 	void resetSelectedElementIds();
-	
+	void updateBackgroundMusicVolume();
 	void updateUI();
-		
+	void playButtonHoverSound(bool canPlayHoverSound);
 	void drawTextObjects(sf::RenderWindow* window);
 
 	void drawButtons(sf::RenderWindow* window);
@@ -55,6 +57,8 @@ public:
 	virtual void initialiseButtons() = 0;
 	virtual void initialiseLoneText() = 0;
 	virtual void initialiseSliders() = 0;
+	virtual void initSounds();
+	virtual void initMusic() ;
 	bool shouldDraw() const;
 	void setShouldDraw(bool shouldDraw);
 	void saveTextPositions();
@@ -89,17 +93,28 @@ protected:
 	sf::Vector2f m_buttonSpacing;
 	std::string m_uiButtonTexturePath;
 	sf::Vector2f m_textObjectSpacing; 
+
+	std::string m_hoveredButtonId; 
+	std::string m_previousHoveredButtonId;
 	std::string m_clickedElementId;
 	std::string m_draggingElementId;
+	
 	sf::Font m_textFont;
 	float m_buttonWidth = 0.0f;
-	float m_buttonHeight = 0.0f;
+	float m_buttonHeight = 0.0f; 
+	float m_buttonSelectVolume = 100.0f;
 	unsigned int m_buttonCharSize = 0; 
 	bool m_shouldDraw = false;
 	bool m_hasActiveSubMenu = false;
+	bool m_buttonSelectSoundActive = false;
 	Menu * m_activeSubmenu = nullptr;
 	SpriteGenerator* m_spriteGenerator = nullptr;
-	
+	sf::Music * m_backgroundMusic = nullptr;
+	AudioManager* m_audioManager = nullptr;
+	std::string m_buttonSelectSoundPath  = "../Assets/Audio/ButtonSelect.wav";
+	std::string m_menuBackgroundMusicPath;
+	std::shared_ptr<sf::Sound> m_buttonSelectSound;
+
 
 
 

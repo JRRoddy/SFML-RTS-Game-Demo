@@ -14,11 +14,13 @@ SceneManager::SceneManager(sf::RenderWindow* window, unsigned int windowWidth, u
 	m_textureManager = std::make_unique<TextureManager>(TextureManager()); 
 	m_textureManager.get()->loadTextures(m_pathToTextures);
 	m_textureManager.get()->loadAnims(m_pathToAnims);
+	m_audioManager = std::make_unique<AudioManager>(AudioManager()); 
+	m_audioManager.get()->loadSounds(m_pathToSounds);
 	m_spriteGenerator = std::make_unique<SpriteGenerator>(SpriteGenerator(m_textureManager.get()));
 	m_inputManager = std::make_unique<InputManager>(InputManager(m_window)); 
 	m_camera = std::make_unique<Camera>(Camera(window, sf::FloatRect(0, 0, window->getSize().x, window->getSize().y)));
 	m_player = std::make_unique<Player>(Player( sf::Vector2f(window->getSize()) / 2.0f, m_spriteGenerator.get(), m_inputManager.get(),m_camera.get())); 
-	// as level generator has its own resoruces within the class allocated on the heap but it is a single object that is easy to track(as it exists for the life time of the prorgam) 
+	// as level generator has its own resources within the class allocated on the heap but it is a single object that is easy to track(as it exists for the life time of the prorgam) 
 	// here we use a raw pointer that is simply deleted at the end of the program
 	m_levelGenerator = new LevelGenerator(m_spriteGenerator.get(), sf::Vector2f(window->getSize()) / 2.0f,m_player.get(), sf::Vector2i(64, 64), sf::Vector2f(512.0f, 512.0f), sf::Vector2i(2, 2));
 	m_menuCanLoad.unlock();
@@ -89,7 +91,7 @@ void SceneManager::loadMenuSplashScreen(sf::RenderWindow * window)
 	m_menuCanLoad.lock();
 	std::cout << "menu can now load" << std::endl;
 	std::cout << "loading splash screen menu on seperate Thread" << std::endl;
-	m_menusPresentInScene = { std::make_shared<MainMenu>(window,m_inputManager.get(),m_spriteGenerator.get()) };
+	m_menusPresentInScene = { std::make_shared<MainMenu>(window,m_inputManager.get(),m_spriteGenerator.get(),m_audioManager.get()) };
 	m_menuManager = std::make_unique<MenuManager>(MenuManager(m_menusPresentInScene, 0, m_editMode));
 	std::cout <<  "loading finished for splash screen on seperate thread momentarily sleeping" << std::endl;
 	

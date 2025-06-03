@@ -5,16 +5,19 @@
 class OptionsMenu:public Menu {
 	
 public:
-	OptionsMenu(sf::RenderWindow* window, InputManager* inputManage, SpriteGenerator * spriteGenerator);
+	OptionsMenu(sf::RenderWindow* window, InputManager* inputManage, SpriteGenerator * spriteGenerator, AudioManager * audioManager);
 	~OptionsMenu() {};
 	void initialise();
 	void initUiBindings() ;
 	void updateUiBindings() ;
 	void draw(sf::RenderWindow* window);
 	void initialiseButtons() ;
-	void backButtonAction();
+	void backButtonAction(); 
+	
 	void volumeSliderAction();
-	void initialiseLoneText() ;
+	void menuVolumeSliderAction();
+	void musicVolumeSliderAction();
+	void initialiseLoneText();
 	void initialiseSliders();
 
 private:
@@ -26,5 +29,6 @@ private:
 	sf::Color m_optionsHeaderTextColour;
 	sf::Vector2f m_sliderSpacing;
 	unsigned int m_optionsHeaderCharSize = 0;
+	
 
 };

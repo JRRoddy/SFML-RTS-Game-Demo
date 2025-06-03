@@ -1,11 +1,12 @@
 #include "Menu.h"
 
 
-Menu::Menu(sf::RenderWindow* window, InputManager* inputManager, SpriteGenerator * spriteGenerator)
+Menu::Menu(sf::RenderWindow* window, InputManager* inputManager, SpriteGenerator * spriteGenerator, AudioManager * audioManager)
 {
 	m_window = window;
 	m_inputManager = inputManager;
 	m_spriteGenerator = spriteGenerator;
+	m_audioManager = audioManager;
 	m_draggingElementSelected = false;
 }
 
@@ -34,7 +35,7 @@ void Menu::parseUIdata()
 		std::cout << "found ui data path: " << m_menuUiDataPath << std::endl;
 		// go through all the lines in the file and read the ui data 
 		while (std::getline(file, line)) {
-		    // if we encounter a atext object position
+		    // if we encounter a text object position
 			if (line.find("TPos:")) {
 				// erase the line identifier leaving just the data 
 				line.erase(0, line.find(":") + 1);
@@ -110,11 +111,25 @@ void Menu::saveUiData() {
 
 }
 
-void Menu::initSubMenus()
-{
-	
-}
 
+void Menu::playButtonHoverSound(bool canPlayHoverSound)
+{
+	if (canPlayHoverSound && m_previousHoveredButtonId != m_hoveredButtonId) {
+	   
+		GameSettings::modifyMenuSoundObject(m_buttonSelectSound.get());
+		m_buttonSelectSound->play();
+		m_buttonSelectSoundActive = true;
+	   
+	}
+	else if (!canPlayHoverSound) {
+		m_buttonSelectSoundActive = false;
+	}
+
+
+
+
+
+}
 
 //  method that is used to edit properties of 
 // buttons within a particualr menu when the scene is in edit mode 
@@ -126,6 +141,7 @@ void Menu::editButtons() {
 	sf::Vector2f mousePos = sf::Vector2f(sf::Mouse::getPosition(*m_window));
 	// current clicked element 
 	m_clickedElementId = "";
+
 	// using an itterator to go through all the buttons in a map 
 	for (std::map<std::string, Button>::iterator it = m_buttons.begin(); it != m_buttons.end(); it++) {
 
@@ -191,6 +207,9 @@ void Menu::draw(sf::RenderWindow* window)
 void Menu::update()
 {
 
+	// update background music regardless as that is done in a sub menu meaning if we are in the options 
+	// menu and dont do this then the music volume modifier wont have any effect 
+	updateBackgroundMusicVolume();
 	// if we dont have a active sub menu we update this menu 
 	if (!m_hasActiveSubMenu) {
 		updateUI();
@@ -217,16 +236,31 @@ void Menu::resetSelectedElementIds() {
 		m_draggingElementId = "";
 		m_draggingElementSelected = false;
 	}
+	if (m_previousHoveredButtonId != m_hoveredButtonId) {
+		m_previousHoveredButtonId = m_hoveredButtonId;
+	}
 	// each time we update we set the clicked element id to "" ready to detect any other 
 	// ui elements being clicked next frame 
 	m_clickedElementId = "";
+}
+void Menu::updateBackgroundMusicVolume()
+{
+
+	if (m_backgroundMusic != nullptr) {
+
+
+		GameSettings::modifyMusicObject(m_backgroundMusic);
+		
+
+	}
 }
 // calls all methods to update particualr ui elements such as the updateButtons method 
 void Menu::updateUI() {
 		
 	resetSelectedElementIds();
 	updateButtons();
-	updateSliders();
+	updateSliders(); 
+	
 
 
 }
@@ -260,35 +294,49 @@ void Menu::drawSliders(sf::RenderWindow* window)
 
 void Menu::updateButtons()
 {
-
+	bool buttonHoverSoundCanPlay = false;
+	m_hoveredButtonId = "";
 	// itterate through the std::map that contains all the buttons mapped to a particualr string id
 	for (std::map<std::string, Button>::iterator it = m_buttons.begin(); it != m_buttons.end(); it++) {
 		// if the mouse is contained within the button bounds and is clicked 
-		if (it->second.getShape().getGlobalBounds().contains(sf::Vector2f(m_inputManager->getMousePos())) &&
-			m_inputManager->mouseReleased(sf::Mouse::Left))
+		if (it->second.getShape().getGlobalBounds().contains(sf::Vector2f(m_inputManager->getMousePos())))
 		{
-			try {
-				// set the current clicked element id to the button string id 
-				// which is used to access a particualr method pointer that 
-				// is bound to that button id 
-				m_clickedElementId = it->second.getButtonId();
-				std::cout << "clicked element id set to " << m_clickedElementId << std::endl;
-				// if the button leads to a particualr sub menu this line will not 
-				// throw an expection and will set the current active sub menu to 
-				// the sub menu object that is mapped to a particualr sub menu string id 
-				// that the button object stores 
-				m_activeSubmenu = m_subMenus.at(it->second.getLinkedMenuId()).get();
-				std::cout << "set sub menu to " << it->first << std::endl;
-				// set up flags for the sub menu to become active 
-				m_activeSubmenu->setShouldDraw(true);
-				m_hasActiveSubMenu = true;
-			}
-			catch (...) {
-			}
+			
+			buttonHoverSoundCanPlay = true; 
+			m_hoveredButtonId = it->second.getButtonId();
+			if (m_inputManager->mouseReleased(sf::Mouse::Left)) {
+				try {
+					// set the current clicked element id to the button string id 
+					// which is used to access a particualr method pointer that 
+					// is bound to that button id  
 
+					m_clickedElementId = it->second.getButtonId();
+					std::cout << "clicked element id set to " << m_clickedElementId << std::endl;
+					// if the button leads to a particualr sub menu this line will not 
+					// throw an expection and will set the current active sub menu to 
+					// the sub menu object that is mapped to a particualr sub menu string id 
+					// that the button object stores 
+					m_activeSubmenu = m_subMenus.at(it->second.getLinkedMenuId()).get();
+					std::cout << "set sub menu to " << it->first << std::endl;
+					// set up flags for the sub menu to become active 
+					m_activeSubmenu->setShouldDraw(true);
+					m_hasActiveSubMenu = true;
+				}
+				catch (...) {
+				}
+			}
+		
 		}
 
+		
+
+
+
 	}
+
+	playButtonHoverSound(buttonHoverSoundCanPlay);
+
+	
 }
 void Menu::updateSliders()
 {
@@ -324,6 +372,22 @@ void Menu::updateSelectedSlider()
 }
 
 
+
+void Menu::initSounds()
+{
+
+	m_buttonSelectSound = m_audioManager->getSoundObjectCopy(m_buttonSelectSoundPath);
+
+}
+
+void Menu::initMusic()
+{
+	m_backgroundMusic = new sf::Music();
+	if (!m_backgroundMusic->openFromFile(m_menuBackgroundMusicPath)) {
+	
+		std::cout << "could not load menu musci from path " << m_menuBackgroundMusicPath << std::endl;
+	};
+}
 
 bool Menu::shouldDraw() const
 {

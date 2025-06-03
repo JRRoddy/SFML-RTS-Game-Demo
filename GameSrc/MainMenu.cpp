@@ -1,6 +1,6 @@
 #include "MainMenu.h"
 
-MainMenu::MainMenu(sf::RenderWindow* window,InputManager * inputManager, SpriteGenerator * spriteGenerator):Menu(window,inputManager,spriteGenerator)
+MainMenu::MainMenu(sf::RenderWindow* window,InputManager * inputManager, SpriteGenerator * spriteGenerator,AudioManager * audioManager):Menu(window,inputManager,spriteGenerator,audioManager)
 {
 	std::cout << "initialsing main menu " << std::endl;
 
@@ -15,12 +15,13 @@ MainMenu::MainMenu(sf::RenderWindow* window,InputManager * inputManager, SpriteG
 	m_menuUiDataPath = "../Assets/UiData/MainMenu.txt";
 	m_textFontPath = "../Assets/Fonts/Roboto.ttf";
 	m_uiButtonTexturePath = "../Assets/Textures/UiBlueButton.png";
+	m_menuBackgroundMusicPath = "../Assets/Audio/MenuMusic.mp3";
 	m_buttonSize = sf::Vector2f(m_buttonWidth, m_buttonHeight);
 	m_shouldDraw = true;
 	m_uiActionBinder = std::make_unique<UiActionBinder<MainMenu>>(UiActionBinder<MainMenu>());
 	m_subMenus = {
-      {"score",std::make_shared<ScoreMenu>(ScoreMenu(m_window,m_inputManager,m_spriteGenerator))},
-	  {"options",std::make_shared<OptionsMenu>(OptionsMenu(m_window,m_inputManager,m_spriteGenerator))}
+      {"score",std::make_shared<ScoreMenu>(ScoreMenu(m_window,m_inputManager,m_spriteGenerator,m_audioManager))},
+	  {"options",std::make_shared<OptionsMenu>(OptionsMenu(m_window,m_inputManager,m_spriteGenerator,m_audioManager))}
 	};
 	initialise();
 }
@@ -31,10 +32,16 @@ void MainMenu::initialise()
 	initUiBindings();
 	initialiseButtons();
 	parseUIdata();
+	initSounds();
+	initMusic();
+
+
 	for (std::map<std::string, std::shared_ptr<Menu>>::iterator it = m_subMenus.begin(); it != m_subMenus.end(); it++) {
 		it->second->initialise();
 
 	}
+	m_backgroundMusic->setLoop(true); 
+	m_backgroundMusic->play();
 }
 
 void MainMenu::initialiseButtons()
@@ -80,9 +87,14 @@ void MainMenu::updateUiBindings()
 
 }
 
+
+
+
+
 void MainMenu::playButtonAction()
 {
 	m_shouldDraw = false;
+	m_backgroundMusic->stop();
 }
 
 void MainMenu::exitButtonAction()

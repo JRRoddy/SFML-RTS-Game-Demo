@@ -28,7 +28,7 @@ ScoreMenu::ScoreMenu()
 
 }
 
-ScoreMenu::ScoreMenu(sf::RenderWindow* window, InputManager* inputManager, SpriteGenerator * spriteGenerator):Menu(window,inputManager,spriteGenerator)
+ScoreMenu::ScoreMenu(sf::RenderWindow* window, InputManager* inputManager, SpriteGenerator * spriteGenerator,AudioManager * audioManager):Menu(window,inputManager,spriteGenerator,audioManager)
 {
 	std::cout << "initialsing main menu " << std::endl;
 
@@ -63,6 +63,8 @@ void ScoreMenu::initialise()
 	initialiseButtons();
 	parseUIdata();
 	initialiseLoneText();
+	initSounds();
+
 
 }
 

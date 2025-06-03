@@ -12,6 +12,7 @@
 #include "mutex" 
 #include "SFML/Audio/Sound.hpp"
 #include "GameSettings.h"
+#include "AudioManager.h"
 
 
 // simple scene manager class that will hold the current game state and all the main components of the game ensuring 
@@ -39,10 +40,9 @@ private:
 	std::unique_ptr<InputManager> m_inputManager;
 	std::unique_ptr<MenuManager> m_menuManager;
 	std::vector<std::shared_ptr<Menu>>m_menusPresentInScene; 
-	sf::Sound m_sound;
 	LevelGenerator *  m_levelGenerator;
 	std::unique_ptr<TextureManager> m_textureManager; 
-
+	std::unique_ptr<AudioManager> m_audioManager;
 	std::unique_ptr<SpriteGenerator> m_spriteGenerator;
 	std::unique_ptr<Camera> m_camera;
 	std::unique_ptr<Player> m_player;
@@ -50,6 +50,8 @@ private:
 	std::string m_pathToTextures = "../Assets/Textures/PathsToTextures.txt";
 	std::string m_pathToAnims = "../Assets/Animations/PathsToAnimations.txt";
 	std::string m_userDetails = "../Assets/UserDetails/UserDetails - Copy.csv";
+	std::string m_pathToSounds = "../Assets/Audio/PathsToAudio.txt"; 
+	std::string m_pathToMusic = "../Assets/Audio/PathsToMusic.txt";
 	std::mutex m_loadingMenuMutex;
 	std::thread m_loadUserFileData;
 	std::thread m_loadingMenuSplashScreen; 

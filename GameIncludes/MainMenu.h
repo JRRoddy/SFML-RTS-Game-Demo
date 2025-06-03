@@ -6,7 +6,7 @@
 
 class MainMenu:public Menu{
 public: 
-	MainMenu(sf::RenderWindow * window,InputManager * inputManager, SpriteGenerator * spriteGenerator);
+	MainMenu(sf::RenderWindow * window,InputManager * inputManager, SpriteGenerator * spriteGenerator, AudioManager * audioManager);
 	~MainMenu() {
 		std::cout << "main menu destructor called" << std::endl;
 	};
@@ -16,9 +16,11 @@ public:
 	void updateUiBindings();
 	void initialiseLoneText() {};
 	void initialiseSliders() {};
+	
+
 private:
 	void playButtonAction();
 	void exitButtonAction();
 	std::unique_ptr<UiActionBinder<MainMenu>>m_uiActionBinder;
-
+	
 };

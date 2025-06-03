@@ -1,10 +1,10 @@
 #include "OptionsMenu.h"
 
-OptionsMenu::OptionsMenu(sf::RenderWindow* window, InputManager* inputManager,SpriteGenerator * spriteGenerator):Menu(window,inputManager,spriteGenerator)
+OptionsMenu::OptionsMenu(sf::RenderWindow* window, InputManager* inputManager,SpriteGenerator * spriteGenerator, AudioManager * audioManager):Menu(window,inputManager,spriteGenerator,audioManager)
 {
 	m_buttonIds = { "back" };
-	m_sliderIds = { "sound" }; 
-	m_sliderStringText = { "Sound:" };
+	m_sliderIds = { "sound","menuSFX","music"};
+	m_sliderStringText = { "Sound:","MenuSFX:","Music:"};
 	m_buttonCharSize = 50;
 	m_buttonWidth = 200.0f;
 	m_buttonHeight = 50.0f;
@@ -24,7 +24,10 @@ OptionsMenu::OptionsMenu(sf::RenderWindow* window, InputManager* inputManager,Sp
 	m_defaultSliderColour = sf::Color::Color(128,128,128,255);
 	m_defaultSliderIndicatorColour = sf::Color::Color(255,255,255,255);
 	m_defaultSliderIndicatorRadi = 10.0f;
-	m_defaultSliderPercentage = 0.85f;
+	m_defaultSliderPercentage = 1.0f; 
+	GameSettings::soundVolumeModifier = m_defaultSliderPercentage;
+	GameSettings::menuSFXModifier = m_defaultSliderPercentage;
+	GameSettings::musicModifier = m_defaultSliderPercentage;
 	m_sliderSpacing = sf::Vector2f(0.0f, 50.0f);
 	m_sliderTextCharSize = 40;
 	m_sliderTextColour = sf::Color::White; 
@@ -40,6 +43,7 @@ void OptionsMenu::initialise()
 
 	initialiseLoneText();
 	initialiseSliders();
+	initSounds();
 }
 
 void OptionsMenu::initUiBindings()
@@ -47,6 +51,9 @@ void OptionsMenu::initUiBindings()
 
 	m_uiActionBinder->addBinding("back", &OptionsMenu::backButtonAction);
 	m_uiActionBinder->addBinding("sound", &OptionsMenu::volumeSliderAction);
+	m_uiActionBinder->addBinding("menuSFX", &OptionsMenu::menuVolumeSliderAction);
+	m_uiActionBinder->addBinding("music", &OptionsMenu::musicVolumeSliderAction);
+
 }
 
 void OptionsMenu::updateUiBindings()
@@ -101,6 +108,16 @@ void OptionsMenu::volumeSliderAction()
 {
 	GameSettings::soundVolumeModifier = m_sliders["sound"].getInterpolater();
 
+}
+void OptionsMenu::menuVolumeSliderAction()
+{
+	GameSettings::menuSFXModifier = m_sliders["menuSFX"].getInterpolater();
+
+}
+
+void OptionsMenu::musicVolumeSliderAction()
+{
+	GameSettings::musicModifier = m_sliders["music"].getInterpolater();
 }
 
 void OptionsMenu::initialiseLoneText()
