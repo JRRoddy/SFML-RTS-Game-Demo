@@ -151,6 +151,8 @@ void SceneManager::readUserDataFile()
 		}
 		std::cout << "line in csv data: " << line << std::endl;
 		fileDataOutput << lineNum << line + "\n"; 
+		// push  the parsed user details into a vector 
+		m_userData.push_back(line);
 		std::cout << "sleeping momentarily after writing to file " << std::endl; 
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 		lineNum++;
