@@ -26,22 +26,22 @@ public:
 	~SceneManager();
 
 	void draw();
-	void update(float dt,sf::Event & event); 
+	void update(float dt, sf::Event& event);
 	void loadMenuSplashScreen(sf::RenderWindow* window);
-	void readUserDataFile() ;
+	void readUserDataFile();
 
 private:
 
-	sf::RenderWindow * m_window;
+	sf::RenderWindow* m_window;
 	unsigned int m_windowWidth;
-	unsigned int m_windowHeight; 
-	bool m_menuLoadingComplete = false;
+	unsigned int m_windowHeight;
+
 	bool m_editMode;
 	std::unique_ptr<InputManager> m_inputManager;
 	std::unique_ptr<MenuManager> m_menuManager;
-	std::vector<std::shared_ptr<Menu>>m_menusPresentInScene; 
-	LevelGenerator *  m_levelGenerator;
-	std::unique_ptr<TextureManager> m_textureManager; 
+	std::vector<std::shared_ptr<Menu>>m_menusPresentInScene;
+	LevelGenerator* m_levelGenerator;
+	std::unique_ptr<TextureManager> m_textureManager;
 	std::unique_ptr<AudioManager> m_audioManager;
 	std::unique_ptr<SpriteGenerator> m_spriteGenerator;
 	std::unique_ptr<Camera> m_camera;
@@ -50,16 +50,18 @@ private:
 	std::string m_pathToTextures = "../Assets/Textures/PathsToTextures.txt";
 	std::string m_pathToAnims = "../Assets/Animations/PathsToAnimations.txt";
 	std::string m_userDetails = "../Assets/UserDetails/UserDetails - Copy.csv";
-	std::string m_pathToSounds = "../Assets/Audio/PathsToAudio.txt"; 
+	std::string m_pathToSounds = "../Assets/Audio/PathsToAudio.txt";
 	std::string m_pathToMusic = "../Assets/Audio/PathsToMusic.txt";
-	std::mutex m_loadingMenuMutex;
+
 	std::thread m_loadUserFileData;
-	std::thread m_loadingMenuSplashScreen; 
+	std::thread m_loadingMenuSplashScreen;
+
 	std::mutex m_menuCanLoad;
-	std::mutex m_menuCanInteract;
+	std::mutex m_loadingMenuMutex;
 	std::condition_variable m_menuLoadingCompleteCvar;
-	
-}; 
+	bool m_menuLoadingComplete = false;
+
+};
 
 
 
