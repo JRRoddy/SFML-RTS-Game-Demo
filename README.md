@@ -1,2 +1,1 @@
-# Assignment_24_25
-The template for the SFML and GoogleTest assignments
+Thhis project was developed from a university assignment where i was tasked with developing a game demo(in this case i chose RTS) using  a light weight rendering library(SFML), and the rest of the code base being up to me to develop from scratch using c++. This project applies many C++ concepts such as template programming, RAII, and multiple inheritance. The project also has a variety of features such as spatial partitioning for more effcient collision detection between entities, multi-threaded loading of saved game data,  2D state based animation controller for characters in the game demo, and A-star pathfinindg that allows NPC entities to pathfind around obstacles such as rocks in the scene. 
